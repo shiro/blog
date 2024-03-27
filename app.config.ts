@@ -3,9 +3,10 @@ import { nodeTypes } from "@mdx-js/mdx";
 import { linariaVitePlugin } from "./vite/linariaVitePlugin";
 import remarkShikiTwoslash from "remark-shiki-twoslash";
 import rehypeRaw from "rehype-raw";
-import pkg from "@vinxi/plugin-mdx";
+// @ts-ignore
+import _mdx from "@vinxi/plugin-mdx";
 
-const { default: mdx } = pkg;
+const { default: mdx } = _mdx;
 
 const babelPluginLabels = [
   "solid-labels/babel",
@@ -59,7 +60,7 @@ export default defineConfig({
             // remarkFrontmatter,
             // remarkMdxFrontmatter,
             [
-              remarkShikiTwoslash.default,
+              (remarkShikiTwoslash as any).default,
               {
                 disableImplicitReactImport: true,
                 includeJSDocInHover: true,

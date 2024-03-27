@@ -132,6 +132,10 @@ export const globals = css`
             flex-direction: column;
         }
 
+        h1 {
+            ${heading1Text};
+        }
+
         p + p {
             margin-top: 16px;
         }
