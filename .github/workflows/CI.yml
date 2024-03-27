@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -28,12 +28,19 @@ jobs:
         env:
           BASE_PATH: /my-app/
 
-      - name: create .nojekyll
-        run: touch .output/public/.nojekyll
-
-      - name: deploy pages
-        uses: JamesIves/github-pages-deploy-action@v4.5.0
+      - name: upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          branch: master
-          folder: .output/public
+          path: '.output/public'
 
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
