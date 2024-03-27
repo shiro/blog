@@ -5,6 +5,7 @@ import Text from "~/atoms/Text.md";
 import fs from "fs";
 import path from "path";
 import { NoHydration } from "solid-js/web";
+import { config } from "~/config";
 
 const base = "./src/routes/articles";
 const list = () => {
@@ -12,7 +13,7 @@ const list = () => {
   return fs.readdirSync(base).map((x) => {
     const raw = fs.readFileSync(path.join(base, x)).toString();
     const title = raw.split("\n")[0].slice(2);
-    const url = `/articles/${x.split(".")[0]}`;
+    const url = `${config.base}/articles/${x.split(".")[0]}`;
     return { title, url };
   });
 };
