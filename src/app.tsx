@@ -6,13 +6,16 @@ import { css } from "@linaria/core";
 import "~/style/global.style";
 import "./app.css";
 
+const base = (import.meta.env.BASE_URL ?? "").replace("/_build", "");
+
 export default function App() {
   return (
     <Router
+      base={base}
       root={(props) => (
         <MetaProvider>
           <Title>SolidStart - Basic</Title>
-          <a href="/">Index</a>
+          <a href="/">Index ({base})</a>
           <a class={f} href="/about">
             About
           </a>

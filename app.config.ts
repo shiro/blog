@@ -7,11 +7,13 @@ import pkg from "@vinxi/plugin-mdx";
 
 const { default: mdx } = pkg;
 
+console.log("base", process.env.BASE_PATH);
 export default defineConfig({
   ssr: true,
   devOverlay: false,
 
   server: {
+    baseURL: process.env.BASE_PATH,
     static: true,
     prerender: {
       routes: [

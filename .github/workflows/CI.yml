@@ -27,7 +27,7 @@ jobs:
       - name: build
         run: yarn build
         env:
-          BASE_PATH: /my-app/
+          BASE_PATH: /blog/
 
       - name: upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
