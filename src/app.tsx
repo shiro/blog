@@ -5,17 +5,16 @@ import { Suspense } from "solid-js";
 import { css } from "@linaria/core";
 import "~/style/global.style";
 import "./app.css";
-
-const base = (import.meta.env.BASE_URL ?? "").replace("/_build", "");
+import { config } from "~/config";
 
 export default function App() {
   return (
     <Router
-      base={base}
+      base={config.base}
       root={(props) => (
         <MetaProvider>
           <Title>SolidStart - Basic</Title>
-          <a href="/">Index ({base})</a>
+          <a href="/">Index</a>
           <a class={f} href="/about">
             About
           </a>
