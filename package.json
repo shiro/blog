@@ -15,9 +15,12 @@
     "@solidjs/start": "^1.0.0-rc.0",
     "solid-js": "^1.8.16",
     "babel-plugin-transform-remove-imports": "1.7.1",
-    "@babel/plugin-transform-export-namespace-from": "7.23.4",
-    "@babel/preset-typescript": "7.23.3",
+    "@babel/plugin-transform-export-namespace-from": "7.24.1",
+    "@babel/preset-typescript": "7.24.1",
+    "@mdx-js/mdx": "3.0.1",
+    "solid-mdx": "0.0.7",
     "sass": "1.72.0",
+    "@vinxi/plugin-mdx": "3.7.1",
     "vinxi": "^0.3.11"
   },
   "engines": {

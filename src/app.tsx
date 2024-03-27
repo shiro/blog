@@ -8,11 +8,14 @@ import "./app.css";
 export default function App() {
   return (
     <Router
-      root={props => (
+      root={(props) => (
         <MetaProvider>
           <Title>SolidStart - Basic</Title>
           <a href="/">Index</a>
-          <a class={f} href="/about">About</a>
+          <a class={f} href="/about">
+            About
+          </a>
+          <a href="/foo">Foo</a>
           <Suspense>{props.children}</Suspense>
         </MetaProvider>
       )}
@@ -23,5 +26,5 @@ export default function App() {
 }
 
 const f = css`
-    background: red;
+  background: red;
 `;
