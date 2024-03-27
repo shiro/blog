@@ -26,7 +26,7 @@ export default function Home() {
       <h1>Hello world!</h1>
       <Text />
       <NoHydration>
-        <ul>
+        <ul class="mb-8 text-colors-secondary-800">
           <For each={list()}>
             {(item) => (
               <li>

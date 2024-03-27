@@ -3,6 +3,7 @@ import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { Suspense } from "solid-js";
 import { css } from "@linaria/core";
+import "~/style/global.style";
 import "./app.css";
 
 export default function App() {
@@ -16,7 +17,9 @@ export default function App() {
             About
           </a>
           <a href="/foo">Foo</a>
-          <Suspense>{props.children}</Suspense>
+          <div class="content-container">
+            <Suspense>{props.children}</Suspense>
+          </div>
         </MetaProvider>
       )}
     >

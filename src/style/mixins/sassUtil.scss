@@ -1,0 +1,86 @@
+@function px($number) { @return $number * 1px; }
+@function em($number) { @return $number * 1em; }
+@function rem($number) { @return $number * 1rem; }
+@function first($list) { @return nth($list, 1); }
+@function last($list) { @return nth($list, length($list)); }
+
+@function nth-delete($list, $n) {
+  $result: ();
+  $n: if($n < 0, length($list) + $n + 1, $n);
+  $bracketed: is-bracketed($list);
+  $separator: list-separator($list);
+  @for $i from 1 through length($list) {
+    @if $i != $n { $result: append($result, nth($list, $i)); }
+  }
+  @return join((), $result, $separator, $bracketed);
+}
+
+@function str-split($string, $separator) {
+  $split-arr: ();
+  // first index of separator in string
+  $index: str-index($string, $separator);
+  // loop through string
+  @while $index != null {
+    // get the substring from the first character to the separator
+    $item: str-slice($string, 1, $index - 1);
+    // push item to array
+    $split-arr: append($split-arr, $item);
+    // remove item and separator from string
+    $string: str-slice($string, $index + 1);
+    // find new index of separator
+    $index: str-index($string, $separator);
+  }
+  // add the remaining string to list (the last item)
+  $split-arr: append($split-arr, $string);
+
+  @return $split-arr;
+}
+
+@function replace-nth($list, $index, $value) {
+  $result: null;
+
+  @if type-of($index) != number {
+    @warn "$index: #{quote($index)} is not a number for `replace-nth`.";
+  }
+  @else if $index == 0 {
+    @warn "List index 0 must be a non-zero integer for `replace-nth`.";
+  }
+  @else if abs($index) > length($list) {
+    @warn "List index is #{$index} but list is only #{length($list)} item long for `replace-nth`.";
+  }
+  @else {
+    $result: ();
+    $index: if($index < 0, length($list) + $index + 1, $index);
+
+    @for $i from 1 through length($list) {
+      @if $i == $index {
+        $result: append($result, $value);
+      }
+      @else {
+        $result: append($result, nth($list, $i));
+      }
+    }
+  }
+
+  @return $result;
+}
+
+@function str-trim($string) {
+  @if (str-slice($string, 1, 1) == ' ') {
+    @return str-trim(str-slice($string, 2));
+  }
+  @else if (str-slice($string, str-length($string), -1) == ' ') {
+    @return str-trim(str-slice($string, 1, -2));
+  }
+  @else {
+    @return $string;
+  }
+}
+
+@function pxToRem($value) {
+  @return rem($value / $emBase);
+}
+
+@function strip-unit($value) {
+  @return $value / ($value * 0 + 1);
+}

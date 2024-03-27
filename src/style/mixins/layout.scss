@@ -1,0 +1,15 @@
+@mixin container {
+  margin: 0 auto;
+  width: calc(600px + 30vw);
+  @include size-xs { width: 100%; }
+  @include size-xs { padding: 0 3vw; }
+}
+
+@mixin edgeChildrenNoMargin {
+  &:first-child { margin-left: 0; }
+  &:last-child { margin-right: 0; }
+}
+
+@function du($fixed, $dynamic) {
+  @return calc(#{$fixed}px + #{$dynamic}vw);
+}

@@ -1,0 +1,26 @@
+# Mapping chord key combos on Linux
+
+Recently I realized that lots of my key combinations require pretty unhealthy hand movements.
+
+```python
+import map2
+
+# capture keyboard inputs with a reader
+reader = map2.Reader(patterns=["/dev/input/by-id/your-kbd"])
+# re-map them using a chrod mapper
+mapper = map2.ChordMapper()
+# and write them to a virtual device
+writer = map2.Writer(clone_from="/dev/input/by-id/your-kbd")
+# setup the event pipeline
+map2.link([reader, mapper, writer])
+
+# and map some chords!
+mapper_kbd_arp.map([";", "a"], "A")
+mapper_kbd_arp.map([";", "s"], "S")
+mapper_kbd_arp.map([";", "d"], "D")
+mapper_kbd_arp.map([";", "f"], "F")
+mapper_kbd_arp.map([";", "g"], "G")
+# and so on...
+```
+
+And that's it!

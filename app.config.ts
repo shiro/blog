@@ -1,5 +1,8 @@
 import { defineConfig } from "@solidjs/start/config";
+import { nodeTypes } from "@mdx-js/mdx";
 import { linariaVitePlugin } from "./vite/linariaVitePlugin";
+import remarkShikiTwoslash from "remark-shiki-twoslash";
+import rehypeRaw from "rehype-raw";
 import pkg from "@vinxi/plugin-mdx";
 
 const { default: mdx } = pkg;
@@ -9,11 +12,14 @@ export default defineConfig({
   devOverlay: false,
 
   server: {
+    static: true,
     prerender: {
       routes: [
         "/",
         "/about",
         "/foo",
+        "/page/1",
+        "/page/2",
         //
         // "/articles/2024-03-25-first-article",
       ],
@@ -26,11 +32,42 @@ export default defineConfig({
 
   vite(options) {
     return {
+      css: { postcss: "./postcss.config.js" },
       plugins: [
         mdx.withImports({})({
           jsx: true,
           jsxImportSource: "solid-js",
           providerImportSource: "solid-mdx",
+          rehypePlugins: [
+            // rehypeSlug, rehypeCollectHeadings,
+            [rehypeRaw, { passThrough: nodeTypes }],
+          ],
+          remarkPlugins: [
+            // remarkFrontmatter,
+            // remarkMdxFrontmatter,
+            [
+              remarkShikiTwoslash.default,
+              {
+                disableImplicitReactImport: true,
+                includeJSDocInHover: true,
+                // theme: "css-variables",
+                themes: ["github-dark", "github-light"],
+                defaultCompilerOptions: {
+                  allowSyntheticDefaultImports: true,
+                  esModuleInterop: true,
+                  target: "ESNext",
+                  module: "esnext",
+                  lib: ["lib.dom.d.ts", "lib.es2015.d.ts"],
+                  jsxImportSource: "solid-js",
+                  jsx: "preserve",
+                  types: ["solid-start/env"],
+                  paths: {
+                    "~/*": ["./src/*"],
+                  },
+                },
+              },
+            ],
+          ],
         }),
         linariaVitePlugin({
           include: [
