@@ -1,0 +1,26 @@
+{
+  "name": "example-basic",
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start",
+    "version": "vinxi version"
+  },
+  "dependencies": {
+    "@solidjs/meta": "^0.29.2",
+    "@wyw-in-js/vite": "0.5.0",
+    "@solidjs/router": "^0.13.1",
+    "@linaria/core": "6.1.0",
+    "@solidjs/start": "^1.0.0-rc.0",
+    "solid-js": "^1.8.16",
+    "babel-plugin-transform-remove-imports": "1.7.1",
+    "@babel/plugin-transform-export-namespace-from": "7.23.4",
+    "@babel/preset-typescript": "7.23.3",
+    "sass": "1.72.0",
+    "vinxi": "^0.3.11"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
