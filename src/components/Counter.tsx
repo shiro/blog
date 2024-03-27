@@ -1,12 +1,11 @@
-import { createSignal } from "solid-js";
 import { css } from "@linaria/core";
 import "./Counter.css";
 
 export default function Counter() {
-  const [count, setCount] = createSignal(0);
+  let count = $signal(0);
   return (
-    <button class={increment} onClick={() => setCount(count() + 1)}>
-      Clicks: {count()}
+    <button class={increment} onClick={() => {count++ }}>
+      Clicks: {count}
     </button>
   );
 }

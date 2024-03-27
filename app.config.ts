@@ -7,7 +7,11 @@ import pkg from "@vinxi/plugin-mdx";
 
 const { default: mdx } = pkg;
 
-console.log("base", process.env.BASE_PATH);
+const babelPluginLabels = [
+  "solid-labels/babel",
+  { dev: process.env.NODE_ENV == "development" },
+];
+
 export default defineConfig({
   ssr: true,
   devOverlay: false,
@@ -29,6 +33,13 @@ export default defineConfig({
     },
   },
   // experimental: {islands: true},
+
+  solid: {
+    babel: {
+      plugins: [babelPluginLabels],
+    },
+    ...({} as any),
+  },
 
   extensions: ["mdx", "md"],
 

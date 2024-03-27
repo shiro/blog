@@ -17,8 +17,6 @@ const list = () => {
     return { title, url };
   });
 };
-// .map((x) => x.toString())
-// .map((x) => [x.split("\n")[0].slice(2), `/articles/${x}`]);
 
 export default function Home() {
   return (
