@@ -1,21 +1,16 @@
-import { MetaProvider, Title } from "@solidjs/meta";
-import { Router } from "@solidjs/router";
-import { FileRoutes } from "@solidjs/start/router";
-import { Suspense, lazy } from "solid-js";
 import { css } from "@linaria/core";
+import { MetaProvider, Title } from "@solidjs/meta";
+import { RouteDefinition, Router } from "@solidjs/router";
+import { Suspense, lazy } from "solid-js";
+import { config } from "~/config";
 import "~/style/global.style";
 import "./app.css";
-import { config } from "~/config";
 
 const Foo = lazy(() => import("~/routes/index"));
-const Article2 = lazy(
-  () =>
-    import("~/routes/articles/2024-03-25-starting-a-blog.mdx"),
-);
-const Article = lazy(
-  () =>
-    import("~/routes/articles/2024-03-30-maping-chord-key-combos-on-linux.mdx"),
-);
+
+const articlesImportMap = import.meta.glob("./articles/*.mdx");
+const getArticleComponent = (name: string) =>
+  articlesImportMap[`./articles/${name}.mdx`];
 
 export default function App() {
   return (
@@ -35,36 +30,34 @@ export default function App() {
         </MetaProvider>
       )}
     >
-      {[
-        { path: "/", component: () => <Foo /> },
-        {
-          path: "/articles/:name",
-          component: (p) => {
-            return (
-              <Article2
-                components={{
-                  h1: () => {
-                    return <span>hi</span>;
-                  },
-                }}
-                {...p} />
-            );
+      {
+        [
+          { path: "/", component: () => <Foo /> },
+          {
+            path: "/articles/:name",
+            component: (p) => {
+              // router bug: 'name' not in 'p', update when this is fixed
+              const name = p.location.pathname.replace("/articles/", "");
+              const Article = lazy(getArticleComponent(name) as any);
+              return (
+                <Article
+                  components={
+                    {
+                      // h1: () => {
+                      //   return <span>hi</span>;
+                      // },
+                    }
+                  }
+                  {...p}
+                />
+              );
+            },
+            matchFilters: {
+              name: (name: string) => !!getArticleComponent(name),
+            },
           },
-        },
-        {
-          path: "/articles/2024-03-30-maping-chord-key-combos-on-linux",
-          component: () => (
-            <Article
-              components={{
-                h1: () => {
-                  return <span>hi</span>;
-                },
-              }}
-            />
-          ),
-        },
-      ]}
-      {/* <FileRoutes /> */}
+        ] as RouteDefinition[]
+      }
     </Router>
   );
 }

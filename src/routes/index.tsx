@@ -1,24 +1,12 @@
-import { For } from "solid-js/web";
 import { Title } from "@solidjs/meta";
-import Counter from "~/components/Counter";
+import { For, NoHydration } from "solid-js/web";
 import Text from "~/atoms/Text.md";
-import fs from "fs";
-import path from "path";
-import { NoHydration } from "solid-js/web";
-import { config } from "~/config";
+import Counter from "~/components/Counter";
+import { getArticles } from "~/ssg/getArticles";
 
-const base = "./src/routes/articles";
-const list = () => {
-  "use server";
-  return fs.readdirSync(base).map((x) => {
-    const raw = fs.readFileSync(path.join(base, x)).toString();
-    const title = raw.split("\n")[0].slice(2);
-    const url = `${config.base}/articles/${x.split(".")[0]}`;
-    return { title, url };
-  });
-};
+const list = getArticles();
 
-export default function Home() {
+const List = () => {
   return (
     <main>
       <Title>Hello World</Title>
@@ -26,7 +14,7 @@ export default function Home() {
       <Text />
       <NoHydration>
         <ul class="mb-8 text-colors-secondary-800">
-          <For each={list()}>
+          <For each={list}>
             {(item) => (
               <li>
                 <a href={item.url}>{item.title}</a>
@@ -45,4 +33,6 @@ export default function Home() {
       </p>
     </main>
   );
-}
+};
+
+export default List;

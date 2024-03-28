@@ -3,6 +3,7 @@ import { nodeTypes } from "@mdx-js/mdx";
 import { linariaVitePlugin } from "./vite/linariaVitePlugin";
 import remarkShikiTwoslash from "remark-shiki-twoslash";
 import rehypeRaw from "rehype-raw";
+import compileTime from "vite-plugin-compile-time"
 // @ts-ignore
 import _mdx from "@vinxi/plugin-mdx";
 
@@ -48,6 +49,7 @@ export default defineConfig({
     return {
       css: { postcss: "./postcss.config.js" },
       plugins: [
+        compileTime(),
         mdx.withImports({})({
           jsx: true,
           jsxImportSource: "solid-js",
@@ -105,3 +107,6 @@ export default defineConfig({
     };
   },
 });
+
+// solid next:
+// https://github.com/solidjs/solid-docs-next/blob/fc5ec0b803f0ae2a9deb55e1c6fb7c2c60b46c87/app.config.ts

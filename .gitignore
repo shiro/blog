@@ -1,4 +1,4 @@
 node_modules/
 .output/
 .vinxi/
-app.config.timestamp.*
+app.config.timestamp*
