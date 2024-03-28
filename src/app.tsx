@@ -6,6 +6,7 @@ import { config } from "~/config";
 import "~/style/global.style";
 import "./app.css";
 
+const GallerySite = lazy(() => import("~/GallerySite"));
 const Foo = lazy(() => import("~/routes/index"));
 
 const articlesImportMap = import.meta.glob("./articles/*.mdx");
@@ -23,6 +24,7 @@ export default function App() {
           <a class={f} href="/about">
             About
           </a>
+          <a href="/gallery">Gallery</a>
           <a href="/foo">Foo</a>
           <div class="content-container">
             <Suspense>{props.children}</Suspense>
@@ -33,6 +35,7 @@ export default function App() {
       {
         [
           { path: "/", component: () => <Foo /> },
+          { path: "/gallery", component: () => <GallerySite /> },
           {
             path: "/articles/:name",
             component: (p) => {

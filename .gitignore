@@ -2,3 +2,5 @@ node_modules/
 .output/
 .vinxi/
 app.config.timestamp*
+input/
+public/generated/

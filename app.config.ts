@@ -3,7 +3,8 @@ import { nodeTypes } from "@mdx-js/mdx";
 import { linariaVitePlugin } from "./vite/linariaVitePlugin";
 import remarkShikiTwoslash from "remark-shiki-twoslash";
 import rehypeRaw from "rehype-raw";
-import compileTime from "vite-plugin-compile-time"
+import compileTime from "vite-plugin-compile-time";
+// import devtools from "solid-devtools/vite";
 // @ts-ignore
 import _mdx from "@vinxi/plugin-mdx";
 
@@ -22,15 +23,8 @@ export default defineConfig({
     baseURL: process.env.BASE_PATH,
     static: true,
     prerender: {
-      routes: [
-        "/",
-        "/about",
-        "/foo",
-        "/page/1",
-        "/page/2",
-        //
-        // "/articles/2024-03-25-first-article",
-      ],
+      failOnError: true,
+      routes: ["/"],
       crawlLinks: true,
     },
   },
@@ -48,8 +42,25 @@ export default defineConfig({
   vite(options) {
     return {
       css: { postcss: "./postcss.config.js" },
+      server: {
+        warmup: {
+          clientFiles: ["./src/app.tsx"],
+        },
+      },
       plugins: [
         compileTime(),
+        // devtools({
+        //   autoname: true,
+        //   locator: {
+        //     key: "Shift",
+        //     targetIDE: (s: any) => {
+        //       console.log("GOT", s);
+        //       return "http://google.com";
+        //     },
+        //     componentLocation: true,
+        //     jsxLocation: true,
+        //   } as any,
+        // }),
         mdx.withImports({})({
           jsx: true,
           jsxImportSource: "solid-js",

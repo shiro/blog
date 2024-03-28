@@ -11,6 +11,7 @@
   "dependencies": {
     "@babel/plugin-transform-export-namespace-from": "7.24.1",
     "@babel/preset-typescript": "7.24.1",
+    "@kobalte/core": "0.12.6",
     "@linaria/core": "6.1.0",
     "@mdx-js/mdx": "3.0.1",
     "@solidjs/meta": "^0.29.2",
@@ -19,6 +20,8 @@
     "@vinxi/plugin-mdx": "3.7.1",
     "@wyw-in-js/vite": "0.5.0",
     "babel-plugin-transform-remove-imports": "1.7.1",
+    "babel-register-esm": "https://github.com/morganney/babel-register-esm#feat/import-customization-hook",
+    "classnames": "2.5.1",
     "cssnano": "6.1.0",
     "postcss-preset-env": "9.4.0",
     "postcss-pxtorem": "6.1.0",
@@ -35,5 +38,11 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/imagemagick": "0.0.35",
+    "imagemagick": "0.1.3",
+    "solid-devtools": "0.29.3",
+    "ts-node": "10.9.2"
   }
 }

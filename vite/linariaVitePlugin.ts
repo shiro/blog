@@ -11,6 +11,7 @@ interface Options {
 export const linariaVitePlugin = (options: Options = {}): PluginOption => {
     return wyw({
         babelOptions: {
+            configFile: false,
             presets: ["@babel/preset-typescript", "solid"],
             plugins: [
                 [
