@@ -3,4 +3,3 @@ node_modules/
 .vinxi/
 app.config.timestamp*
 input/
-public/generated/
