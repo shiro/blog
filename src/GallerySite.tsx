@@ -49,11 +49,11 @@ const Card: Component<any> = (props: any) => {
       }}
     >
       <Dialog.Root>
-        <Dialog.Trigger>
+        <Dialog.Trigger class="block">
           <img
             class={cn(
               image,
-              "absolute top-0 left-0 h-full w-full object-cover overflow-hidden",
+              "absolute top-0 left-0 h-full w-full object-cover",
             )}
             style={{
               opacity: thumbnailLoaded ? 1 : 0,
@@ -71,7 +71,7 @@ const Card: Component<any> = (props: any) => {
             style={{ background: "rgba(0, 0, 0, 0.5)" }}
           />
           <div class="fixed inset-0 z-50 flex items-center justify-center">
-            <Dialog.Content class="max-w-[90vw] max-h-[90vh] overflow-hidden flex items-center justify-center">
+            <Dialog.Content class="max-w-[90vw] max-h-[90vh] flex items-center justify-center">
               <Dialog.CloseButton>
                 <img
                   class={cn(

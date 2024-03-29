@@ -18,7 +18,6 @@ const Header: Component<Props> = (props) => {
       <a href={`${config.base}/`}>
         <LogoSVG class={cn(Logo, "w-12")} viewBox="0 0 60 94.564" />
       </a>
-
       <a
         class="text-h1 text-colors-text-900a underline"
         href={`${config.base}/`}
