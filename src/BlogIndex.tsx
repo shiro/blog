@@ -17,9 +17,9 @@ const BlogIndex: Component<Props> = (props) => {
   return (
     <main class={cn(_BlogIndex)}>
       <Title>Blog of a programming rabbit</Title>
-      <ul class="mb-8 mt-8 flex flex-col gap-4">
+      <ul class="flex flex-col gap-4">
         <For each={list}>
-          {(item) => (
+          {(item, idx) => (
             <>
               <li class="flex flex-col hover:bg-colors-primary-100 p-4">
                 <a
@@ -35,7 +35,9 @@ const BlogIndex: Component<Props> = (props) => {
                   <span>{item.description}</span>
                 </a>
               </li>
-              <Separator.Root class="border-colors-text-300a" />
+              <Show when={idx() != list.length - 1}>
+                <Separator.Root class="border-colors-text-300a" />
+              </Show>
             </>
           )}
         </For>

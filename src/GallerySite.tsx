@@ -25,13 +25,18 @@ const GallerySite: Component<Props> = (props) => {
 const Card: Component<any> = (props: any) => {
   const { picture } = $destructure(props);
   return (
-    <div class={cn(card, "relative w-full h-0 pt-[100%]")}>
+    <div class={cn(card, "overflow-hidden relative w-full h-0 pt-[100%]")}>
       <Dialog.Root>
         <Dialog.Trigger>
           <img
             class={cn(
+              Image,
               "absolute top-0 left-0 h-full w-full object-cover overflow-hidden",
             )}
+            style={{
+              "--color1": picture.meta.mainColors[0],
+              "--color2": picture.meta.mainColors[1],
+            }}
             src={`${config.base}${picture.thumbnail}`}
             alt="Gallery picture"
           />
@@ -82,6 +87,10 @@ const card = css`
       display: none;
     }
   }
+`;
+
+const Image = css`
+  background: linear-gradient(45deg, var(--color1) 0%, var(--color2) 100%);
 `;
 
 export default GallerySite;

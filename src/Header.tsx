@@ -13,9 +13,11 @@ interface Props {
 const Header: Component<Props> = (props) => {
   return (
     <nav
-      class={cn(_Header, "flex gap-8 pb-4 pt-4 items-center content-container")}
+      class={cn(_Header, "flex gap-8 mb-4 mt-4 items-center content-container")}
     >
-      <LogoSVG class={cn(Logo, "w-12")} viewBox="0 0 60 94.564" />
+      <a href={`${config.base}/`}>
+        <LogoSVG class={cn(Logo, "w-12")} viewBox="0 0 60 94.564" />
+      </a>
 
       <a
         class="text-h1 text-colors-text-900a underline"
