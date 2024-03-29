@@ -2,7 +2,6 @@ import { Dialog } from "@kobalte/core";
 import { css } from "@linaria/core";
 import cn from "classnames";
 import { JSX } from "solid-js";
-import { isServer } from "solid-js/web";
 import { config } from "~/config";
 import { getGalleryPictures } from "~/ssg/getGalleryPictures";
 import { breakpoint, breakpointUntil } from "~/style/commonStyle";
@@ -23,13 +22,22 @@ const GallerySite: Component<Props> = (props) => {
   );
 };
 
+const isImageCached = (url: string) => {
+  const img = new Image();
+  img.src = url;
+  return img.complete;
+};
+
 const Card: Component<any> = (props: any) => {
   const { picture } = $destructure(props);
   let imageLoaded = $signal(false);
   let thumbnailLoaded = $signal(false);
 
+  const thumbnailUrl = `${config.base}${picture.thumbnailUrl}`;
+  const imageUrl = `${config.base}${picture.url}`;
+
   $effect(() => {
-    thumbnailLoaded = true;
+    thumbnailLoaded = isImageCached(thumbnailUrl);
   });
 
   return (
@@ -53,7 +61,7 @@ const Card: Component<any> = (props: any) => {
             onLoad={() => {
               thumbnailLoaded = true;
             }}
-            src={`${config.base}${picture.thumbnail}`}
+            src={thumbnailUrl}
             alt="Gallery picture"
           />
         </Dialog.Trigger>
@@ -65,23 +73,20 @@ const Card: Component<any> = (props: any) => {
           <div class="fixed inset-0 z-50 flex items-center justify-center">
             <Dialog.Content class="max-w-[90vw] max-h-[90vh] overflow-hidden flex items-center justify-center">
               <Dialog.CloseButton>
-                <Show
-                  when={imageLoaded}
-                  fallback={
-                    <div class="overflow-hidden max-w-[90vw] max-h-[90vh] object-contain" />
-                  }
-                >
-                  <img
-                    class={cn(
-                      "overflow-hidden max-w-[90vw] max-h-[90vh] object-contain",
-                    )}
-                    src={`${config.base}${picture.picture}`}
-                    alt="Gallery picture"
-                    onLoad={() => {
-                      imageLoaded = true;
-                    }}
-                  />
-                </Show>
+                <img
+                  class={cn(
+                    image,
+                    "overflow-hidden max-w-[90vw] max-h-[90vh] object-contain",
+                  )}
+                  src={imageUrl}
+                  alt="Gallery picture"
+                  style={{
+                    opacity: imageLoaded ? 1 : 0,
+                  }}
+                  onLoad={() => {
+                    imageLoaded = true;
+                  }}
+                />
               </Dialog.CloseButton>
             </Dialog.Content>
           </div>
@@ -118,7 +123,7 @@ const card = css`
 `;
 
 const image = css`
-  transition: opacity 2s ease-in-out;
+  transition: opacity 200ms ease-in-out;
   text-indent: 100%;
   white-space: nowrap;
   overflow: hidden;

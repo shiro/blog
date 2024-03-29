@@ -1,5 +1,7 @@
 import { defineConfig } from "@solidjs/start/config";
+import { PluginOption } from "vite";
 import { nodeTypes } from "@mdx-js/mdx";
+import path, { join } from "node:path";
 import { linariaVitePlugin } from "./vite/linariaVitePlugin";
 import remarkShikiTwoslash from "remark-shiki-twoslash";
 import rehypeRaw from "rehype-raw";
@@ -13,10 +15,57 @@ import _mdx from "@vinxi/plugin-mdx";
 
 const { default: mdx } = _mdx;
 
+const root = process.cwd();
+
 const babelPluginLabels = [
   "solid-labels/babel",
   { dev: process.env.NODE_ENV == "development" },
 ];
+
+const SSRMapPlugin = (): PluginOption => {
+  // let config: UserConfig;
+  let config: any;
+  return {
+    name: "SSRManifest",
+    enforce: "post",
+    config(c) {
+      config = c;
+    },
+    transform(code, id) {
+      if (!id.includes("routeMap.tsx")) return;
+
+      const splitIdx = code.indexOf("export");
+      const importCode = code.slice(0, splitIdx);
+      let exportCode = code.slice(splitIdx);
+      const matches = importCode.matchAll(/import ([^ ]+) from .(.*).;/g)!;
+
+      const aliases = ((config.resolve?.alias as any[]) ?? []).map((a) => ({
+        ...a,
+        replacement: path.relative(root, a.replacement),
+      }));
+
+      const importMap = [...matches].reduce(
+        (acc, [_, importName, importPath]) => {
+          for (const { find, replacement } of aliases) {
+            importPath = importPath.replace(find, replacement);
+          }
+          importPath += ".tsx";
+          return { ...acc, [importName]: importPath };
+        },
+        {},
+      );
+
+      for (const [importName, importPath] of Object.entries(importMap)) {
+        exportCode = exportCode.replaceAll(
+          new RegExp(`${importName}(?=[^a-zA-Z0-9])`, "g"),
+          `"${importPath}"`,
+        );
+      }
+
+      return { code: exportCode };
+    },
+  };
+};
 
 export default defineConfig({
   ssr: true,
@@ -46,6 +95,7 @@ export default defineConfig({
     return {
       css: { postcss: "./postcss.config.js" },
       server: {
+        port: 3000,
         warmup: {
           clientFiles: ["./src/app.tsx"],
         },
@@ -53,6 +103,7 @@ export default defineConfig({
       plugins: [
         compileTime(),
         solidSvg(),
+        SSRMapPlugin(),
         // devtools({
         //   autoname: true,
         //   locator: {

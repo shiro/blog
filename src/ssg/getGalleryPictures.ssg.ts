@@ -21,8 +21,8 @@ export const getGalleryPicturesSSG = () => {
         );
 
         return {
-          picture: `${prefix}/${x}`,
-          thumbnail: `${prefix}/${name}.thumbnail${ext}`,
+          url: `${prefix}/${x}`,
+          thumbnailUrl: `${prefix}/${name}.thumbnail${ext}`,
           meta,
         };
       })
