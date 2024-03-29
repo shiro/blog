@@ -3,7 +3,7 @@ import { css } from "@linaria/core";
 import cn from "classnames";
 import { JSX } from "solid-js";
 import { getGalleryPictures } from "~/ssg/getGalleryPictures";
-import { breakpointUntil } from "~/style/commonStyle";
+import { breakpoint, breakpointUntil } from "~/style/commonStyle";
 
 interface Props {
   children?: JSX.Element;
@@ -24,7 +24,7 @@ const GallerySite: Component<Props> = (props) => {
 const Card: Component<any> = (props: any) => {
   const { picture } = $destructure(props);
   return (
-    <div class="relative w-full h-0 pt-[100%]">
+    <div class={cn(card, "relative w-full h-0 pt-[100%]")}>
       <Dialog.Root>
         <Dialog.Trigger>
           <img
@@ -45,7 +45,7 @@ const Card: Component<any> = (props: any) => {
               <Dialog.CloseButton>
                 <img
                   class={cn(
-                    "overflow-hidden max-w-[90vw] max-h-[90vh] bject-contain",
+                    "overflow-hidden max-w-[90vw] max-h-[90vh] object-contain",
                   )}
                   src={picture.picture}
                   alt="Gallery picture"
@@ -68,6 +68,19 @@ const Grid = css`
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
   grid-gap: 0;
+`;
+
+const card = css`
+  ${breakpoint("s")} {
+    &:nth-child(1n + 18) + div {
+      display: none;
+    }
+  }
+  ${breakpoint("m")} {
+    &:nth-child(1n + 18) + div {
+      display: none;
+    }
+  }
 `;
 
 export default GallerySite;

@@ -3,8 +3,10 @@ import { MetaProvider, Title } from "@solidjs/meta";
 import { RouteDefinition, Router } from "@solidjs/router";
 import { Suspense, lazy } from "solid-js";
 import { config } from "~/config";
+
 import "~/style/global.style";
 import "./app.css";
+import Header from "~/Header";
 
 const GallerySite = lazy(() => import("~/GallerySite"));
 const Foo = lazy(() => import("~/routes/index"));
@@ -20,12 +22,7 @@ export default function App() {
       root={(props) => (
         <MetaProvider>
           <Title>SolidStart - Basic</Title>
-          <a href="/">Index</a>
-          <a class={f} href="/about">
-            About
-          </a>
-          <a href="/gallery">Gallery</a>
-          <a href="/foo">Foo</a>
+          <Header />
           <div class="content-container">
             <Suspense>{props.children}</Suspense>
           </div>

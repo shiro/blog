@@ -4,6 +4,7 @@ import { linariaVitePlugin } from "./vite/linariaVitePlugin";
 import remarkShikiTwoslash from "remark-shiki-twoslash";
 import rehypeRaw from "rehype-raw";
 import compileTime from "vite-plugin-compile-time";
+import solidSvg from "vite-plugin-solid-svg";
 // import devtools from "solid-devtools/vite";
 // @ts-ignore
 import _mdx from "@vinxi/plugin-mdx";
@@ -49,6 +50,7 @@ export default defineConfig({
       },
       plugins: [
         compileTime(),
+        solidSvg(),
         // devtools({
         //   autoname: true,
         //   locator: {
