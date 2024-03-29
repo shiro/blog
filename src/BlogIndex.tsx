@@ -30,8 +30,9 @@ const BlogIndex: Component<Props> = (props) => {
                     {item.title}
                   </span>
                   <span class="textbody text-colors-text-300a !no-underline">
-                    [1.1.2024] by shiro
+                    {item.date} by shiro
                   </span>
+                  <span>{item.description}</span>
                 </a>
               </li>
               <Separator.Root class="border-colors-text-300a" />

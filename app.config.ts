@@ -3,6 +3,8 @@ import { nodeTypes } from "@mdx-js/mdx";
 import { linariaVitePlugin } from "./vite/linariaVitePlugin";
 import remarkShikiTwoslash from "remark-shiki-twoslash";
 import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
+import remarkFrontmatter from "remark-frontmatter";
 import compileTime from "vite-plugin-compile-time";
 import solidSvg from "vite-plugin-solid-svg";
 // import devtools from "solid-devtools/vite";
@@ -72,8 +74,8 @@ export default defineConfig({
             [rehypeRaw, { passThrough: nodeTypes }],
           ],
           remarkPlugins: [
-            // remarkFrontmatter,
-            // remarkMdxFrontmatter,
+            remarkFrontmatter,
+            remarkGfm,
             [
               (remarkShikiTwoslash as any).default,
               {
