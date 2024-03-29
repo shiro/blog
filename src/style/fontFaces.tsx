@@ -1,8 +1,10 @@
 type FontLoader = (font: string, format: string) => string;
 
 const japaneseCodeRange = (show: boolean) =>
-    show ? `unicode-range: U+3000-30FF , U+FF00-FFEF , U+4E00-9FAF ;` : "";
+  show ? `unicode-range: U+3000-30FF , U+FF00-FFEF , U+4E00-9FAF ;` : "";
 const nameSuffix = (isFull: boolean) => (isFull ? "" : " JP Only");
+
+const interPath = `fonts/inter-3.19-roman/Inter`;
 
 // language=SCSS
 const notoFragments = (isFull: boolean, fontLoader?: FontLoader) => `
@@ -13,20 +15,20 @@ const notoFragments = (isFull: boolean, fontLoader?: FontLoader) => `
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url('/assets/resources/static/fonts/noto-sans-jp-v40-japanese-regular.eot'); /* IE9 Compat Modes */
+    src: url('${interPath}/noto-sans-jp-v40-japanese-regular.eot'); /* IE9 Compat Modes */
     src: local('Noto Sans Japanese Regular'),
     local('NotoSansJapanese-Regular'),
-    url('/assets/resources/static/fonts/noto-sans-jp-v40-japanese-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-    url('/assets/resources/static/fonts/noto-sans-jp-v40-japanese-regular.woff2') format('woff2'), /* Super Modern Browsers */
-    url('/assets/resources/static/fonts/noto-sans-jp-v40-japanese-regular.woff') format('woff'), /* Modern Browsers */
-    url('/assets/resources/static/fonts/noto-sans-jp-v40-japanese-regular.svg#NotoSansJP') format('svg'); /* Legacy iOS */
+    url('${interPath}/noto-sans-jp-v40-japanese-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('${interPath}/noto-sans-jp-v40-japanese-regular.woff2') format('woff2'), /* Super Modern Browsers */
+    url('${interPath}/noto-sans-jp-v40-japanese-regular.woff') format('woff'), /* Modern Browsers */
+    url('${interPath}/noto-sans-jp-v40-japanese-regular.svg#NotoSansJP') format('svg'); /* Legacy iOS */
     ${
-        fontLoader != null
-            ? `src: ${fontLoader(
-                  "/assets/resources/static/fonts/noto-sans-jp-v40-japanese-regular.woff2",
-                  "woff2"
-              )};`
-            : ``
+      fontLoader != null
+        ? `src: ${fontLoader(
+            `${interPath}/noto-sans-jp-v40-japanese-regular.woff2`,
+            "woff2",
+          )};`
+        : ``
     }
   }
 
@@ -37,25 +39,23 @@ const notoFragments = (isFull: boolean, fontLoader?: FontLoader) => `
     font-style: normal;
     font-weight: 700;
     font-display: swap;
-    src: url('/assets/resources/static/fonts/noto-sans-jp-v40-japanese-700.eot'); /* IE9 Compat Modes */
+    src: url('${interPath}/noto-sans-jp-v40-japanese-700.eot'); /* IE9 Compat Modes */
     src: local('Noto Sans Japanese Medium'),
     local('NotoSansJapanese-Medium'),
-    url('/assets/resources/static/fonts/noto-sans-jp-v40-japanese-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-    url('/assets/resources/static/fonts/noto-sans-jp-v40-japanese-700.woff2') format('woff2'), /* Super Modern Browsers */
-    url('/assets/resources/static/fonts/noto-sans-jp-v40-japanese-700.woff') format('woff'), /* Modern Browsers */
-    url('/assets/resources/static/fonts/noto-sans-jp-v40-japanese-700.svg#NotoSansJP') format('svg'); /* Legacy iOS */
+    url('${interPath}/noto-sans-jp-v40-japanese-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('${interPath}/noto-sans-jp-v40-japanese-700.woff2') format('woff2'), /* Super Modern Browsers */
+    url('${interPath}/noto-sans-jp-v40-japanese-700.woff') format('woff'), /* Modern Browsers */
+    url('${interPath}/noto-sans-jp-v40-japanese-700.svg#NotoSansJP') format('svg'); /* Legacy iOS */
     ${
-        fontLoader != null
-            ? `src: ${fontLoader(
-                  "/assets/resources/static/fonts/noto-sans-jp-v40-japanese-700.woff2",
-                  "woff2"
-              )};`
-            : ``
+      fontLoader != null
+        ? `src: ${fontLoader(
+            `${interPath}/noto-sans-jp-v40-japanese-700.woff2`,
+            "woff2",
+          )};`
+        : ``
     }
   }
 `;
-
-const interPath = `/assets/resources/static/fonts/inter-3.19-roman/Inter`;
 
 // language=SCSS
 export const fontFaceFragmentNativeInter = `
@@ -78,9 +78,9 @@ export const fontFaceFragment = (fontLoader?: FontLoader) => `
     url('${interPath}-Regular-Roman.woff2') format('woff2'), /* Super Modern Browsers */
     url('${interPath}-Regular-Roman.woff') format('woff'), /* Modern Browsers */
     ${
-        fontLoader != null
-            ? `src: ${fontLoader(`${interPath}-Regular-Roman.woff2`, "woff2")};`
-            : ``
+      fontLoader != null
+        ? `src: ${fontLoader(`${interPath}-Regular-Roman.woff2`, "woff2")};`
+        : ``
     }
   }
 
@@ -93,9 +93,9 @@ export const fontFaceFragment = (fontLoader?: FontLoader) => `
     url('${interPath}-Italic-Roman.woff2') format('woff2'), /* Super Modern Browsers */
     url('${interPath}-Italic-Roman.woff') format('woff'), /* Modern Browsers */
     ${
-        fontLoader != null
-            ? `src: ${fontLoader(`${interPath}-Italic-Roman.woff2`, "woff2")};`
-            : ``
+      fontLoader != null
+        ? `src: ${fontLoader(`${interPath}-Italic-Roman.woff2`, "woff2")};`
+        : ``
     }
   }
 
@@ -109,12 +109,9 @@ export const fontFaceFragment = (fontLoader?: FontLoader) => `
     url('${interPath}-SemiBold-Roman.woff2') format('woff2'), /* Super Modern Browsers */
     url('${interPath}-SemiBold-Roman.woff') format('woff'), /* Modern Browsers */
     ${
-        fontLoader != null
-            ? `src: ${fontLoader(
-                  `${interPath}-SemiBold-Roman.woff2`,
-                  "woff2"
-              )};`
-            : ``
+      fontLoader != null
+        ? `src: ${fontLoader(`${interPath}-SemiBold-Roman.woff2`, "woff2")};`
+        : ``
     }
   }
 
@@ -127,12 +124,12 @@ export const fontFaceFragment = (fontLoader?: FontLoader) => `
     url('${interPath}-SemiBoldItalic-Roman.woff2') format('woff2'), /* Super Modern Browsers */
     url('${interPath}-SemiBoldItalic-Roman.woff') format('woff'), /* Modern Browsers */
     ${
-        fontLoader != null
-            ? `src: ${fontLoader(
-                  `${interPath}-SemiBoldItalic-Roman.woff2`,
-                  "woff2"
-              )};`
-            : ``
+      fontLoader != null
+        ? `src: ${fontLoader(
+            `${interPath}-SemiBoldItalic-Roman.woff2`,
+            "woff2",
+          )};`
+        : ``
     }
   }
 `;

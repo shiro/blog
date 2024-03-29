@@ -1,7 +1,0 @@
-.increment:focus {
-  border: 2px solid #335d92;
-}
-
-.increment:active {
-  background-color: rgba(68, 107, 158, 0.2);
-}
