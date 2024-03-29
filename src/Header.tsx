@@ -1,9 +1,10 @@
-import { JSX, Component } from "solid-js";
 import { css } from "@linaria/core";
 import cn from "classnames";
-import LogoSVG from "../assets/logo.svg?component-solid";
+import { Component, JSX } from "solid-js";
+import { config } from "~/config";
 import { color, heading1Text } from "~/style/commonStyle";
 import { heading1TextHeight } from "~/style/textStylesTS";
+import LogoSVG from "../assets/logo.svg?component-solid";
 
 interface Props {
   children?: JSX.Element;
@@ -16,13 +17,16 @@ const Header: Component<Props> = (props) => {
     >
       <LogoSVG class={cn(Logo, "w-12")} viewBox="0 0 60 94.564" />
 
-      <a class="text-h1 text-colors-text-900a underline" href="/">
+      <a
+        class="text-h1 text-colors-text-900a underline"
+        href={`${config.base}/`}
+      >
         Blog
       </a>
-      <a class={foo} href="/gallery">
+      <a class={foo} href={`${config.base}/gallery`}>
         Gallery
       </a>
-      <a class="text-h1 text-colors-text-300a" href="/about">
+      <a class="text-h1 text-colors-text-300a" href={`${config.base}/about`}>
         About
       </a>
     </nav>

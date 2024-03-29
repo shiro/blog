@@ -1,15 +1,14 @@
-import { css } from "@linaria/core";
 import { MetaProvider, Title } from "@solidjs/meta";
 import { RouteDefinition, Router } from "@solidjs/router";
 import { Suspense, lazy } from "solid-js";
 import { config } from "~/config";
 
+import Header from "~/Header";
 import "~/style/global.style";
 import "./app.css";
-import Header from "~/Header";
 
+const BlogIndex = lazy(() => import("~/BlogIndex"));
 const GallerySite = lazy(() => import("~/GallerySite"));
-const Foo = lazy(() => import("~/routes/index"));
 
 const articlesImportMap = import.meta.glob("./articles/*.mdx");
 const getArticleComponent = (name: string) =>
@@ -31,13 +30,16 @@ export default function App() {
     >
       {
         [
-          { path: "/", component: () => <Foo /> },
+          { path: "/", component: () => <BlogIndex /> },
           { path: "/gallery", component: () => <GallerySite /> },
           {
             path: "/articles/:name",
             component: (p) => {
               // router bug: 'name' not in 'p', update when this is fixed
-              const name = p.location.pathname.replace("/articles/", "");
+              const name = p.location.pathname.replace(
+                `${config.base}/articles/`,
+                "",
+              );
               const Article = lazy(getArticleComponent(name) as any);
               return (
                 <Article
@@ -61,7 +63,3 @@ export default function App() {
     </Router>
   );
 }
-
-const f = css`
-  background: red;
-`;

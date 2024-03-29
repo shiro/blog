@@ -1,10 +1,10 @@
-import { JSX, Component } from "solid-js";
+import { Separator } from "@kobalte/core";
 import { css } from "@linaria/core";
-import cn from "classnames";
 import { Title } from "@solidjs/meta";
-import { For, NoHydration } from "solid-js/web";
-import Text from "~/atoms/Text.md";
-import Counter from "~/components/Counter";
+import cn from "classnames";
+import { Component, JSX } from "solid-js";
+import { For } from "solid-js/web";
+import { config } from "~/config";
 import { getArticles } from "~/ssg/getArticles";
 
 const list = getArticles();
@@ -16,13 +16,26 @@ interface Props {
 const BlogIndex: Component<Props> = (props) => {
   return (
     <main class={cn(_BlogIndex)}>
-      <Title>Hello World</Title>
-      <ul class="mb-8 text-colors-secondary-800">
+      <Title>Blog of a programming rabbit</Title>
+      <ul class="mb-8 mt-8 flex flex-col gap-4">
         <For each={list}>
           {(item) => (
-            <li>
-              <a href={item.url}>{item.title}</a>
-            </li>
+            <>
+              <li class="flex flex-col hover:bg-colors-primary-100 p-4">
+                <a
+                  href={`${config.base}${item.url}`}
+                  class="flex flex-col no-underline"
+                >
+                  <span class="text-h2 text-colors-primary-800">
+                    {item.title}
+                  </span>
+                  <span class="textbody text-colors-text-300a !no-underline">
+                    [1.1.2024] by shiro
+                  </span>
+                </a>
+              </li>
+              <Separator.Root class="border-colors-text-300a" />
+            </>
           )}
         </For>
       </ul>

@@ -64,9 +64,13 @@ module.exports = {
       transparent: "transparent",
     },
     fontSize: {
+      small: [`${smallText.size}px`, `${smallText.lineHeight}px`],
+      body: [`${bodyText.size}px`, `${bodyText.lineHeight}px`],
+      big: [`${bigText.size}px`, `${bigText.lineHeight}px`],
       h1: [`${heading1Text.size}px`, `${heading1Text.lineHeight}px`],
       h2: [`${heading2Text.size}px`, `${heading2Text.lineHeight}px`],
       h3: [`${heading3Text.size}px`, `${heading3Text.lineHeight}px`],
+      large: [`${largeText.size}px`, `${largeText.lineHeight}px`],
     },
     screens: {
       s: "600px",

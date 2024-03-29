@@ -2,6 +2,7 @@ import { Dialog } from "@kobalte/core";
 import { css } from "@linaria/core";
 import cn from "classnames";
 import { JSX } from "solid-js";
+import { config } from "~/config";
 import { getGalleryPictures } from "~/ssg/getGalleryPictures";
 import { breakpoint, breakpointUntil } from "~/style/commonStyle";
 
@@ -31,7 +32,7 @@ const Card: Component<any> = (props: any) => {
             class={cn(
               "absolute top-0 left-0 h-full w-full object-cover overflow-hidden",
             )}
-            src={picture.thumbnail}
+            src={`${config.base}${picture.thumbnail}`}
             alt="Gallery picture"
           />
         </Dialog.Trigger>
@@ -47,7 +48,7 @@ const Card: Component<any> = (props: any) => {
                   class={cn(
                     "overflow-hidden max-w-[90vw] max-h-[90vh] object-contain",
                   )}
-                  src={picture.picture}
+                  src={`${config.base}${picture.picture}`}
                   alt="Gallery picture"
                 />
               </Dialog.CloseButton>
