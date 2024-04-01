@@ -1,4 +1,4 @@
-import AboutSite from "~/AboutSite";
+import AboutSite from "~/about/AboutSite";
 import App from "~/app";
 import BlogIndex from "~/BlogIndex";
 import GallerySite from "~/GallerySite";

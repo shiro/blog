@@ -64,6 +64,7 @@ module.exports = {
       transparent: "transparent",
     },
     fontSize: {
+      sub: [`${subText.size}px`, `${subText.lineHeight}px`],
       small: [`${smallText.size}px`, `${smallText.lineHeight}px`],
       body: [`${bodyText.size}px`, `${bodyText.lineHeight}px`],
       big: [`${bigText.size}px`, `${bigText.lineHeight}px`],
@@ -73,6 +74,7 @@ module.exports = {
       large: [`${largeText.size}px`, `${largeText.lineHeight}px`],
     },
     screens: {
+      xs: "0px",
       s: "600px",
       m: "960px",
       l: "1280px",

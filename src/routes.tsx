@@ -11,7 +11,7 @@ const getArticleComponent = (name: string) =>
 export const routes: RouteDefinition[] = [
   { path: "/", component: () => <BlogIndex /> },
   { path: "/gallery", component: lazy(() => import("~/GallerySite")) },
-  { path: "/about", component: lazy(() => import("~/AboutSite")) },
+  { path: "/about", component: lazy(() => import("~/about/AboutSite")) },
   {
     path: "/articles/:name",
     component: (p) => {

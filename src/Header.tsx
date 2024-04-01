@@ -1,16 +1,28 @@
 import { css } from "@linaria/core";
 import cn from "classnames";
-import { Component, JSX } from "solid-js";
+import { Component, JSX, createMemo } from "solid-js";
 import { config } from "~/config";
 import { color, heading1Text } from "~/style/commonStyle";
 import { heading1TextHeight } from "~/style/textStylesTS";
 import LogoSVG from "../assets/logo.svg?component-solid";
+import { useLocation } from "@solidjs/router";
 
 interface Props {
   children?: JSX.Element;
 }
 
 const Header: Component<Props> = (props) => {
+  const location = useLocation();
+  console.log(location.pathname);
+
+  const activeSection = $derefMemo(
+    createMemo(() => {
+      if (location.pathname.startsWith("/gallery")) return "gallery";
+      if (location.pathname.startsWith("/about")) return "about";
+      return "blog";
+    })
+  );
+
   return (
     <nav
       class={cn(
@@ -20,18 +32,29 @@ const Header: Component<Props> = (props) => {
       <a href={`${config.base}/`}>
         <LogoSVG class={cn(Logo, "w-12")} viewBox="0 0 60 94.564" />
       </a>
-      <a
-        class="text-h1 text-colors-text-900a underline"
-        href={`${config.base}/`}>
+      <NavLink href={`${config.base}/`} active={activeSection == "blog"}>
         Blog
-      </a>
-      <a class={foo} href={`${config.base}/gallery`}>
+      </NavLink>
+      <NavLink
+        href={`${config.base}/gallery`}
+        active={activeSection == "gallery"}>
         Gallery
-      </a>
-      <a class="text-h1 text-colors-text-300a" href={`${config.base}/about`}>
+      </NavLink>
+      <NavLink href={`${config.base}/about`} active={activeSection == "about"}>
         About
-      </a>
+      </NavLink>
     </nav>
+  );
+};
+
+const NavLink: Component<any> = (props: any) => {
+  const { children, href, active } = $destructure(props);
+  return (
+    <a
+      class={cn("text-h1", { "text-colors-text-900a underline": active })}
+      href={href}>
+      {children}
+    </a>
   );
 };
 
@@ -41,9 +64,6 @@ const Logo = css`
   & path {
     fill: ${color("colors/text-300a")} !important;
   }
-`;
-const foo = css`
-  ${heading1Text};
 `;
 
 export default Header;

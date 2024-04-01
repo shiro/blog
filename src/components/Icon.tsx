@@ -4,20 +4,20 @@ import { Component } from "solid-js";
 import SVG from "~/components/SVG";
 
 interface Props {
-  className?: string;
+  class?: string;
   icon: string;
   description?: string;
   onClick?: (ev: any) => void;
 }
 
 const Icon: Component<Props> = (props) => {
-  const { icon, description, className, ...rest } = $destructure(props);
+  const { icon, description, class: $class, ...rest } = $destructure(props);
 
   return (
     <SVG
-      class={cn(_Icon, className)}
       src={`/icons/icon-${icon}.svg`}
       // alt={description}
+      class={cn(_Icon, $class)}
       {...(rest as any)}
     />
   );
