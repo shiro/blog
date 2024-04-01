@@ -42,18 +42,17 @@ const Card: Component<any> = (props: any) => {
 
   return (
     <div
-      class={cn(card, "overflow-hidden relative w-full h-0 pt-[100%]")}
+      class={cn(card, "relative h-0 w-full overflow-hidden pt-[100%]")}
       style={{
         "--color1": picture.meta.mainColors[0],
         "--color2": picture.meta.mainColors[1],
-      }}
-    >
+      }}>
       <Dialog.Root>
         <Dialog.Trigger class="block">
           <img
             class={cn(
               image,
-              "absolute top-0 left-0 h-full w-full object-cover",
+              "absolute left-0 top-0 h-full w-full object-cover"
             )}
             style={{
               opacity: thumbnailLoaded ? 1 : 0,
@@ -71,12 +70,12 @@ const Card: Component<any> = (props: any) => {
             style={{ background: "rgba(0, 0, 0, 0.5)" }}
           />
           <div class="fixed inset-0 z-50 flex items-center justify-center">
-            <Dialog.Content class="max-w-[90vw] max-h-[90vh] flex items-center justify-center">
+            <Dialog.Content class="flex max-h-[90vh] max-w-[90vw] items-center justify-center">
               <Dialog.CloseButton>
                 <img
                   class={cn(
                     image,
-                    "overflow-hidden max-w-[90vw] max-h-[90vh] object-contain",
+                    "max-h-[90vh]  max-w-[90vw] overflow-hidden object-contain"
                   )}
                   src={imageUrl}
                   alt="Gallery picture"

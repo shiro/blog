@@ -21,11 +21,10 @@ const BlogIndex: Component<Props> = (props) => {
         <For each={list}>
           {(item, idx) => (
             <>
-              <li class="flex flex-col hover:bg-colors-primary-100 p-4">
+              <li class="flex flex-col p-4 hover:bg-colors-primary-100">
                 <a
                   href={`${config.base}${item.url}`}
-                  class="flex flex-col no-underline"
-                >
+                  class="flex flex-col no-underline">
                   <span class="text-h2 text-colors-primary-800">
                     {item.title}
                   </span>
