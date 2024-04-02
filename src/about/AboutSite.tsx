@@ -1,6 +1,8 @@
 import { css } from "@linaria/core";
 import cn from "classnames";
 import { Component, JSX } from "solid-js";
+import LabeledBox from "~/about/LabeledBox";
+import SnakeGame from "~/about/SnakeGame";
 import StatsBar from "~/about/StatsBar";
 import StatusButton from "~/about/StatusButton";
 import Icon from "~/components/Icon";
@@ -44,28 +46,25 @@ const AboutSite: Component<Props> = (props) => {
         class="flex flex-col gap-2 s:flex-row"
         style={{ "grid-area": "title" }}>
         <div class="text-nowrap text-h3">Level 21</div>
-        <div class="xs:text-h3 text-nowrap text-h3">
+        <div class="text-nowrap text-h3 xs:text-h3">
           Legendary Software Engineer
         </div>
       </div>
-      <LabeledBox
-        label="general"
-        class="flex flex-col justify-stretch"
-        style={{ "grid-area": "general" }}>
-        <ul class="flex flex-col gap-1">
-          <li class="flex gap-2">
+      <LabeledBox label="general" style={{ "grid-area": "general" }}>
+        <ul class="flex min-h-full flex-col justify-center gap-1">
+          <li class="flex gap-2 text-nowrap xs:text-h3 s:text-body">
             <IconText icon="github" />
             <a href="https://github.com/shiro">github.com/shiro</a>
           </li>
-          <li class="flex gap-2">
+          <li class="flex gap-2 text-nowrap xs:text-h3 s:text-body">
             <IconText icon="email" />
             <a href="https://github.com/shiro">matic@uagi.io</a>
           </li>
-          <li class="flex gap-2">
+          <li class="flex gap-2 text-nowrap xs:text-h3 s:text-body">
             <IconText icon="globe" />
             <a href="https://github.com/shiro">usagi.io</a>
           </li>
-          <li class="flex gap-2">
+          <li class="flex gap-2 text-nowrap xs:text-h3 s:text-body">
             <IconText icon="house" />
             <span>Tokyo</span>
           </li>
@@ -85,20 +84,10 @@ const AboutSite: Component<Props> = (props) => {
           along the way.
         </p>
       </LabeledBox>
-    </div>
-  );
-};
-
-const LabeledBox: Component<any> = (props: any) => {
-  const { style, children, label } = $destructure(props);
-  return (
-    <div class="relative mt-[14px]" style={style}>
-      <span class="absolute left-2 top-[-14px] bg-colors-special-bg pl-2 pr-2 text-colors-text-300a">
-        {label}
-      </span>
-      <div class="min-h-full rounded-md border-2 border-colors-text-100a p-8">
-        {children}
-      </div>
+      <SnakeGame
+        style={{ "grid-area": "snake" }}
+        class="justify-self-stretch"
+      />
     </div>
   );
 };
@@ -110,24 +99,27 @@ const _AboutSite = css`
     "picture title    title emtpy" auto
     "picture general  about about" auto
     "stats   general  about about" auto
+    "snake   snake  snake snake" auto
     / auto auto auto auto;
   ${breakpointUntil("m")} {
     grid-template:
-      "picture name    " auto
-      "picture title   " auto
-      "picture general " auto
-      "stats   general " auto
-      "about   about   " auto
-      / auto 1fr auto auto;
+      "picture name    name " auto
+      "picture title   title" auto
+      "picture general snake" auto
+      "stats   general snake" auto
+      "about   about   about" auto
+      / auto auto 1fr;
   }
   ${breakpointUntil("s")} {
+    justify-items: stretch;
     grid-template:
       "name name" auto
       "picture title" auto
       "picture general" auto
       "stats   general" auto
       "about   about  " auto
-      / auto 1fr auto auto;
+      "snake   snake  " auto
+      / auto 1fr;
   }
 `;
 

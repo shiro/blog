@@ -1586,13 +1586,13 @@
   resolved "https://registry.npmjs.org/@sindresorhus/merge-streams/-/merge-streams-2.3.0.tgz#719df7fb41766bc143369eaa0dd56d8dc87c9958"
   integrity sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==
 
-"@solid-devtools/debugger@^0.23.3":
-  version "0.23.3"
-  resolved "https://registry.npmjs.org/@solid-devtools/debugger/-/debugger-0.23.3.tgz#f56fa5952460db45a146673eda764b349474381d"
-  integrity sha512-VrgswTjb2FyHxQJp5y5u7OaJ2k1R14LYlAOX/1rDZrGHWKdGYCaWHGzxI7C8AExtMP+LS+WOxy0uXMPQpoAD2g==
+"@solid-devtools/debugger@^0.23.4":
+  version "0.23.4"
+  resolved "https://registry.npmjs.org/@solid-devtools/debugger/-/debugger-0.23.4.tgz#07b5e6c9cb08ef961c12efd1e5924a25cdf78d62"
+  integrity sha512-EfTB1Eo313wztQYGJ4Ec/wE70Ay2d603VCXfT3RlyqO5QfLrQGRHX5NXC07hJpQTJJJ3tbNgzO7+ZKo76MM5uA==
   dependencies:
     "@nothing-but/utils" "~0.12.0"
-    "@solid-devtools/shared" "^0.13.1"
+    "@solid-devtools/shared" "^0.13.2"
     "@solid-primitives/bounds" "^0.0.118"
     "@solid-primitives/cursor" "^0.0.112"
     "@solid-primitives/event-bus" "^1.0.8"
@@ -1604,10 +1604,10 @@
     "@solid-primitives/static-store" "^0.0.5"
     "@solid-primitives/utils" "^6.2.1"
 
-"@solid-devtools/shared@^0.13.1":
-  version "0.13.1"
-  resolved "https://registry.npmjs.org/@solid-devtools/shared/-/shared-0.13.1.tgz#f672ec4c96d77b6f91e9b0e598dd3ae3abf4a6fb"
-  integrity sha512-qaAcZF47FFr4alVQSy5ooLy7mMt4MMDxSHw52heY1oCut8yfXDrnLcYDONabfoin2WYIwsQpjYhryHgjtB0uDg==
+"@solid-devtools/shared@^0.13.2":
+  version "0.13.2"
+  resolved "https://registry.npmjs.org/@solid-devtools/shared/-/shared-0.13.2.tgz#05cebc0c8341ce61a1f2049cf5cb198d4eb00429"
+  integrity sha512-Y4uaC4EfTVwBR537MZwfaY/eiWAh+hW4mbtnwNuUw/LFmitHSkQhNQTUlLQv/S0chtwrYWQBxvXos1dC7e8R9g==
   dependencies:
     "@solid-primitives/event-bus" "^1.0.8"
     "@solid-primitives/event-listener" "^2.3.0"
@@ -6646,16 +6646,16 @@ smob@^1.0.0:
   resolved "https://registry.npmjs.org/smob/-/smob-1.4.1.tgz#66270e7df6a7527664816c5b577a23f17ba6f5b5"
   integrity sha512-9LK+E7Hv5R9u4g4C3p+jjLstaLe11MDsL21UpYaCNmapvMkYhqCV4A/f/3gyH8QjMyh6l68q9xC85vihY9ahMQ==
 
-solid-devtools@0.29.3:
-  version "0.29.3"
-  resolved "https://registry.npmjs.org/solid-devtools/-/solid-devtools-0.29.3.tgz#62c563ab5c340d02168b63017c204f5632aad537"
-  integrity sha512-9j3VxVbEoC54ML22gAMytR8ZS1nk9xKatsWziKSkI4c/Bcyh4sxQBGESHuXSLs9xaxpyGVTmFl3hknoxEpKzlA==
+solid-devtools@0.30.0:
+  version "0.30.0"
+  resolved "https://registry.npmjs.org/solid-devtools/-/solid-devtools-0.30.0.tgz#a04869a81952bdd615e85910e0862371c5082050"
+  integrity sha512-icQr7jEIZ0rgJcIAJOaIIKOzq+BDx9G1Ok+mPJBaxI0RPkeea3xJ7CqrKNQT8oYB5DWXgdu1r8D2SA29+bxGSw==
   dependencies:
     "@babel/core" "^7.23.3"
     "@babel/plugin-syntax-typescript" "^7.23.3"
     "@babel/types" "^7.23.3"
-    "@solid-devtools/debugger" "^0.23.3"
-    "@solid-devtools/shared" "^0.13.1"
+    "@solid-devtools/debugger" "^0.23.4"
+    "@solid-devtools/shared" "^0.13.2"
 
 solid-js@^1.8.16:
   version "1.8.16"
