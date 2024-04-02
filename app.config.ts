@@ -52,13 +52,13 @@ const SSRMapPlugin = (): PluginOption => {
           importPath += ".tsx";
           return { ...acc, [importName]: importPath };
         },
-        {},
+        {}
       );
 
       for (const [importName, importPath] of Object.entries(importMap)) {
         exportCode = exportCode.replaceAll(
           new RegExp(`${importName}(?=[^a-zA-Z0-9])`, "g"),
-          `"${importPath}"`,
+          `"${importPath}"`
         );
       }
 
@@ -108,10 +108,6 @@ export default defineConfig({
         //   autoname: true,
         //   locator: {
         //     key: "Shift",
-        //     targetIDE: (s: any) => {
-        //       console.log("GOT", s);
-        //       return "http://google.com";
-        //     },
         //     componentLocation: true,
         //     jsxLocation: true,
         //   } as any,
@@ -152,11 +148,7 @@ export default defineConfig({
           ],
         }),
         linariaVitePlugin({
-          include: [
-            /\/src\//,
-            // /\/core\//,
-            // /\/packages\/server\/pdf\//,
-          ],
+          include: [/\/src\//],
           exclude: [
             /solid-refresh/,
             /\/@babel\/runtime\//,

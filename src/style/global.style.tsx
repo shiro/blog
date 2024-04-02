@@ -31,7 +31,7 @@ export const globals = css`
     a:visited,
     a:hover,
     a:active {
-      color: inherit;
+      color: ${color("colors/primary-800")};
     }
 
     a:hover {

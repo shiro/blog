@@ -13,7 +13,6 @@ interface Props {
 
 const Header: Component<Props> = (props) => {
   const location = useLocation();
-  console.log(location.pathname);
 
   const activeSection = $derefMemo(
     createMemo(() => {

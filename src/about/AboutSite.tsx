@@ -54,7 +54,7 @@ const AboutSite: Component<Props> = (props) => {
         </div>
       </div>
       <LabeledBox label="general" style={{ "grid-area": "general" }}>
-        <ul class="flex min-h-full flex-col justify-center gap-1">
+        <ul class="flex min-h-full flex-col gap-1">
           <li class="flex gap-2 text-nowrap xs:text-h3 s:text-body">
             <IconText icon="github" />
             <a href="https://github.com/shiro">github.com/shiro</a>
@@ -123,6 +123,7 @@ const _AboutSite = css`
   }
   ${breakpointUntil("s")} {
     justify-items: stretch;
+    column-gap: 32px !important;
     grid-template:
       "name name" auto
       "picture title" auto
