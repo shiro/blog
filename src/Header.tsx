@@ -17,8 +17,9 @@ const Header: Component<Props> = (props) => {
 
   const activeSection = $derefMemo(
     createMemo(() => {
-      if (location.pathname.startsWith("/gallery")) return "gallery";
-      if (location.pathname.startsWith("/about")) return "about";
+      if (location.pathname.startsWith(`${config.base}/gallery`))
+        return "gallery";
+      if (location.pathname.startsWith(`${config.base}/about`)) return "about";
       return "blog";
     })
   );
