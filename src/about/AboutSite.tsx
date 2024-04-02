@@ -2,6 +2,8 @@ import { css } from "@linaria/core";
 import cn from "classnames";
 import { Component, JSX } from "solid-js";
 import LabeledBox from "~/about/LabeledBox";
+import ProjectsSection from "~/about/ProjectsSection";
+import SkillsSection from "~/about/SkillsSection";
 import SnakeGame from "~/about/SnakeGame";
 import StatsBar from "~/about/StatsBar";
 import StatusButton from "~/about/StatusButton";
@@ -88,6 +90,12 @@ const AboutSite: Component<Props> = (props) => {
         style={{ "grid-area": "snake" }}
         class="justify-self-stretch"
       />
+      <div
+        class="mb-8 flex w-full flex-col items-stretch gap-4"
+        style={{ "grid-area": "rest" }}>
+        <ProjectsSection />
+        <SkillsSection />
+      </div>
     </div>
   );
 };
@@ -96,10 +104,11 @@ const _AboutSite = css`
   justify-items: start;
   grid-template:
     "picture name     name  emtpy" auto
-    "picture title    title emtpy" auto
-    "picture general  about about" auto
-    "stats   general  about about" auto
-    "snake   snake  snake snake" auto
+    "picture title   title emtpy" auto
+    "picture general about about" auto
+    "stats   general about about" auto
+    "snake   snake   snake snake" auto
+    "rest    rest    rest  rest" auto
     / auto auto auto auto;
   ${breakpointUntil("m")} {
     grid-template:
@@ -108,6 +117,7 @@ const _AboutSite = css`
       "picture general snake" auto
       "stats   general snake" auto
       "about   about   about" auto
+      "rest    rest    rest " auto
       / auto auto 1fr;
   }
   ${breakpointUntil("s")} {
@@ -119,6 +129,7 @@ const _AboutSite = css`
       "stats   general" auto
       "about   about  " auto
       "snake   snake  " auto
+      "rest    rest   " auto
       / auto 1fr;
   }
 `;
