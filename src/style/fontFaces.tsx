@@ -4,7 +4,7 @@ const japaneseCodeRange = (show: boolean) =>
   show ? `unicode-range: U+3000-30FF , U+FF00-FFEF , U+4E00-9FAF ;` : "";
 const nameSuffix = (isFull: boolean) => (isFull ? "" : " JP Only");
 
-const interPath = `fonts/inter-3.19-roman/Inter`;
+const interPath = `/fonts/inter-3.19-roman/Inter`;
 
 // language=SCSS
 const notoFragments = (isFull: boolean, fontLoader?: FontLoader) => `
@@ -26,7 +26,7 @@ const notoFragments = (isFull: boolean, fontLoader?: FontLoader) => `
       fontLoader != null
         ? `src: ${fontLoader(
             `${interPath}/noto-sans-jp-v40-japanese-regular.woff2`,
-            "woff2",
+            "woff2"
           )};`
         : ``
     }
@@ -50,7 +50,7 @@ const notoFragments = (isFull: boolean, fontLoader?: FontLoader) => `
       fontLoader != null
         ? `src: ${fontLoader(
             `${interPath}/noto-sans-jp-v40-japanese-700.woff2`,
-            "woff2",
+            "woff2"
           )};`
         : ``
     }
@@ -127,7 +127,7 @@ export const fontFaceFragment = (fontLoader?: FontLoader) => `
       fontLoader != null
         ? `src: ${fontLoader(
             `${interPath}-SemiBoldItalic-Roman.woff2`,
-            "woff2",
+            "woff2"
           )};`
         : ``
     }
