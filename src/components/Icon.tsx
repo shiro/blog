@@ -2,6 +2,7 @@ import { css } from "@linaria/core";
 import cn from "classnames";
 import { Component } from "solid-js";
 import SVG from "~/components/SVG";
+import { config } from "~/config";
 
 interface Props {
   class?: string;
@@ -15,7 +16,7 @@ const Icon: Component<Props> = (props) => {
 
   return (
     <SVG
-      src={`/icons/icon-${icon}.svg`}
+      src={`${config.base}/icons/icon-${icon}.svg`}
       // alt={description}
       class={cn(_Icon, $class)}
       {...(rest as any)}

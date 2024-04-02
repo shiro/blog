@@ -52,8 +52,8 @@ function getInitialData(src: string, async?: boolean) {
   if (!isServer) {
     return undefined;
   } else {
-    if (src.startsWith(config.resourceBaseURL))
-      src = src.slice(config.resourceBaseURL.length);
+    // if (src.startsWith(config.resourceBaseURL))
+    //   src = src.slice(config.resourceBaseURL.length);
 
     src = path.join(process.cwd(), "public", src);
 

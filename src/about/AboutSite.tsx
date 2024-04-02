@@ -8,6 +8,7 @@ import SnakeGame from "~/about/SnakeGame";
 import StatsBar from "~/about/StatsBar";
 import StatusButton from "~/about/StatusButton";
 import IconText from "~/components/IconText";
+import { config } from "~/config";
 import { breakpointUntil } from "~/style/commonStyle";
 
 interface Props {
@@ -19,9 +20,8 @@ const AboutSite: Component<Props> = (props) => {
     <div class={cn(_AboutSite, "mb-8 grid gap-4")}>
       <div class="flex flex-col gap-2 " style={{ "grid-area": "picture" }}>
         <div class="flex h-[192px] w-[192px] items-center justify-center rounded border-4 border-colors-primary-500">
-          {/* <Icon icon="github" class="h-[88px] w-[139px]" /> */}
           <img
-            src="/profile-picture.jpg"
+            src={`${config.base}/profile-picture.jpg`}
             alt="Profile picture"
             class="h-full w-full"
           />

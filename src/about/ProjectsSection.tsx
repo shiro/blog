@@ -1,9 +1,10 @@
-import { JSX, Component } from "solid-js";
+import { Separator } from "@kobalte/core";
 import { css } from "@linaria/core";
 import cn from "classnames";
+import { Component, JSX } from "solid-js";
 import LabeledBox from "~/about/LabeledBox";
-import { Separator } from "@kobalte/core";
 import IconText from "~/components/IconText";
+import { config } from "~/config";
 import { breakpoint } from "~/style/commonStyle";
 
 interface Props {
@@ -78,7 +79,7 @@ const Project: Component<any> = (props: any) => {
 const PreviewImage: Component<any> = (props: any) => {
   return (
     <img
-      src="/preview/preview-blog1.jpg"
+      src={`${config.base}/preview/preview-blog1.jpg`}
       class={cn(
         Image,
         "h-32 w-[30%] max-w-60 rounded border-2 border-colors-primary-800 object-cover xs:w-[50%]"
