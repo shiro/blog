@@ -4,6 +4,12 @@ import { config } from "~/config";
 import { preloadSSR } from "../vite/SSR/SSRPreload";
 import { preloadSSRDev } from "../vite/SSR/SSRPreloadDev";
 
+const _warn = console.warn;
+console.warn = function (message?: any, ...optionalParams: any[]) {
+  if (message == "No route matched for preloading js assets") return;
+  _warn(message, ...optionalParams);
+};
+
 export default createHandler(() => {
   return (
     <StartServer

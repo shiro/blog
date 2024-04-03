@@ -196,20 +196,31 @@ export const globals = css`
     }
   }
 
-  .code-container .line {
-    min-height: ${bodyTextHeight}px;
-  }
-  .language-id {
-    display: none;
+  pre.shiki {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    background-color: ${color("colors/primary-50")};
+    padding: 8px;
+    .code-title {
+      position: relative;
+      top: -8px;
+      left: -8px;
+      padding: 4px 16px;
+      width: calc(100% + 16px);
+      background-color: ${color("colors/primary-200")};
+    }
+    .code-container .line {
+      min-height: ${bodyTextHeight}px;
+      white-space: pre-wrap !important;
+    }
+    .language-id {
+      display: none;
+    }
   }
   .theme-light .shiki.github-dark {
     display: none;
   }
   .theme-dark .shiki.github-light {
     display: none;
-  }
-  .shiki {
-    background-color: ${color("colors/primary-50")};
-    padding: 8px;
   }
 `;

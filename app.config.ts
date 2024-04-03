@@ -122,7 +122,7 @@ export default defineConfig({
           ],
           remarkPlugins: [
             remarkFrontmatter,
-            remarkGfm,
+            // remarkGfm,
             [
               (remarkShikiTwoslash as any).default,
               {

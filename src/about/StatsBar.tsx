@@ -25,7 +25,7 @@ const StatsBar: Component<Props> = (props) => {
   return (
     <div
       class={cn(
-        "relative flex w-[192px] rounded-md border-2",
+        "relative flex w-[192px] select-none rounded-md border-2",
         {
           "border-colors-primary-300": type == "primary",
           "border-colors-secondary-300": type == "secondary",

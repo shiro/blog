@@ -28,10 +28,13 @@ const BlogIndex: Component<Props> = (props) => {
                   <span class="text-h2 text-colors-primary-800">
                     {item.title}
                   </span>
-                  <span class="textbody text-colors-text-300a !no-underline">
+                  <span class="textbody mb-4 mt-1 text-colors-text-300a !no-underline">
                     {item.date} by shiro
                   </span>
-                  <span>{item.description}</span>
+                  <span
+                    class="text-colors-text-600a"
+                    innerHTML={item.description.replaceAll("\n", "<br/>")}
+                  />
                 </a>
               </li>
               <Show when={idx() != list.length - 1}>

@@ -1,9 +1,8 @@
-import { JSX, Component } from "solid-js";
 import { css } from "@linaria/core";
 import cn from "classnames";
+import { Component, JSX } from "solid-js";
 import LabeledBox from "~/about/LabeledBox";
 import IconText from "~/components/IconText";
-import { bodyTextHeight } from "~/style/textStylesTS";
 import { breakpoint, breakpointUntil } from "~/style/commonStyle";
 
 interface Props {
@@ -59,7 +58,7 @@ const Skill: Component<any> = (props: any) => {
     <div class="flex gap-2">
       <div
         class={`box-content flex h-[28px] w-[28px] items-center justify-center rounded border-2 border-colors-text-600a`}>
-        <Show when={icon} fallback={<span>{text}</span>}>
+        <Show when={icon} fallback={<span class="select-none">{text}</span>}>
           <IconText icon={icon} />
         </Show>
       </div>
