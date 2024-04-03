@@ -1,6 +1,7 @@
 import { Tooltip } from "@kobalte/core";
 import cn from "classnames";
 import { Component, lazy } from "solid-js";
+import Icon from "~/components/Icon";
 import IconText from "~/components/IconText";
 
 const articlesImportMap = import.meta.glob("./articles/*/*.mdx");
@@ -48,6 +49,38 @@ const Article: Component<Props> = (props) => {
               </div>
             </figure>
           );
+        },
+
+        ul: (props: any) => (
+          <ul {...props} class={cn(props.className, "list-disc pl-8")} />
+        ),
+        li: (props: any) => <li {...props} />,
+
+        Embed: (props: any) => {
+          if (props.url?.includes("://github.com")) {
+            const [s, username, projectName] = props.url.match(
+              new RegExp("github.com/(.+)/(.*)")
+            );
+            return (
+              <a
+                class="mb-8 ml-auto mr-auto mt-8 flex h-40 w-[440px] rounded bg-colors-primary-300 text-colors-text-600a no-underline"
+                target="_blank"
+                href={props.url}>
+                <Icon
+                  icon="github"
+                  class="ml-8 mr-8 h-full w-16 flex-shrink-0"
+                />
+                <div class="flex flex-1 flex-col gap-2 bg-colors-primary-200 pl-4 pr-4 shadow">
+                  <span class="mt-6 text-h2">
+                    <span class="text-colors-text-300a">{username}/</span>
+                    <span class="text-colors-text-900a">{projectName}</span>
+                  </span>
+                  <span>{props.description}</span>
+                </div>
+              </a>
+            );
+          }
+          return null;
         },
         div: (props: any) => {
           if (props.className?.includes("code-title")) {

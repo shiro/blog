@@ -85,7 +85,7 @@ export const globals = css`
     }
 
     p + p {
-      margin-top: 4px;
+      margin-top: 16px;
     }
     p + h1 {
       margin-top: 36px;
@@ -131,7 +131,7 @@ export const globals = css`
 
     p + ul,
     p + ol {
-      margin-top: 16px;
+      margin-top: 4px;
     }
     ul + p,
     ol + p {

@@ -62,7 +62,14 @@ const SnakeGame: Component<Props> = (props) => {
 
     const moveFruit = () => {
       fruitEl?.remove();
+      let i = 0;
       while (map[getKey(...fruitPos)]) {
+        // avoid crashing the browser
+        if (++i == 30) {
+          reset();
+          return;
+        }
+
         fruitPos = [
           Math.round(Math.random() * (w - 1)),
           Math.round(Math.random() * (h - 1)),
