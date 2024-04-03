@@ -5,6 +5,8 @@ import {
   primaryFontBold,
   primaryFontBoldItalic,
   primaryFontItalic,
+  smallText,
+  subText,
   text,
 } from "~/style/commonStyle";
 import "~/style/fontPreamble.style";
@@ -13,7 +15,11 @@ import "~/style/reset.scss";
 import "~/style/tw.style";
 // import "~/style/styleLoadOrder";
 import { css } from "@linaria/core";
-import { baseText, bodyTextHeight } from "~/style/textStylesTS";
+import {
+  baseText,
+  bodyTextHeight,
+  smallTextHeight,
+} from "~/style/textStylesTS";
 
 export const globals = css`
   @layer tw-base {
@@ -197,8 +203,8 @@ export const globals = css`
   }
 
   pre.shiki {
-    margin-top: 16px;
-    margin-bottom: 16px;
+    margin-top: 32px;
+    margin-bottom: 32px;
     background-color: ${color("colors/primary-50")};
     padding: 8px;
     .code-title {
@@ -210,7 +216,8 @@ export const globals = css`
       background-color: ${color("colors/primary-200")};
     }
     .code-container .line {
-      min-height: ${bodyTextHeight}px;
+      ${subText};
+      min-height: ${smallTextHeight}px;
       white-space: pre-wrap !important;
     }
     .language-id {

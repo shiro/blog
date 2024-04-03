@@ -14,7 +14,11 @@ export const routes: RouteDefinition[] = [
     component: (p) => {
       // router bug: 'name' not in 'p', update when this is fixed
       const name = p.location.pathname.replace(`${config.base}/articles/`, "");
-      return <Article name={name} />;
+      return (
+        <div class="mb-16">
+          <Article name={name} />
+        </div>
+      );
     },
     matchFilters: {
       name: (name: string) => isValidArticle(name),

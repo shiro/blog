@@ -1,6 +1,7 @@
 import { Tooltip } from "@kobalte/core";
 import cn from "classnames";
 import { Component, lazy } from "solid-js";
+import Spoiler from "~/Spoiler";
 import Icon from "~/components/Icon";
 import IconText from "~/components/IconText";
 
@@ -55,7 +56,7 @@ const Article: Component<Props> = (props) => {
           <ul {...props} class={cn(props.className, "list-disc pl-8")} />
         ),
         li: (props: any) => <li {...props} />,
-
+        Spoiler: (props: any) => <Spoiler>{props.children}</Spoiler>,
         Embed: (props: any) => {
           if (props.url?.includes("://github.com")) {
             const [s, username, projectName] = props.url.match(

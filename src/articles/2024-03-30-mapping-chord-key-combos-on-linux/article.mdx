@@ -3,6 +3,139 @@
 Recently I realized that lots of my key combinations require pretty unhealthy hand movements, so
 I added chording key combos to my life.
 
+Chording combos refer to pressing multiple keys at the same time (or in very quick succession) to
+trigger some action rather that outputing the keys. The keys still function normally when not
+pressed in a chord.
+
+While I'm not exactly sure if chording is the official name for it, I've been using this
+cool [vim plugin](https://github.com/kana/vim-arpeggio) that calls it that, so that's how I'm going to refer to it.
+
+<Embed
+  url="https://github.com/kana/vim-arpeggio"
+  description="Vim plugin: Mappings for simultaneously pressed keys."
+/>
+
+Since I developed my own software for Linux key remapping a while ago (I'll talk about it in length another time), adding the functionality there seemed like the obvious way to go.
+The project is called map2 and allows for blazingly fast key-remapping and even allows
+running arbirary python code to achieve even the craziest ideas.
+
+Something similar might be doable on Windows using AutoHotkey as well.
+
+<Embed
+url="https://github.com/shiro/map2"
+description="Linux input remapping for your keyboard, mouse and more!"
+/>
+
+After setting the end-goal, I started writing some quick prototype code in Python.
+The idea is simple:
+- define some key-combos in an array
+- bind a custom python callback on all keys that appear as chord inputs
+- once a chord-key is hit, set a timeout which delays the event
+- if another key is pressed, clear the timeoout and, if it completes a chord, remap it
+
+Of course I knew from the get-go that the above is just the ideal path, there's lots of edge
+cases to handle here.
+
+Here's my initial prototype code that mostly works but doesn't cover all edge cases
+(it's supposed to work, not look good):
+
+<Spoiler>
+```python title="arpeggio.py"
+combos = {
+    frozenset({"a", "b"}): "c",
+    frozenset({"a", "d"}): "e",
+}
+
+chord_chars = set([x for y in combos for x in y])
+interval = None
+stack = []
+
+def arpeggio(mapper, writer):
+  is_down = {}
+  def fn(key, state):
+    global chord_chars, interval, stack
+    nonlocal is_down
+
+    if key not in chord_chars:
+      if interval is not None:
+        interval.cancel()
+        interval = None
+
+      pressed = [k for k in is_down if is_down[k]]
+      if pressed != []:
+        writer.send("".join(map(lambda k: "{"+k+" up}", pressed)))
+
+      if len(stack) > 0:
+        writer.send("".join(stack))
+        stack = []
+
+      is_down = {}
+      return True
+
+    if state == "down":
+      stack = stack + [key]
+
+      def submit():
+        global interval, combos, stack
+        nonlocal is_down
+
+        if interval is not None:
+          interval.cancel()
+          interval = None
+
+        output = combos.get(frozenset(stack), None)
+        if output is not None:
+          writer.send(output)
+          stack = []
+        else:
+          if stack == [key]:
+            is_down[key] = True
+            stack = []
+            writer.send("{"+key+" down}")
+          elif len(stack) == 2:
+            writer.send("".join(stack))
+            stack = []
+
+      if len(stack) == 2:
+        submit()
+      elif interval is None:
+        interval = setInterval(50, submit)
+
+    if state == "repeat":
+      if is_down.get(key):
+        writer.send("{"+key+" repeat}")
+
+    if state == "up":
+      if interval is not None:
+        interval.cancel()
+        interval = None
+
+      if is_down.get(key):
+        if stack != []:
+          writer.send("".join(stack))
+          stack = []
+
+        is_down[key] = False
+        stack = []
+        return True
+
+
+      if stack != []:
+        writer.send("".join(stack))
+        stack = []
+
+  mapper.map_fallback(fn)
+```
+</Spoiler>
+
+The Python prototype was a good first step and reassured me that using chords is the way
+to go - it just feels nice and reduces finger travel time by a lot.
+
+I could have ended it there, but since this seemed like something lots of people could
+benefit from, I decided to do a native implementation and support it as part of the
+core map2 API. After a fun weekend, I managed to hack together someting I was satisfied
+with, here's the final API:
+
 
 ```python  title="example.py"
 import map2
@@ -25,4 +158,34 @@ mapper_kbd_arp.map([";", "g"], "G")
 # and so on...
 ```
 
-And that's it!
+Curently we only support 2-key-chords, I also decided to write the code in a way
+that allows for future multi-key support.
+
+Since map2 has a pretty nice e2e test harness, it was also possible to test lots
+of edge cases systematically, getting me to a working version without ever
+running the script on my keyboard - this was one of those rare movements where
+test-driven-development actually worked well!  
+Here's a sample:
+
+```rust title="examples/tests/chords.rs"
+#[pyo3_asyncio::tokio::test]
+async fn simple_chord() -> PyResult<()> {
+    Python::with_gil(|py| -> PyResult<()> {
+        let m = pytests::include_python!();
+
+        reader_send_all(py, m, "reader", &keys("{a down}{b down}{a up}{b up}"));
+        sleep(py, 55);
+        assert_eq!(writer_read_all(py, m, "writer"), keys("c"),);
+        sleep(py, 55);
+        assert_empty!(py, m, WRITER);
+
+        Ok(())
+    })?;
+    Ok(())
+}
+```
+
+At the momemt of writing this, the API is not documented in the docs since I decided
+to use it for a month before doing that.
+
+
