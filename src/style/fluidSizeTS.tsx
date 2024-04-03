@@ -4,7 +4,8 @@ const cssUnitMult = (value: string, multiplier: number) =>
   `${parseFloat(value) * multiplier}${getUnit(value)}`;
 
 const scalingMap = [
-  [0, 0.3],
+  [200, 0.3],
+  [380, 0.65],
   [500, 0.8],
   [720, 0.9],
   [1280, 1],
@@ -38,6 +39,9 @@ export const _calculateFluidProperty = (
     ? maxFonSize.replace(/(px|rem)/g, "")
     : parseFloat(maxFonSize);
 
+  // the pxToRem plugin converts "0px" to "0", which breaks things
+  if (minVW == "0px") minVW = "0rem";
+
   return `calc(${minFontSize} + (${_maxFontSize} - ${_minFontSize}) * ((100vw - ${minVW}) / ${
     parseFloat(maxVW) - parseFloat(minVW)
   }))`;
@@ -45,9 +49,9 @@ export const _calculateFluidProperty = (
 
 export const remBase = 16;
 export const pxToEmDepr = (value: string | number) =>
-  parseFloat(`${value}`) / remBase + "em";
+  parseFloat(value.toString()) / remBase + "em";
 export const pxToRemDepr = (value: string | number) =>
-  parseFloat(`${value}`) / remBase + "rem";
+  parseFloat(value.toString()) / remBase + "rem";
 const pxToRemRuntime = (value: string | number) => `(${value}/${remBase}*1rem)`;
 
 export const pxToEm = pxToEmDepr;
