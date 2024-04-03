@@ -8,7 +8,7 @@ trigger some action rather that outputing the keys. The keys still function norm
 pressed in a chord.
 
 While I'm not exactly sure if chording is the official name for it, I've been using this
-cool [vim plugin](https://github.com/kana/vim-arpeggio) that calls it that, so that's how I'm going to refer to it.
+cool vim plugin that calls it that, so that's how I'm going to refer to it.
 
 <Embed
   url="https://github.com/kana/vim-arpeggio"
@@ -134,8 +134,33 @@ to go - it just feels nice and reduces finger travel time by a lot.
 I could have ended it there, but since this seemed like something lots of people could
 benefit from, I decided to do a native implementation and support it as part of the
 core map2 API. After a fun weekend, I managed to hack together someting I was satisfied
-with, here's the final API:
+with. 
 
+Since map2 has a pretty nice e2e test harness, it was also possible to test lots
+of edge cases systematically, getting me to a working version without ever
+running the script on my keyboard - this was one of those rare movements where
+test-driven-development actually worked well!  
+Here's a sample:
+
+```rust title="examples/tests/chords.rs"
+#[pyo3_asyncio::tokio::test]
+async fn simple_chord() -> PyResult<()> {
+  Python::with_gil(|py| -> PyResult<()> {
+      let m = pytests::include_python!();
+
+      reader_send_all(py, m, "reader", &keys("{a down}{b down}{a up}{b up}"));
+      sleep(py, 55);
+      assert_eq!(writer_read_all(py, m, "writer"), keys("c"),);
+      sleep(py, 55);
+      assert_empty!(py, m, WRITER);
+
+      Ok(())
+      })?;
+  Ok(())
+}
+```
+
+And here's a sample reamapping script with the finalized API:
 
 ```python  title="example.py"
 import map2
@@ -150,42 +175,68 @@ writer = map2.Writer(clone_from="/dev/input/by-id/your-kbd")
 map2.link([reader, mapper, writer])
 
 # and map some chords!
-mapper_kbd_arp.map([";", "a"], "A")
-mapper_kbd_arp.map([";", "s"], "S")
-mapper_kbd_arp.map([";", "d"], "D")
-mapper_kbd_arp.map([";", "f"], "F")
-mapper_kbd_arp.map([";", "g"], "G")
+mapper.map(["a", "b"], "c")
 # and so on...
 ```
 
-Curently we only support 2-key-chords, I also decided to write the code in a way
-that allows for future multi-key support.
+Curently we only support 2-key-chords, however I also decided to write the code in a way
+that allows for future multi-key support, so look forward to that inevitable pull request.
 
-Since map2 has a pretty nice e2e test harness, it was also possible to test lots
-of edge cases systematically, getting me to a working version without ever
-running the script on my keyboard - this was one of those rare movements where
-test-driven-development actually worked well!  
-Here's a sample:
+After using chords for a while, hitting multiple keys at once became natural quickly,
+almost like playing a piano.
+I can feel myself keeping my hands on the center of my keyboard and avoiding unhealthy
+finger movements to the point where I instincively *feel* like a specific movement
+is too much and I should add another chord.
 
-```rust title="examples/tests/chords.rs"
-#[pyo3_asyncio::tokio::test]
-async fn simple_chord() -> PyResult<()> {
-    Python::with_gil(|py| -> PyResult<()> {
-        let m = pytests::include_python!();
+While chords are probably not everyone's cup of tea, I highly recommend giving it
+a try. If you're on Linux, it has never been easier - simply run `pip install map2`
+and off you go!  
+If you need some inspiration, here's some smooth chord suggestions:
 
-        reader_send_all(py, m, "reader", &keys("{a down}{b down}{a up}{b up}"));
-        sleep(py, 55);
-        assert_eq!(writer_read_all(py, m, "writer"), keys("c"),);
-        sleep(py, 55);
-        assert_empty!(py, m, WRITER);
+```python title="chords.py"
+# ";" + letters on the left side to capital letters
+for ch in "asdfgqwertzxcv":
+    mapper.map([";", ch], ch.upper())
 
-        Ok(())
-    })?;
-    Ok(())
-}
+# ";" + letters on the right side to capital letters
+for ch in "hjklyuiopbnm":
+    mapper.map(["z", ch], ch.upper())
+
+# special symbols
+mapper.map(["[", "q"], "[")                             # [
+mapper.map(["[", "w"], "]")                             # ]
+mapper.map(["d", "f"], "{escape}")                      # esc
+mapper.map(["[", "e"], "{shift down}1{shift up}")       # !
+mapper.map(["[", "f"], "{shift down}{slash}{shift up}") # ?
+mapper.map(["[", "z"], "{shift down}\{{shift up}")      # {
+mapper.map(["[", "x"], "{shift down}\}{shift up}")      # }
+mapper.map(["[", "t"], "{shift down}2{shift up}")       # @
+mapper.map(["[", "r"], "{shift down}3{shift up}")       # #
+mapper.map(["[", "g"], "{shift down}4{shift up}")       # $
+mapper.map(["[", "3"], "{shift down}5{shift up}")       # %
+mapper.map(["[", "2"], "{shift down}6{shift up}")       # ^
+mapper.map(["[", "c"], "{shift down}7{shift up}")       # &
+mapper.map(["[", "v"], "{shift down}8{shift up}")       # *
+mapper.map(["[", "a"], "{shift down}9{shift up}")       # (
+mapper.map(["[", "s"], "{shift down}0{shift up}")       # )
+mapper.map(["x", "o"], "{shift down}{comma}{shift up}") # <
+mapper.map(["x", "p"], "{shift down}{dot}{shift up}")   # >
+mapper.map(["x", "i"], "=")                             # =
+mapper.map(["x", "j"], "{shift down}-{shift up}")       # _
+
+# number keys
+mapper.map([",", "f"], "0")
+mapper.map([",", "d"], "1")
+mapper.map([",", "s"], "2")
+mapper.map([",", "a"], "3")
+mapper.map([",", "r"], "4")
+mapper.map([",", "e"], "5")
+mapper.map([",", "w"], "6")
+mapper.map([",", "c"], "7")
+mapper.map([",", "x"], "8")
+mapper.map([",", "z"], "9")
+mapper.map([",", "q"], "`")
 ```
 
-At the momemt of writing this, the API is not documented in the docs since I decided
-to use it for a month before doing that.
-
-
+No more difficult movements for capital letters and reaching for number keys
+feels amazing, happy mapping!

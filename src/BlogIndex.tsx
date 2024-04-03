@@ -29,7 +29,7 @@ const BlogIndex: Component<Props> = (props) => {
                     {item.title}
                   </span>
                   <span class="textbody mb-4 mt-1 text-colors-text-300a !no-underline">
-                    {item.date} by shiro
+                    {item.date} by Matic Utsumi Gačar
                   </span>
                   <span
                     class="text-colors-text-600a"

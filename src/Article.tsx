@@ -1,6 +1,6 @@
 import { Tooltip } from "@kobalte/core";
 import cn from "classnames";
-import { Component, lazy } from "solid-js";
+import { Component, children, lazy } from "solid-js";
 import Spoiler from "~/Spoiler";
 import Icon from "~/components/Icon";
 import IconText from "~/components/IconText";
@@ -39,7 +39,6 @@ const Article: Component<Props> = (props) => {
         },
         pre: (props: any) => <pre {...props} title={null} />,
         Img: (props: any) => {
-          // return <img {...props} class="ml-auto mr-auto" />;
           return (
             <figure class="mb-2 mt-2 flex justify-center">
               <div>
@@ -51,11 +50,26 @@ const Article: Component<Props> = (props) => {
             </figure>
           );
         },
-
+        code: (props: any) => {
+          const { children: _c, ...rest } = $destructure(props);
+          const c = children(() => _c);
+          return (
+            <code
+              {...rest}
+              class={
+                typeof c() == "string"
+                  ? "rounded bg-colors-primary-300 pl-2 pr-2"
+                  : ""
+              }>
+              {c()}
+            </code>
+          );
+        },
         ul: (props: any) => (
           <ul {...props} class={cn(props.className, "list-disc pl-8")} />
         ),
         li: (props: any) => <li {...props} />,
+        em: (props: any) => <em {...props} class="pr-1" />,
         Spoiler: (props: any) => <Spoiler>{props.children}</Spoiler>,
         Embed: (props: any) => {
           if (props.url?.includes("://github.com")) {
