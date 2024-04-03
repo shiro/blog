@@ -1,4 +1,4 @@
-import { RouteDefinition } from "@solidjs/router";
+import { Navigate, RouteDefinition } from "@solidjs/router";
 import { lazy } from "solid-js";
 import Article, { isValidArticle } from "~/Article";
 import { config } from "~/config";
@@ -20,4 +20,5 @@ export const routes: RouteDefinition[] = [
       name: (name: string) => isValidArticle(name),
     },
   },
+  { path: "/*", component: () => <Navigate href={config.base} /> },
 ];

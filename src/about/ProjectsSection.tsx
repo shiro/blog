@@ -33,7 +33,7 @@ const ProjectsSection: Component<Props> = (props) => {
           <Project
             name="map2"
             descripton="Linux key remapping tool"
-            website="https://shiro.github.io/map2"
+            website="https://github.com/shiro/map2"
             images={["/", "", ""]}>
             A tool for remmaping inputs from keyboards, mice, joysticks,
             steering wheels and much more.
@@ -69,7 +69,10 @@ const Project: Component<any> = (props: any) => {
         <For each={images}>{(url) => <PreviewImage />}</For>
       </div>
       <div class="mt-4 flex gap-2">
-        <IconText icon="globe" /> <a href={website}>{websiteName}</a>
+        <IconText icon="globe" />{" "}
+        <a target="_blank" href={website}>
+          {websiteName}
+        </a>
       </div>
       <div class="mt-2">{children}</div>
     </div>
