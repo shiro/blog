@@ -51,6 +51,12 @@ const collectRec = (
   visited.add(node.id);
 
   const imports = [...node.clientImportedModules.values()];
+  // if (!node.id.includes("node_modules"))
+  //   console.log(
+  //     "dep",
+  //     node.id,
+  //     imports.map((x) => x.file)
+  //   );
 
   if (!ignorePatterns.some((pattern) => pattern.test(node.id!))) {
     for (const dep of imports) {
