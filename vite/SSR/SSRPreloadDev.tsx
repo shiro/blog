@@ -11,10 +11,10 @@ const getModuleGraph = () => {
 
 const fixUrl = (url: string) => (url.startsWith("/") ? url : "/" + url);
 
-const wihtoutQuery = (url: string) => url.split("?")[0];
+const withoutQuery = (url: string) => url.split("?")[0];
 
 function renderAsset(url: string) {
-  const urlWithoutSearch = wihtoutQuery(url);
+  const urlWithoutSearch = withoutQuery(url);
   if (urlWithoutSearch.endsWith(".woff2"))
     return (
       <link
@@ -66,7 +66,7 @@ const collectRec = (
     }
   }
 
-  if ([".css", ".scss"].some((x) => wihtoutQuery(node.url).endsWith(x))) {
+  if ([".css", ".scss"].some((x) => withoutQuery(node.url).endsWith(x))) {
     if (!node.transformResult?.code) return;
 
     const start = 'const __vite__css = "';
@@ -79,7 +79,7 @@ const collectRec = (
       .replaceAll("\\\\", "\\");
 
     CSSOutput.push([node.id, code]);
-  } else if ([".js"].some((x) => wihtoutQuery(node.url).endsWith(x))) {
+  } else if ([".js"].some((x) => withoutQuery(node.url).endsWith(x))) {
     JSOutput.push(node.url);
   }
 };
@@ -111,6 +111,6 @@ export const preloadSSRDev = () => {
   return [
     renderAsset("/fonts/inter-3.19-roman/Inter-Regular-Roman.woff2"),
     ...inlineCSSToPreload.map(([id, code]) => renderInlineCSS(id, code)),
-    ...filesToPreload.map(fixUrl).map(renderAsset),
+    // ...filesToPreload.map(fixUrl).map(renderAsset),
   ];
 };
