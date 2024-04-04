@@ -23,7 +23,7 @@ const ProjectsSection: Component<Props> = (props) => {
             name="fujiPod web"
             descripton="Japanese dictionary and study platform"
             website="https://fujipod.com"
-            images={["/", "", ""]}>
+            images={[1, 2, 3].map((x) => `/preview-fujipod-web-${x}.jpg`)}>
             A free Japanese language study platform and dictionary with an
             active, growing community of over 100 users.
           </Project>
@@ -35,8 +35,9 @@ const ProjectsSection: Component<Props> = (props) => {
             descripton="Linux key remapping tool"
             website="https://github.com/shiro/map2"
             images={["/", "", ""]}>
-            A tool for remmaping inputs from keyboards, mice, joysticks,
-            steering wheels and much more.
+            A tool for remapping inputs from keyboards, mice, joysticks,
+            steering wheels and much more, increasing productivity, reducing
+            wrist injuries and much more.
           </Project>
 
           <Separator.Root class="border-t-2 border-colors-primary-200" />
@@ -45,8 +46,10 @@ const ProjectsSection: Component<Props> = (props) => {
             name="Blog of a programming rabbit"
             descripton="Blog and portfolio website"
             website="https://usagi.io"
-            images={["/"]}>
-            My personal blog and prortfolio webiste.
+            images={["/preview-blog-1.jpg"]}>
+            My personal blog and portfolio website on which I discuss new
+            technologies, libraries and awesome hacks that make the world go
+            round.
           </Project>
         </div>
       </LabeledBox>
@@ -66,7 +69,7 @@ const Project: Component<any> = (props: any) => {
         </span>
       </div>
       <div class="flex gap-4">
-        <For each={images}>{(url) => <PreviewImage />}</For>
+        <For each={images}>{(url) => <PreviewImage url={url} />}</For>
       </div>
       <div class="mt-4 flex gap-2">
         <IconText icon="globe" />{" "}
@@ -82,7 +85,7 @@ const Project: Component<any> = (props: any) => {
 const PreviewImage: Component<any> = (props: any) => {
   return (
     <img
-      src={`${config.base}/preview/preview-blog1.jpg`}
+      src={`${config.base}/preview${props.url}`}
       class={cn(
         Image,
         "h-32 w-[30%] max-w-60 rounded border-2 border-colors-primary-800 object-cover xs:w-[50%]"
