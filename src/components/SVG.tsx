@@ -54,6 +54,7 @@ function getInitialData(src: string, async?: boolean) {
   } else {
     // if (src.startsWith(config.resourceBaseURL))
     //   src = src.slice(config.resourceBaseURL.length);
+    if (src.startsWith(config.base)) src = src.slice(config.base.length);
 
     src = path.join(process.cwd(), "public", src);
 

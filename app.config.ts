@@ -93,6 +93,9 @@ export default defineConfig({
 
   vite(options) {
     return {
+      // define: {
+      // "import.meta.env.BASE_URL": JSON.stringify("/foo"),
+      // },
       css: { postcss: "./postcss.config.js" },
       server: {
         port: 3000,

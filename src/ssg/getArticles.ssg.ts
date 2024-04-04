@@ -16,7 +16,6 @@ export const getArticlesSSG = () => {
 
         const title = frontmatter.title ?? raw.match(/# [^\n]*/)![0].slice(2);
         const description = raw.match(/# [^\n]+\n+([\s\S]+?)(?=\n\n)/)?.[1];
-        console.log(description);
 
         const url = `/articles/${x.split(".")[0]}`;
         const date = x.split("-").slice(0, 3).reverse().join(".");

@@ -1,5 +1,6 @@
 import fs from "fs";
 import { getRequestEvent } from "solid-js/web";
+import { config } from "~/config";
 import { routeMap } from "../../src/routeMap";
 import { createMatcher } from "./routerMatchingUtil";
 
@@ -10,7 +11,10 @@ const manifest = fs.existsSync(VITE_MANIFEST_PATH)
   ? JSON.parse(fs.readFileSync(VITE_MANIFEST_PATH).toString())
   : {};
 
-const fixUrl = (url: string) => (url.startsWith("/") ? url : "/" + url);
+const base = (import.meta.env.BASE_URL ?? "").replace("/_build", "");
+console.log("<<< MI", import.meta.env.BASE_PATH, base);
+
+const formatUrl = (url: string) => `${base}/${url}`;
 
 function renderAsset(url: string) {
   if (url.endsWith(".css")) return <link href={url} rel="stylesheet" />;
@@ -24,6 +28,8 @@ const push = (set: string[], item: string) => {
 };
 
 const collectRec = (output: string[], filename: string, manifest: Manifest) => {
+  console.log("collect", filename, manifest[filename]);
+
   for (const jsFilename of manifest[filename]?.imports ?? []) {
     collectRec(output, jsFilename, manifest);
   }
@@ -34,13 +40,22 @@ const collectRec = (output: string[], filename: string, manifest: Manifest) => {
   }
 
   if (manifest[filename]?.file) {
+    let url = manifest[filename].file;
+
+    url = url.startsWith("/") ? url.slice(1) : url;
+
     push(output, manifest[filename].file);
   }
 };
 
 const matchers: [(path: string) => boolean, string[]][] = Object.entries(
-  routeMap,
-).map(([pattern, value]) => [createMatcher(pattern), value as string[]]);
+  routeMap
+).map(([pattern, value]) => [
+  createMatcher(`${config.base}${pattern}`),
+  value as string[],
+]);
+
+console.log("<<< VITE", routeMap, manifest);
 
 export const preloadSSR = () => {
   const pathname = new URL(getRequestEvent()!.request.url).pathname;
@@ -52,5 +67,7 @@ export const preloadSSR = () => {
       collectRec(filesToPreload, filename, manifest);
     }
   }
-  return filesToPreload.map(fixUrl).map(renderAsset);
+  console.log("<<< preload", pathname, filesToPreload);
+
+  return filesToPreload.map(formatUrl).map(renderAsset);
 };
