@@ -1,6 +1,5 @@
-import { css } from "@linaria/core";
 import cn from "classnames";
-import { Component, JSX } from "solid-js";
+import { Component } from "solid-js";
 import IconText from "~/components/IconText";
 
 interface Props {
@@ -46,7 +45,7 @@ const StatsBar: Component<Props> = (props) => {
       />
       <div
         class={cn(
-          "borde- h-0  w-0 border-r-[18px] border-t-[28px] border-r-transparent",
+          "borde- h-0 w-0 border-r-[18px] border-t-[28px] border-transparent bg-transparent",
           {
             "border-t-colors-primary-500": type == "primary",
             "border-t-colors-secondary-500": type == "secondary",
@@ -56,15 +55,5 @@ const StatsBar: Component<Props> = (props) => {
     </div>
   );
 };
-
-const _StatsBar = css``;
-
-const CenterText = css`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  text-align: center;
-`;
 
 export default StatsBar;

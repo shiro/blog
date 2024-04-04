@@ -12,7 +12,6 @@ const manifest = fs.existsSync(VITE_MANIFEST_PATH)
   : {};
 
 const base = (import.meta.env.BASE_URL ?? "").replace("/_build", "");
-console.log("<<< MI", import.meta.env.BASE_PATH, base);
 
 const formatUrl = (url: string) => `${base}/${url}`;
 
@@ -28,23 +27,29 @@ const push = (set: string[], item: string) => {
 };
 
 const collectRec = (output: string[], filename: string, manifest: Manifest) => {
-  console.log("collect", filename, manifest[filename]);
+  const node = manifest[filename];
+  if (!node) return;
 
-  for (const jsFilename of manifest[filename]?.imports ?? []) {
+  // ignore SSR bundles
+  if (node.name == "ssr" && !node.src) return;
+
+  // console.log("collect", filename, manifest[filename]);
+
+  for (const jsFilename of node.imports ?? []) {
     collectRec(output, jsFilename, manifest);
   }
 
-  for (const cssFilename of manifest[filename]?.css ?? []) {
+  for (const cssFilename of node.css ?? []) {
     if (output.some((x) => x == cssFilename)) continue;
+
     push(output, cssFilename);
   }
 
-  if (manifest[filename]?.file) {
+  if (node.file) {
     let url = manifest[filename].file;
-
     url = url.startsWith("/") ? url.slice(1) : url;
 
-    push(output, manifest[filename].file);
+    push(output, url);
   }
 };
 
@@ -54,8 +59,6 @@ const matchers: [(path: string) => boolean, string[]][] = Object.entries(
   createMatcher(`${config.base}${pattern}`),
   value as string[],
 ]);
-
-console.log("<<< VITE", routeMap, manifest);
 
 export const preloadSSR = () => {
   const pathname = new URL(getRequestEvent()!.request.url).pathname;
@@ -67,7 +70,6 @@ export const preloadSSR = () => {
       collectRec(filesToPreload, filename, manifest);
     }
   }
-  console.log("<<< preload", pathname, filesToPreload);
 
   return filesToPreload.map(formatUrl).map(renderAsset);
 };
