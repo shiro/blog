@@ -29,11 +29,11 @@ const DialogImage: Component<Props> = (props) => {
             style={{ background: "rgba(0, 0, 0, 0.5)" }}
           />
           <div class="fixed inset-0 z-50 flex items-center justify-center">
-            <Dialog.Content class="flex max-h-[90vh] max-w-[90vw] items-center justify-center">
+            <Dialog.Content class="flex max-h-[90vh] items-center justify-center s:max-w-[90vw]">
               <Dialog.CloseButton>
                 <props.image
                   class={cn(
-                    "max-h-[90vh]  max-w-[90vw] overflow-hidden object-contain"
+                    "max-h-[90vh] overflow-hidden object-contain s:max-w-[90vw]"
                   )}
                   alt={alt}
                 />

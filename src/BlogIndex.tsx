@@ -1,6 +1,5 @@
 import { Separator } from "@kobalte/core";
 import { css } from "@linaria/core";
-import { Title } from "@solidjs/meta";
 import cn from "classnames";
 import { Component, JSX } from "solid-js";
 import { For } from "solid-js/web";
@@ -16,7 +15,6 @@ interface Props {
 const BlogIndex: Component<Props> = (props) => {
   return (
     <main class={cn(_BlogIndex)}>
-      <Title>Blog of a programming rabbit</Title>
       <ul class="flex flex-col gap-4">
         <For each={list}>
           {(item, idx) => (
