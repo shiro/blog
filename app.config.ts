@@ -11,6 +11,7 @@ import { linariaVitePlugin } from "./vite/linariaVitePlugin";
 // import devtools from "solid-devtools/vite";
 // @ts-ignore
 import _mdx from "@vinxi/plugin-mdx";
+import tsconfig from "./tsconfig.json";
 import { viteImagePlugin } from "./vite/viteImagePlugin";
 
 const { default: mdx } = _mdx;
@@ -102,6 +103,14 @@ export default defineConfig({
         warmup: {
           clientFiles: ["./src/app.tsx"],
         },
+      },
+      resolve: {
+        alias: Object.fromEntries(
+          Object.entries(tsconfig.compilerOptions.paths).map(([key, value]) => [
+            key.replace(/\/\*$/, ""),
+            path.join(process.cwd(), value[0].replace(/\/\*$/, "")),
+          ])
+        ),
       },
       plugins: [
         viteImagePlugin(),

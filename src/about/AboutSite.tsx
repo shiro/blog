@@ -1,3 +1,4 @@
+import ProfilePicture from "@assets/about/profile-picture.jpg?lazy";
 import { css } from "@linaria/core";
 import cn from "classnames";
 import { Component, JSX } from "solid-js";
@@ -8,10 +9,7 @@ import SnakeGame from "~/about/SnakeGame";
 import StatsBar from "~/about/StatsBar";
 import StatusButton from "~/about/StatusButton";
 import IconText from "~/components/IconText";
-import { config } from "~/config";
 import { breakpointUntil } from "~/style/commonStyle";
-import ProfilePicture from "../../assets/about/profile-picture.jpg?lazy";
-// import url from "../../assets/about/profile-picture.jpg";
 
 interface Props {
   children?: JSX.Element;
@@ -22,8 +20,10 @@ const AboutSite: Component<Props> = (props) => {
     <div class={cn(_AboutSite, "mb-8 grid gap-4")}>
       <div class="flex flex-col gap-2 " style={{ "grid-area": "picture" }}>
         <div class="flex h-[192px] w-[192px] items-center justify-center rounded border-4 border-colors-primary-500">
-          <ProfilePicture alt="Profile picture" class="h-full w-full" />
-          {/* <img src={url} alt="Profile picture" class="h-full w-full" /> */}
+          <ProfilePicture
+            alt="Profile picture showing an manga-style face with glasses"
+            class="h-full w-full"
+          />
         </div>
       </div>
 

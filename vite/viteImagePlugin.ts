@@ -51,53 +51,9 @@ export const viteImagePlugin = () => {
   return {
     name: "viteImagePlugin",
     enforce: "pre",
-    // enforce: "post",
     configResolved: (resolvedConfig: any) => {
       config = resolvedConfig;
     },
-    // async resolveId(id: string, importerPath: any) {
-    //   if (id.includes(".jpg?size=")) {
-    //     const [baseId, size] = id.split("?size=");
-    //     const [width, height] = size.split("x").map((x) => {
-    //       const parsed = parseInt(x);
-    //       if (isNaN(parsed)) return undefined;
-    //       return parsed;
-    //     });
-    //
-    //     const srcAssetPath = path.join(
-    //       path.dirname(path.relative(process.cwd(), importerPath)),
-    //       baseId
-    //     );
-    //
-    //     const { name, ext } = path.parse(srcAssetPath);
-    //
-    //     const dstAssetPath = path.join(
-    //       outputDir,
-    //       path.dirname(srcAssetPath),
-    //       `${name}-${size}${ext}`
-    //     );
-    //     const newId = path.relative(path.dirname(importerPath), dstAssetPath);
-    //
-    //     if (fs.existsSync(dstAssetPath)) return newId;
-    //
-    //     const imageMagick = await import("imagemagick");
-    //     const resize = util.promisify(imageMagick.resize);
-    //
-    //     fs.mkdirSync(path.dirname(dstAssetPath), { recursive: true });
-    //
-    //     const sizeOptions = {} as any;
-    //     if (width) sizeOptions.width = width;
-    //     if (height) sizeOptions.height = height;
-    //
-    //     await resize({
-    //       srcPath: srcAssetPath,
-    //       dstPath: dstAssetPath,
-    //       ...sizeOptions,
-    //     });
-    //
-    //     return { id: baseId };
-    //   }
-    // },
 
     async load(id: string, ...args: any[]) {
       if (acceptRE.test(id)) {
@@ -105,10 +61,6 @@ export const viteImagePlugin = () => {
 
         const [filepath, queryRaw] = id.split("?");
         const query = parseDelimitedString(queryRaw, "&");
-        // const srcAssetPath = path.join(
-        //   path.dirname(process.cwd(), importerPath),
-        //   path.relative(process.cwd(), filepath)
-        // );
 
         const { name, ext } = path.parse(filepath);
         let finalImageFilepath = filepath;
@@ -173,7 +125,9 @@ export const viteImagePlugin = () => {
           ]);
           meta = { url, width, height, gradient };
           fs.mkdirSync(path.dirname(metaFilepath), { recursive: true });
-          fs.writeFileSync(metaFilepath, JSON.stringify(meta));
+
+          const { url: _, ...serializableMeta } = meta;
+          fs.writeFileSync(metaFilepath, JSON.stringify(serializableMeta));
         }
 
         return {

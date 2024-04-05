@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
 import cn from "classnames";
-import { Component, JSX } from "solid-js";
+import { Component, ComponentProps, JSX } from "solid-js";
 import { withStyle } from "~/style/commonStyle";
 
 const isImageCached = (url: string) => {
@@ -9,7 +9,7 @@ const isImageCached = (url: string) => {
   return img.complete;
 };
 
-interface Props {
+interface Props extends ComponentProps<"img"> {
   style?: JSX.CSSProperties;
   class?: string;
 }
@@ -35,7 +35,6 @@ const LazyImage: (meta: LazyImageMeta) => Component<Props> =
     return (
       <div
         class={cn(_LazyImage, $class)}
-        {...rest}
         style={{
           ...style,
           "--width": `${meta.width}`,
@@ -49,6 +48,7 @@ const LazyImage: (meta: LazyImageMeta) => Component<Props> =
           onload={() => {
             loaded = true;
           }}
+          {...rest}
         />
       </div>
     );
