@@ -2,9 +2,23 @@ import { Dialog } from "@kobalte/core";
 import { css } from "@linaria/core";
 import cn from "classnames";
 import { JSX } from "solid-js";
-import { config } from "~/config";
-import { getGalleryPictures } from "~/ssg/getGalleryPictures";
 import { breakpoint, breakpointUntil } from "~/style/commonStyle";
+
+const images = Object.values(
+  import.meta.glob("../assets/gallery/*.jpg", {
+    query: "?lazy",
+    import: "default",
+    eager: true,
+  })
+);
+
+const thumbnails = Object.values(
+  import.meta.glob("../assets/gallery/*.jpg", {
+    query: "?lazy&size=400x400",
+    import: "default",
+    eager: true,
+  })
+);
 
 interface Props {
   children?: JSX.Element;
@@ -14,53 +28,22 @@ const GallerySite: Component<Props> = (props) => {
   return (
     <div class={cn(_GallerySite, "ultra-wide")}>
       <div class={Grid}>
-        <For each={getGalleryPictures()}>
-          {(picture) => <Card picture={picture} />}
+        <For each={images}>
+          {(Image, idx) => <Card Image={Image} Thumbnail={thumbnails[idx()]} />}
         </For>
       </div>
     </div>
   );
 };
 
-const isImageCached = (url: string) => {
-  const img = new Image();
-  img.src = url;
-  return img.complete;
-};
-
 const Card: Component<any> = (props: any) => {
-  const { picture } = $destructure(props);
-  let imageLoaded = $signal(false);
-  let thumbnailLoaded = $signal(false);
-
-  const thumbnailUrl = `${config.base}${picture.thumbnailUrl}`;
-  const imageUrl = `${config.base}${picture.url}`;
-
-  $effect(() => {
-    thumbnailLoaded = isImageCached(thumbnailUrl);
-  });
-
+  // const { Image } = $destructure(props);
   return (
-    <div
-      class={cn(card, "relative h-0 w-full overflow-hidden pt-[100%]")}
-      style={{
-        "--color1": picture.meta.mainColors[0],
-        "--color2": picture.meta.mainColors[1],
-      }}>
+    <div class={cn(card, "relative h-0 w-full overflow-hidden pt-[100%]")}>
       <Dialog.Root>
         <Dialog.Trigger class="block">
-          <img
-            class={cn(
-              image,
-              "absolute left-0 top-0 h-full w-full object-cover"
-            )}
-            style={{
-              opacity: thumbnailLoaded ? 1 : 0,
-            }}
-            onLoad={() => {
-              thumbnailLoaded = true;
-            }}
-            src={thumbnailUrl}
+          <props.Thumbnail
+            class={cn("absolute left-0 top-0 h-full w-full object-cover")}
             alt="Gallery picture"
           />
         </Dialog.Trigger>
@@ -72,19 +55,11 @@ const Card: Component<any> = (props: any) => {
           <div class="fixed inset-0 z-50 flex items-center justify-center">
             <Dialog.Content class="flex max-h-[90vh] max-w-[90vw] items-center justify-center">
               <Dialog.CloseButton>
-                <img
+                <props.Image
                   class={cn(
-                    image,
                     "max-h-[90vh]  max-w-[90vw] overflow-hidden object-contain"
                   )}
-                  src={imageUrl}
                   alt="Gallery picture"
-                  style={{
-                    opacity: imageLoaded ? 1 : 0,
-                  }}
-                  onLoad={() => {
-                    imageLoaded = true;
-                  }}
                 />
               </Dialog.CloseButton>
             </Dialog.Content>
@@ -107,8 +82,6 @@ const Grid = css`
 `;
 
 const card = css`
-  background: linear-gradient(45deg, var(--color1) 0%, var(--color2) 100%);
-
   ${breakpoint("s")} {
     &:nth-child(1n + 18) + div {
       display: none;
@@ -119,13 +92,6 @@ const card = css`
       display: none;
     }
   }
-`;
-
-const image = css`
-  transition: opacity 200ms ease-in-out;
-  text-indent: 100%;
-  white-space: nowrap;
-  overflow: hidden;
 `;
 
 export default GallerySite;

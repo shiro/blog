@@ -69,7 +69,7 @@ const Project: Component<any> = (props: any) => {
         </span>
       </div>
       <div class="flex gap-4">
-        <For each={images}>{(url) => <PreviewImage url={url} />}</For>
+        {/* <For each={images}>{(url) => <PreviewImage url={url} />}</For> */}
       </div>
       <div class="mt-4 flex gap-2">
         <IconText icon="globe" />{" "}

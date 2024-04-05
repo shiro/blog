@@ -1,17 +1,17 @@
-import { defineConfig } from "@solidjs/start/config";
-import { PluginOption } from "vite";
 import { nodeTypes } from "@mdx-js/mdx";
-import path, { join } from "node:path";
-import { linariaVitePlugin } from "./vite/linariaVitePlugin";
-import remarkShikiTwoslash from "remark-shiki-twoslash";
+import { defineConfig } from "@solidjs/start/config";
+import path from "node:path";
 import rehypeRaw from "rehype-raw";
-import remarkGfm from "remark-gfm";
 import remarkFrontmatter from "remark-frontmatter";
+import remarkShikiTwoslash from "remark-shiki-twoslash";
+import { PluginOption } from "vite";
 import compileTime from "vite-plugin-compile-time";
 import solidSvg from "vite-plugin-solid-svg";
+import { linariaVitePlugin } from "./vite/linariaVitePlugin";
 // import devtools from "solid-devtools/vite";
 // @ts-ignore
 import _mdx from "@vinxi/plugin-mdx";
+import { viteImagePlugin } from "./vite/viteImagePlugin";
 
 const { default: mdx } = _mdx;
 
@@ -104,6 +104,7 @@ export default defineConfig({
         },
       },
       plugins: [
+        viteImagePlugin(),
         compileTime(),
         solidSvg(),
         SSRMapPlugin(),
