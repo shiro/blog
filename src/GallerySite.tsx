@@ -5,7 +5,7 @@ import { JSX } from "solid-js";
 import { breakpoint, breakpointUntil } from "~/style/commonStyle";
 
 const images = Object.values(
-  import.meta.glob("../assets/gallery/*.jpg", {
+  import.meta.glob("@assets/gallery/*.jpg", {
     query: "?lazy",
     import: "default",
     eager: true,
@@ -13,7 +13,7 @@ const images = Object.values(
 );
 
 const thumbnails = Object.values(
-  import.meta.glob("../assets/gallery/*.jpg", {
+  import.meta.glob("@assets/gallery/*.jpg", {
     query: "?lazy&size=400x400",
     import: "default",
     eager: true,
