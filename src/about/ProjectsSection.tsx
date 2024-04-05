@@ -17,6 +17,7 @@ import ProjectImageFujipodWeb2 from "@assets/about/project-fujipod-web-2.jpg?laz
 import ProjectThumbnailFujipodWeb2 from "@assets/about/project-fujipod-web-2.jpg?lazy&size=300x";
 import ProjectImageFujipodWeb3 from "@assets/about/project-fujipod-web-3.jpg?lazy";
 import ProjectThumbnailFujipodWeb3 from "@assets/about/project-fujipod-web-3.jpg?lazy&size=300x";
+import DialogImage from "~/DialogImage";
 
 interface Props {
   style?: JSX.CSSProperties;
@@ -93,8 +94,15 @@ const Project: Component<any> = (props: any) => {
       </div>
       <div class="flex gap-4">
         <For each={images}>
-          {(Image, idx) => (
-            <PreviewImage Image={Image} Thumbnail={thumbnails[idx()]} />
+          {(image, idx) => (
+            <DialogImage
+              class={cn(
+                ImageStyle,
+                "h-32 w-[30%] max-w-60 rounded border-2 border-colors-primary-800 object-cover xs:w-[50%]"
+              )}
+              image={image}
+              thumbnail={thumbnails[idx()]}
+            />
           )}
         </For>
       </div>

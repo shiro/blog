@@ -1,10 +1,10 @@
-import { Dialog } from "@kobalte/core";
 import { css } from "@linaria/core";
 import cn from "classnames";
-import { JSX } from "solid-js";
+import { JSX, Component } from "solid-js";
+import DialogImage from "~/DialogImage";
 import { breakpoint, breakpointUntil } from "~/style/commonStyle";
 
-const images = Object.values(
+const images: Component[] = Object.values(
   import.meta.glob("@assets/gallery/*.jpg", {
     query: "?lazy",
     import: "default",
@@ -12,7 +12,7 @@ const images = Object.values(
   })
 );
 
-const thumbnails = Object.values(
+const thumbnails: Component[] = Object.values(
   import.meta.glob("@assets/gallery/*.jpg", {
     query: "?lazy&size=400x400",
     import: "default",
@@ -29,43 +29,16 @@ const GallerySite: Component<Props> = (props) => {
     <div class={cn(_GallerySite, "ultra-wide")}>
       <div class={Grid}>
         <For each={images}>
-          {(Image, idx) => <Card Image={Image} Thumbnail={thumbnails[idx()]} />}
+          {(image, idx) => (
+            <DialogImage
+              class={cn(card, "h-0 w-full pt-[100%]")}
+              alt="gallery picture"
+              image={image}
+              thumbnail={thumbnails[idx()]}
+            />
+          )}
         </For>
       </div>
-    </div>
-  );
-};
-
-const Card: Component<any> = (props: any) => {
-  // const { Image } = $destructure(props);
-  return (
-    <div class={cn(card, "relative h-0 w-full overflow-hidden pt-[100%]")}>
-      <Dialog.Root>
-        <Dialog.Trigger class="block">
-          <props.Thumbnail
-            class={cn("absolute left-0 top-0 h-full w-full object-cover")}
-            alt="Gallery picture"
-          />
-        </Dialog.Trigger>
-        <Dialog.Portal>
-          <Dialog.Overlay
-            class="fixed inset-0 z-50 cursor-pointer"
-            style={{ background: "rgba(0, 0, 0, 0.5)" }}
-          />
-          <div class="fixed inset-0 z-50 flex items-center justify-center">
-            <Dialog.Content class="flex max-h-[90vh] max-w-[90vw] items-center justify-center">
-              <Dialog.CloseButton>
-                <props.Image
-                  class={cn(
-                    "max-h-[90vh]  max-w-[90vw] overflow-hidden object-contain"
-                  )}
-                  alt="Gallery picture"
-                />
-              </Dialog.CloseButton>
-            </Dialog.Content>
-          </div>
-        </Dialog.Portal>
-      </Dialog.Root>
     </div>
   );
 };
