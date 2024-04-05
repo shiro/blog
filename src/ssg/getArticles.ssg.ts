@@ -13,6 +13,7 @@ export const getArticlesSSG = () => {
           .readFileSync(path.join(base, x, "article.mdx"))
           .toString();
         const frontmatter = matter(raw).data;
+        if (frontmatter.private) return;
 
         const title = frontmatter.title ?? raw.match(/# [^\n]*/)![0].slice(2);
         const description = raw.match(/# [^\n]+\n+([\s\S]+?)(?=\n\n)/)?.[1];
