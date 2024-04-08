@@ -6,6 +6,7 @@ import { Suspense } from "solid-js";
 import { config } from "~/config";
 import Header from "~/Header";
 import { routes } from "~/routes";
+import BackgroundImage from "~/BackgroundImage";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
             content="Matic Utsumi Gačar's blog and portfolio website discussing code, art and life."
           />
           <Header />
+          <BackgroundImage />
           <div class="content-container">
             <Suspense>{props.children}</Suspense>
           </div>
