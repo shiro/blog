@@ -7,10 +7,10 @@ const files = fs.readdirSync(base);
 
 export const getArticlesSSG = () => {
   return files
-    .map((x) => {
+    .map((slug) => {
       try {
         const raw = fs
-          .readFileSync(path.join(base, x, "article.mdx"))
+          .readFileSync(path.join(base, slug, "article.mdx"))
           .toString();
         const frontmatter = matter(raw).data;
         if (frontmatter.private) return;
@@ -18,9 +18,9 @@ export const getArticlesSSG = () => {
         const title = frontmatter.title ?? raw.match(/# [^\n]*/)![0].slice(2);
         const description = raw.match(/# [^\n]+\n+([\s\S]+?)(?=\n\n)/)?.[1];
 
-        const url = `/articles/${x.split(".")[0]}`;
-        const date = x.split("-").slice(0, 3).reverse().join(".");
-        return { title, url, description, date };
+        const url = `/articles/${slug.split(".")[0]}`;
+        const date = slug.split("-").slice(0, 3).reverse().join(".");
+        return { slug, title, url, description, date };
       } catch (err) {
         // console.error(err);
       }

@@ -1,17 +1,20 @@
 import { Tooltip } from "@kobalte/core";
 import { css } from "@linaria/core";
+import { Meta } from "@solidjs/meta";
 import cn from "classnames";
 import { Component, children, lazy } from "solid-js";
 import LazyImage from "~/LazyImage";
 import Spoiler from "~/Spoiler";
 import Icon from "~/components/Icon";
 import IconText from "~/components/IconText";
+import { getArticles } from "~/ssg/getArticles";
 import { remBase } from "~/style/fluidSizeTS";
 
 const articlesImportMap = import.meta.glob("./articles/*/*.mdx");
+const articles = getArticles();
+
 const getArticleComponent = (name: string) =>
   articlesImportMap[`./articles/${name}/article.mdx`];
-
 export const isValidArticle = (name: string) => !!getArticleComponent(name);
 
 interface Props {
@@ -21,9 +24,11 @@ interface Props {
 const Article: Component<Props> = (props) => {
   const { name } = $destructure(props);
   const RawArticle = lazy(getArticleComponent(name) as any);
+  const description = articles.find((x: any) => x.slug == name)?.description;
 
   return (
     <div class={_Article}>
+      <Meta name="description" content={description} />
       <RawArticle
         components={{
           ["data-lsp"]: (props: any) => {

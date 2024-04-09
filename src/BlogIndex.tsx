@@ -6,7 +6,7 @@ import { For } from "solid-js/web";
 import { config } from "~/config";
 import { getArticles } from "~/ssg/getArticles";
 
-const list = getArticles();
+const articles = getArticles();
 
 interface Props {
   children?: JSX.Element;
@@ -16,7 +16,7 @@ const BlogIndex: Component<Props> = (props) => {
   return (
     <main class={cn(_BlogIndex)}>
       <ul class="flex flex-col gap-4">
-        <For each={list}>
+        <For each={articles}>
           {(item, idx) => (
             <>
               <li class="flex flex-col p-4 hover:bg-colors-primary-100">
@@ -35,7 +35,7 @@ const BlogIndex: Component<Props> = (props) => {
                   />
                 </a>
               </li>
-              <Show when={idx() != list.length - 1}>
+              <Show when={idx() != articles.length - 1}>
                 <Separator.Root class="border-colors-text-300a" />
               </Show>
             </>
