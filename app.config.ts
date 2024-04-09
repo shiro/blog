@@ -162,17 +162,7 @@ export default defineConfig({
         }),
         linariaVitePlugin({
           include: [/\/src\//],
-          exclude: [
-            /solid-refresh/,
-            /\/@babel\/runtime\//,
-            /\.import\./,
-            // /vinxi/,
-            // /@solidjs\/start\/server/,
-            // /node_modues/,
-            // /trpcClientUtil\.ts$/
-            // /@server/,
-            // /\/packages\/server(?!\/pdf)/,
-          ],
+          exclude: [/solid-refresh/, /\/@babel\/runtime\//, /\.import\./],
         }) as any,
       ],
     };
