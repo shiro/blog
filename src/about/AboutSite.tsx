@@ -72,10 +72,7 @@ const AboutSite: Component<Props> = (props) => {
           </li>
         </ul>
       </LabeledBox>
-      <LabeledBox
-        label="about me"
-        // class="flex flex-col justify-stretch"
-        style={{ "grid-area": "about" }}>
+      <LabeledBox label="about me" style={{ "grid-area": "about" }}>
         <p>I solve engineering problems to improve lives.</p>
         <p>
           My passion is building full-stack applications that have a lasting

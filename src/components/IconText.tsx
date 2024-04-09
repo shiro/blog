@@ -6,7 +6,7 @@ import Icon from "~/components/Icon";
 interface Props extends ComponentProps<"span"> {
   // TODO add all sizes
   size?: "small" | "sub" | "body" | "heading1" | "heading2" | "heading3";
-  className?: string;
+  class?: string;
   icon?: string;
   description?: string;
   children?: JSX.Element;
@@ -14,11 +14,16 @@ interface Props extends ComponentProps<"span"> {
 }
 
 const IconText: Component<Props> = (props) => {
-  const { className, children, icon, description, ...rest } =
-    $destructure(props);
+  const {
+    class: $class,
+    children,
+    icon,
+    description,
+    ...rest
+  } = $destructure(props);
 
   return (
-    <span class={cn(_IconText, className)} {...rest}>
+    <span class={cn(_IconText, $class)} {...rest}>
       {icon ? <Icon icon={icon} description={description} /> : children}
     </span>
   );

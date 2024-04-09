@@ -7,6 +7,7 @@ import { config } from "~/config";
 import Header from "~/Header";
 import { routes } from "~/routes";
 import BackgroundImage from "~/BackgroundImage";
+import Footer from "~/Footer";
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
           <div class="content-container">
             <Suspense>{props.children}</Suspense>
           </div>
+          <Footer />
         </MetaProvider>
       )}>
       {routes}
