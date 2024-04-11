@@ -31,7 +31,7 @@ const BlogIndex: Component<Props> = (props) => {
                   </span>
                   <span
                     class="text-colors-text-600a"
-                    innerHTML={item.description.replaceAll("\n", "<br/>")}
+                    innerHTML={item.description?.replaceAll("\n\n", "<br/>")}
                   />
                 </a>
               </li>

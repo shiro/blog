@@ -215,13 +215,19 @@ export const globals = css`
       width: calc(100% + 16px);
       background-color: ${color("colors/primary-200")};
     }
-    .code-container .line {
+    .line {
       ${subText};
       min-height: ${smallTextHeight}px;
       white-space: pre-wrap !important;
+      &:last-child {
+        display: none;
+      }
     }
     .language-id {
       display: none;
+    }
+    .diff.add {
+      background: rgba(53, 117, 42, 0.2);
     }
   }
   .theme-light .shiki.github-dark {

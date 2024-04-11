@@ -13,6 +13,9 @@ import { linariaVitePlugin } from "./vite/linariaVitePlugin";
 import _mdx from "@vinxi/plugin-mdx";
 import tsconfig from "./tsconfig.json";
 import { viteImagePlugin } from "./vite/viteImagePlugin";
+import remarkGfm from "remark-gfm";
+import rehypeShiki from "@shikijs/rehype";
+import { transformerNotationDiff } from "@shikijs/transformers";
 
 const { default: mdx } = _mdx;
 
@@ -132,33 +135,45 @@ export default defineConfig({
           rehypePlugins: [
             // rehypeSlug, rehypeCollectHeadings,
             [rehypeRaw, { passThrough: nodeTypes }],
-          ],
-          remarkPlugins: [
-            remarkFrontmatter,
-            // remarkGfm,
             [
-              (remarkShikiTwoslash as any).default,
+              rehypeShiki,
               {
-                disableImplicitReactImport: true,
-                includeJSDocInHover: true,
+                // disableImplicitReactImport: true,
+                // includeJSDocInHover: true,
                 // theme: "css-variables",
-                themes: ["github-dark", "github-light"],
-                defaultCompilerOptions: {
-                  allowSyntheticDefaultImports: true,
-                  esModuleInterop: true,
-                  target: "ESNext",
-                  module: "esnext",
-                  lib: ["lib.dom.d.ts", "lib.es2015.d.ts"],
-                  jsxImportSource: "solid-js",
-                  jsx: "preserve",
-                  types: ["solid-start/env"],
-                  paths: {
-                    "~/*": ["./src/*"],
-                  },
-                },
+                // themes: { dark: "github-dark", light: "github-light" },
+                theme: "github-dark",
+                transformers: [
+                  transformerNotationDiff(),
+                  // {
+                  //   line(node: any, line: any) {
+                  // node.properties["data-line"] = line;
+                  // if (!node.children.length) {
+                  //   console.log(node, this.lines.length, line);
+                  // }
+                  // if ([1, 3, 4].includes(line))
+                  //   this.addClassToHast(node, "foo");
+                  // },
+                  // },
+                ],
+
+                // defaultCompilerOptions: {
+                //   allowSyntheticDefaultImports: true,
+                //   esModuleInterop: true,
+                //   target: "ESNext",
+                //   module: "esnext",
+                //   lib: ["lib.dom.d.ts", "lib.es2015.d.ts"],
+                //   jsxImportSource: "solid-js",
+                //   jsx: "preserve",
+                //   types: ["solid-start/env"],
+                //   paths: {
+                //     "~/*": ["./src/*"],
+                //   },
+                // },
               },
             ],
           ],
+          remarkPlugins: [remarkFrontmatter, remarkGfm],
         }),
         linariaVitePlugin({
           include: [/\/src\//],

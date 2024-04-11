@@ -12,11 +12,11 @@ export const getArticlesSSG = () => {
         const raw = fs
           .readFileSync(path.join(base, slug, "article.mdx"))
           .toString();
-        const frontmatter = matter(raw).data;
+        const { data: frontmatter, content } = matter(raw);
         if (frontmatter.private) return;
 
-        const title = frontmatter.title ?? raw.match(/# [^\n]*/)![0].slice(2);
-        const description = raw.match(/# [^\n]+\n+([\s\S]+?)(?=\n\n)/)?.[1];
+        const title = frontmatter.title ?? "NO TITLE";
+        const description = content.match(/\n\n([\s\S]+?)(?=\n\n)/)?.[1];
 
         const url = `/articles/${slug.split(".")[0]}`;
         const date = slug.split("-").slice(0, 3).reverse().join(".");

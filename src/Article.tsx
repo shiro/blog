@@ -24,11 +24,12 @@ interface Props {
 const Article: Component<Props> = (props) => {
   const { name } = $destructure(props);
   const RawArticle = lazy(getArticleComponent(name) as any);
-  const description = articles.find((x: any) => x.slug == name)?.description;
+  const meta = articles.find((x: any) => x.slug == name)!;
 
   return (
     <div class={_Article}>
-      <Meta name="description" content={description} />
+      <Meta name="description" content={meta.description} />
+      <h1 class="text-colors-text-900a">{meta.title}</h1>
       <RawArticle
         components={{
           ["data-lsp"]: (props: any) => {
@@ -59,26 +60,52 @@ const Article: Component<Props> = (props) => {
               </figure>
             );
           },
-          code: (props: any) => {
-            const { children: _c, ...rest } = $destructure(props);
-            const c = children(() => _c);
-            return (
-              <code
-                {...rest}
-                class={
-                  typeof c() == "string"
-                    ? "rounded bg-colors-primary-300 pl-2 pr-2"
-                    : ""
-                }>
-                {c()}
-              </code>
-            );
-          },
+          // code: (props: any) => {
+          //   const { children: _c, ...rest } = $destructure(props);
+          //   const c = children(() => _c);
+          //   return (
+          //     <code
+          //       {...rest}
+          //       class={
+          //         typeof c() == "string"
+          //           ? "rounded bg-colors-primary-300 pl-2 pr-2"
+          //           : ""
+          //       }>
+          //       {c()}
+          //     </code>
+          //   );
+          // },
+          h1: (props: any) => (
+            <h2 {...props} class="text-h2 text-colors-text-900a" />
+          ),
+          h2: (props: any) => (
+            <h3 {...props} class="text-h3 text-colors-text-900a" />
+          ),
+          h3: (props: any) => (
+            <h4 {...props} class="text-h4 text-colors-text-900a" />
+          ),
+
           ul: (props: any) => (
             <ul {...props} class={cn(props.className, "list-disc pl-8")} />
           ),
           li: (props: any) => <li {...props} />,
           em: (props: any) => <em {...props} class="pr-1" />,
+          table: (props: any) => (
+            <table
+              {...props}
+              class="mb-4 mt-4 border-2 border-colors-text-300a"
+            />
+          ),
+          th: (props: any) => {
+            return (
+              <th
+                {...props}
+                style={{ ...props.style, "text-align": props.style.textAlign }}
+                class="pb-1 pl-2 pr-2 pt-1 pt-1 text-colors-text-900a"
+              />
+            );
+          },
+          td: (props: any) => <td {...props} class="pb-1 pl-2 pr-2 pt-1" />,
           Spoiler: (props: any) => <Spoiler>{props.children}</Spoiler>,
           Embed: (props: any) => {
             if (props.url?.includes("://github.com")) {
@@ -129,8 +156,8 @@ const Article: Component<Props> = (props) => {
 
 const _Article = css`
   ${LazyImage.styles.container} {
-    width: calc((var(--width) / 16) * ${remBase}rem);
-    height: calc((var(--height) / 16) * ${remBase}rem);
+    // width: calc((var(--width) / 16) * ${remBase}rem);
+    // height: calc((var(--height) / 16) * ${remBase}rem);
   }
 `;
 

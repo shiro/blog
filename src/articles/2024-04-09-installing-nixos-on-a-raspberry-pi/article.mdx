@@ -1,0 +1,97 @@
+---
+title: Installing NixOS on a Raspberry Pi
+private: false
+---
+
+
+Do you love NixOS and want to install it everywhere including your Raspberry Pi?
+Today we're going to do just that, so grab your Pi and an SD card!
+
+TODO intro
+
+# Installing
+
+First, make sure there's no important data on the SD card, since it's going to get wiped clean when
+we flash the nixOS image.  
+To get a recent image, simply grab a green build one from [Hydra](https://hydra.nixos.org/job/nixos/trunk-combined/nixos.sd_image.aarch64-linux), the official build CI.
+
+I used [this one](https://hydra.nixos.org/build/255585304/download/1/nixos-sd-image-24.05pre608655.ff0dbd94265a-aarch64-linux.img.zst), but grabbind a recent one is probably the best idea.
+
+Next, plug in your SD card and find out what device letter it got assgined:
+
+```txt
+[root@pc:~]# lsblk
+sdf                   8:80   1  29.7G  0 disk
+└─sdf1                8:81   1  29.7G  0 part
+```
+
+In my case its `/dev/sdf`, make sure you pick the right one to avoid data loss.
+
+
+
+TODO
+
+```txt
+[root@pc:~]# zstd --decompress nixos-sd-image-24.05pre608655.ff0dbd94265a-aarch64-linux.img.zst
+[root@pc:~]# sudo dd if=nixos-sd-image-24.05pre608655.ff0dbd94265a-aarch64-linux.img of=/dev/sdf bs=4096 conv=fsync status=progress
+```
+
+wait for a long time
+
+
+/run/media/shiro/NIXOS_SD/boot/extlinux/extlinux.conf
+
+```txt
+[root@pc:~]# lsblk
+sdf                   8:80   1  29.7G  0 disk
+├─sdf1                8:81   1    30M  0 part /run/media/shiro/FIRMWARE
+└─sdf2                8:82   1  29.7G  0 part /run/media/shiro/NIXOS_SD
+
+[root@pc:~]# ls -la /dev/disk/by-label
+lrwxrwxrwx 1 root root 10 Apr 10 16:00 FIRMWARE -> ../../sdf1
+lrwxrwxrwx 1 root root 10 Apr 10 16:00 NIXOS_SD -> ../../sdf2
+```
+
+```txt
+[root@pc:~]# mount /dev/sdf2 /mnt
+[root@pc:~]# mkdir /mnt/root/.ssh
+[root@pc:~]# chmod 700 /mnt/root/.ssh
+[root@pc:~]# cat pi_key.pub > /mnt/root/.ssh/authorized_keys
+[root@pc:~]# chmod 600 /mnt/root/.ssh/authorized_keys
+```
+
+# Key
+
+```bash
+cp pi_key /mnt/pi/root/.ssh/autorized_keys
+sudo chown root /mnt/pi/root/.ssh/autorized_keys
+sudo chgrp root /mnt/pi/root/.ssh/autorized_keys
+sudo chmod 600 /mnt/pi/root/.ssh/autorized_keys
+```
+
+# connect
+
+```bash
+sudo -E nmap -sP 192.168.11.0/24
+ssh  -i pi_key root@192.168.11.7
+```
+
+```txt
+Nmap scan report for 192.168.11.1 <- router
+Host is up (0.00036s latency).
+MAC Address: AA:BB:CC:DD:EE:FF (BUFFALO.INC)
+Nmap scan report for 192.168.11.7 <- raspberry
+Host is up (0.00018s latency).
+MAC Address: AA:BB:CC:DD:EE:FF (Raspberry Pi Trading)
+Nmap scan report for 192.168.11.14 <- my PC
+```
+
+
+# Config
+
+```txt
+[root@nixos:~]# nixos-generate-config
+writing /etc/nixos/hardware-configuration.nix...
+writing /etc/nixos/configuration.nix...
+For more hardware-specific settings, see https://github.com/NixOS/nixos-hardware.
+```
