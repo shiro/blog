@@ -3,19 +3,21 @@ import { defineConfig } from "@solidjs/start/config";
 import path from "node:path";
 import rehypeRaw from "rehype-raw";
 import remarkFrontmatter from "remark-frontmatter";
-import remarkShikiTwoslash from "remark-shiki-twoslash";
 import { PluginOption } from "vite";
 import compileTime from "vite-plugin-compile-time";
 import solidSvg from "vite-plugin-solid-svg";
 import { linariaVitePlugin } from "./vite/linariaVitePlugin";
-// import devtools from "solid-devtools/vite";
 // @ts-ignore
 import _mdx from "@vinxi/plugin-mdx";
-import tsconfig from "./tsconfig.json";
-import { viteImagePlugin } from "./vite/viteImagePlugin";
-import remarkGfm from "remark-gfm";
 import rehypeShiki from "@shikijs/rehype";
 import { transformerNotationDiff } from "@shikijs/transformers";
+import remarkGfm from "remark-gfm";
+import remarkCaptions from "remark-captions";
+import tsconfig from "./tsconfig.json";
+import { viteImagePlugin } from "./vite/viteImagePlugin";
+import { parseDelimitedString } from "./src/util/parseDelimitedString";
+
+// import devtools from "solid-devtools/vite";
 
 const { default: mdx } = _mdx;
 
@@ -132,48 +134,49 @@ export default defineConfig({
           jsx: true,
           jsxImportSource: "solid-js",
           providerImportSource: "solid-mdx",
-          rehypePlugins: [
-            // rehypeSlug, rehypeCollectHeadings,
-            [rehypeRaw, { passThrough: nodeTypes }],
+          remarkPlugins: [
+            remarkFrontmatter,
+            remarkGfm,
             [
-              rehypeShiki,
+              remarkCaptions,
               {
-                // disableImplicitReactImport: true,
-                // includeJSDocInHover: true,
-                // theme: "css-variables",
-                // themes: { dark: "github-dark", light: "github-light" },
-                theme: "github-dark",
-                transformers: [
-                  transformerNotationDiff(),
-                  // {
-                  //   line(node: any, line: any) {
-                  // node.properties["data-line"] = line;
-                  // if (!node.children.length) {
-                  //   console.log(node, this.lines.length, line);
-                  // }
-                  // if ([1, 3, 4].includes(line))
-                  //   this.addClassToHast(node, "foo");
-                  // },
-                  // },
-                ],
-
-                // defaultCompilerOptions: {
-                //   allowSyntheticDefaultImports: true,
-                //   esModuleInterop: true,
-                //   target: "ESNext",
-                //   module: "esnext",
-                //   lib: ["lib.dom.d.ts", "lib.es2015.d.ts"],
-                //   jsxImportSource: "solid-js",
-                //   jsx: "preserve",
-                //   types: ["solid-start/env"],
-                //   paths: {
-                //     "~/*": ["./src/*"],
-                //   },
-                // },
+                external: {
+                  table: "Table:",
+                },
               },
             ],
           ],
-          remarkPlugins: [remarkFrontmatter, remarkGfm],
+          rehypePlugins: [
+            [
+              rehypeShiki,
+              {
+                theme: "github-dark",
+                transformers: [
+                  transformerNotationDiff(),
+                  (() => {
+                    let meta: any;
+                    return {
+                      preprocess(raw: any, options: any) {
+                        meta = {};
+                        const rawMeta = options.meta.__raw;
+                        if (!rawMeta) return;
+                        meta = Object.fromEntries(
+                          Object.entries(
+                            parseDelimitedString(rawMeta, " ")
+                          ).map(([k, v]) => [k, JSON.parse(v)])
+                        );
+                      },
+                      code(node: any) {
+                        node.properties = { ...node.properties, ...meta };
+                        node.meta = meta;
+                      },
+                    };
+                  })(),
+                ],
+              },
+            ],
+            [rehypeRaw, { passThrough: nodeTypes }],
+          ],
         }),
         linariaVitePlugin({
           include: [/\/src\//],

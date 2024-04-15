@@ -4,61 +4,91 @@ private: false
 ---
 
 import DialogImage from "~/DialogImage";
-import DropletCreatedImg from "./droplet-created.jpg?lazy";
+import DropletCreatedImg from "./droplet-created.jpg?lazy&size=x400";
+import NoNixOSImg from "./no-nixos.jpg?lazy&size=x300";
 
 
-NixOS is not a currently supported Linux distribution on Digitalocean, but that
+NixOS is not a currently supported Linux distribution on Digital Ocean, but that
 won't stop us from deploying it there.
 
 
 # Introduction
 
-TODO intro
+[Digital Ocean](https://www.digitalocean.com) is a popular cloud hosting provider for Linux servers,
+databases and much more. When it comes to choosing a Linux distribution for your server,
+there are many things to consider such as package format, update/upgrade cycles, maintenance overhead, etc.
+
+[NixOS](https://nixos.org) is not just a great disto for desktop use, but has lots of features
+that make it a good choice for servers as well, such as declarative configuration of the entire
+system, reproducability and reliability.
+I personally started using it for production servers a about year ago and never looked back,
+giving it a try is highly recommended!
+
+Spinning up a NixOS droplet takes only around 5 minutes and is a great way to try it out
+without any commitment or time/cost investment.
+
 
 # Creating a droplet
 
+Droplets are basically virtual Linux servers that we can SSH into and manage ourselves.
+Let's create a new one and make it run NixOS.  
+
 Select `Manage > Droplets` from the navigation sidebar and click the big `Create Droplet`
 button.
-
 As for the droplet region, simply select one close to you.
-
 The next step is selecting which Linux distribution we want, however as you might have noticed,
 NixOS is currently not officially supported.
+
+
+<Img
+src={NoNixOSImg}
+caption="NixOS is currently not available as a deploy option."
+/>
+
 Thankfully, there's a cool project called [NixOS Infect](https://github.com/elitak/nixos-infect)
 that allows us to convert an existing live Linux install to a NixOS system on the fly.
-
-I recommend going to the [NixOS Infect Github page](https://github.com/elitak/nixos-infect) and
+I recommend going to the project's Github page and
 checking which image is confirmed to be working from the table.
+
+<Embed
+url="https://github.com/elitak/nixos-infect"
+description="Install nixos over the existing OS in a DigitalOcean droplet"
+/>
+
 At the time of writing, `Ubuntu 22.04 x64` seemed to be working and was available on DO, so that's
 what I selected.
-
+I don't think the distro matters in this case, since it will get converted to NixOS anyways.
 
 | Distribution | Name      | Status  | Test date  |
 | :----------- | :-------- | :------ | :--------- |
 | ...          | ...       | ...     | ...        |
+| Ubuntu       | 20.04 x64 | success | 2022-03-23 |
 | Ubuntu       | 22.04 x64 | success | 2023-06-05 |
+| Ubuntu       | 22.10 x64 | failure | 2023-06-05 |
+| Ubuntu       | 23.10 x64 | failure | 2023-11-16 |
 | ...          | ...       | ...     | ...        |
 
+Table: Select a tested distro from the list.
 
 After selecting the image, I'll select the 6$/mo droplet and upload my SSH public key to
 login with ease. If you're not familiar with SSH keys, I recommend [reading up on them](https://docs.digitalocean.com/products/droplets/how-to/add-ssh-keys) or using the password login.
 
-Click `Advanced Options > Add Initialization scripts (free)`, then enter
+Click `Advanced Options > Add Initialization scripts (free)` and paste in the code from the NixOS infect documentation:
 
-```
+```txt
 #cloud-config
 
 runcmd:
   - curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | PROVIDER=digitalocean NIX_CHANNEL=nixos-23.05 bash 2>&1 | tee /tmp/infect.log
 ```
 
+The above is an init script that will run NixOS infect as soon as the droplet is initialized.
+Finally, it's time to hit that big `Create Droplet` button.
+After a few seconds you should see the droplet running and ready on the dashboard.
 
-
-Finally, hit that big `Create Droplet` button.
-
-<DialogImage
-image={DropletCreatedImg}
-thumbnail={DropletCreatedImg}
+<Img
+  src={DropletCreatedImg}
+  caption="Control panel after spinning up the droplet."
 />
 
 ## Configuring the system
@@ -66,8 +96,8 @@ thumbnail={DropletCreatedImg}
 Once the droplet is created, click on the `IPv4` field to copy the address to the system clipboard, open
 a terminal and connect to the droplet. After connecting, ensure it worked by checking the system info.
 
-```
-[shiro@pc:~]# ssh root@111.222.333.444
+```txt
+[shiro@pc:~]# ssh root@143.198.219.81
 [root@droplet:~]# uname -a
 Linux droplet 6.1.69 #1-NixOS SMP PREEMPT_DYNAMIC Wed Dec 20 16:00:29 UTC 2023 x86_64 GNU/Linux
 ```
@@ -77,7 +107,7 @@ Let's try adding some packages by rebuilding the system, since there's currently
 no installed editor, we'll drop into a nix-shell.
 
 
-```
+```txt
 [root@droplet:~]# cd /etc/nixos/
 [root@droplet:/etc/nixos]# nix-shell -p neovim
 [nix-shell:/etc/nixos]# nvim configuration.nix
@@ -95,6 +125,12 @@ no installed editor, we'll drop into a nix-shell.
   # ... rest of the config file
 }
 ```
+
+After saving the file and closing the editor, all that's left to do is
+rebuilding the system and switching to the new version that includes
+the new packages we specified.
+After switching, the packages should be available as globally installed
+system packages.
 
 ```txt
 [nix-shell:/etc/nixos]# exit

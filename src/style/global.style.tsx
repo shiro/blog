@@ -1,5 +1,6 @@
 import { colorVariablesCSS } from "~/style/colorVariableCSS";
 import {
+  bodyText,
   color,
   heading1Text,
   primaryFontBold,
@@ -207,16 +208,9 @@ export const globals = css`
     margin-bottom: 32px;
     background-color: ${color("colors/primary-50")};
     padding: 8px;
-    .code-title {
-      position: relative;
-      top: -8px;
-      left: -8px;
-      padding: 4px 16px;
-      width: calc(100% + 16px);
-      background-color: ${color("colors/primary-200")};
-    }
     .line {
       ${subText};
+      width: 100%;
       min-height: ${smallTextHeight}px;
       white-space: pre-wrap !important;
       &:last-child {

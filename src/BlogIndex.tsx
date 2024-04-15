@@ -19,10 +19,10 @@ const BlogIndex: Component<Props> = (props) => {
         <For each={articles}>
           {(item, idx) => (
             <>
-              <li class="flex flex-col p-4 hover:bg-colors-primary-100">
+              <li class="flex flex-col hover:bg-colors-primary-100">
                 <a
                   href={`${config.base}${item.url}`}
-                  class="flex flex-col no-underline">
+                  class="flex flex-col p-4 no-underline">
                   <span class="text-h2 text-colors-primary-800">
                     {item.title}
                   </span>
@@ -36,7 +36,7 @@ const BlogIndex: Component<Props> = (props) => {
                 </a>
               </li>
               <Show when={idx() != articles.length - 1}>
-                <Separator.Root class="border-colors-text-300a" />
+                <Separator.Root class="border-colors-text-100a" />
               </Show>
             </>
           )}

@@ -1,6 +1,8 @@
 import { Dialog } from "@kobalte/core";
+import { css } from "@linaria/core";
 import cn from "classnames";
 import { Component, JSX } from "solid-js";
+import { withStyle } from "~/style/commonStyle";
 
 interface Props {
   children?: JSX.Element;
@@ -12,16 +14,20 @@ interface Props {
 }
 
 const DialogImage: Component<Props> = (props) => {
-  const { children, class: $class, alt, ...rest } = $destructure(props);
+  const {
+    children,
+    class: $class,
+    alt,
+    thumbnail,
+    image,
+    ...rest
+  } = $destructure(props);
 
   return (
     <div class={cn($class, "relative overflow-hidden")} {...rest}>
       <Dialog.Root>
         <Dialog.Trigger class="block">
-          <props.thumbnail
-            class={cn("absolute left-0 top-0 h-full w-full object-cover")}
-            alt={alt}
-          />
+          <props.thumbnail class={cn(_Thumbnail, "object-cover")} alt={alt} />
         </Dialog.Trigger>
         <Dialog.Portal>
           <Dialog.Overlay
@@ -46,4 +52,6 @@ const DialogImage: Component<Props> = (props) => {
   );
 };
 
-export default DialogImage;
+const _Thumbnail = css``;
+
+export default withStyle(DialogImage, { Thumbnail: _Thumbnail });
