@@ -4,8 +4,11 @@ private: false
 ---
 
 import DialogImage from "~/DialogImage";
-import DropletCreatedImg from "./droplet-created.jpg?lazy&size=x400";
-import NoNixOSImg from "./no-nixos.jpg?lazy&size=x300";
+
+import NoNixOSImg from "./no-nixos.jpg?lazy";
+import NoNixOSThumb from "./no-nixos.jpg?lazy&size=x300";
+import DropletCreatedImg from "./droplet-created.jpg?lazy";
+import DropletCreatedThumb from "./droplet-created.jpg?lazy&size=x400";
 
 
 NixOS is not a currently supported Linux distribution on Digital Ocean, but that
@@ -42,6 +45,7 @@ NixOS is currently not officially supported.
 
 <Img
 src={NoNixOSImg}
+thumbnail={NoNixOSThumb}
 caption="NixOS is currently not available as a deploy option."
 />
 
@@ -88,6 +92,7 @@ After a few seconds you should see the droplet running and ready on the dashboar
 
 <Img
   src={DropletCreatedImg}
+  thumbnail={DropletCreatedThumb}
   caption="Control panel after spinning up the droplet."
 />
 

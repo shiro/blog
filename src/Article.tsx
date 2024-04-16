@@ -63,7 +63,7 @@ const Article: Component<Props> = (props) => {
                 <div>
                   {/* <img {...props} class="ml-auto mr-auto" /> */}
                   <DialogImage
-                    thumbnail={props.src}
+                    thumbnail={props.thumbnail ?? props.src}
                     image={props.src}
                     alt="image"
                   />
