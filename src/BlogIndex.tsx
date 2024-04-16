@@ -15,6 +15,9 @@ interface Props {
 const BlogIndex: Component<Props> = (props) => {
   return (
     <main class={cn(_BlogIndex)}>
+      <h1 class="mb-4 bg-colors-primary-500 pl-8 pr-8 text-center text-big text-colors-text-900a">
+        Blog of a programming rabbit
+      </h1>
       <ul class="flex flex-col gap-4">
         <For each={articles}>
           {(item, idx) => (
