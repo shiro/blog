@@ -41,6 +41,20 @@ yarn dev
 
 For more, check out the [Solid Start documentation](https://start.solidjs.com).
 
+## Known issues
+
+### Pre-transform error: ENOENT
+
+On the first run there's often issues with vite optimised files missing, such as:
+
+```
+10:43:53 AM [vite] Pre-transform error: ENOENT: no such file or directory, open '/project/node_modules/.vinxi/client/deps/classnames.js' (x2)
+...
+```
+
+This is a known linaria bug, it's being tracked [here](https://github.com/vitejs/vite/issues/14493).
+The workaround is to type `r<ENTER>` into the terminal which will restart the vinxi server.
+
 ## Authors
 
 - Matic Utsumi Gačar <matic@usagi.io>
