@@ -1,5 +1,5 @@
 import type * as BabelCoreNamespace from "@babel/core";
-import { transformFileSync, PluginObj } from "@babel/core";
+import { PluginObj } from "@babel/core";
 import path from "path";
 
 type Babel = typeof BabelCoreNamespace;
@@ -51,12 +51,3 @@ export const ssrBabelPlugin = (babel: Babel, options: Options): PluginObj => {
     },
   };
 };
-
-// export const customBabelStuff = (routesFile: string) => {
-//     //
-//     const t = transformFileSync(routesFile, {
-//         presets: ["@babel/preset-typescript", "babel-preset-solid"],
-//         ast: true,
-//     });
-//     console.log("<<<<<< AST", t?.ast);
-// };
