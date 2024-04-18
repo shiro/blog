@@ -6,6 +6,7 @@ import { color, heading1Text } from "~/style/commonStyle";
 import { heading1TextHeight } from "~/style/textStylesTS";
 import LogoSVG from "../assets/logo.svg?component-solid";
 import { useLocation } from "@solidjs/router";
+import { registerRoute } from "~/registerRoute";
 
 interface Props {
   children?: JSX.Element;
@@ -65,5 +66,7 @@ const Logo = css`
     fill: ${color("colors/text-300a")} !important;
   }
 `;
+
+registerRoute({ path: ["/header"] });
 
 export default Header;

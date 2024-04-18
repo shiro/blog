@@ -1,5 +1,6 @@
 import { shaker } from "@wyw-in-js/transform";
 import wyw from "@wyw-in-js/vite";
+import fs from "fs";
 import * as sass from "sass";
 import { PluginOption } from "vite";
 
@@ -85,4 +86,24 @@ export const linariaVitePlugin = (options: Options = {}): PluginOption => {
       ).css,
     ...options,
   });
+};
+
+const linariaBugErrorRE = new RegExp(
+  "ENOENT: no such file or directory, open '.*/port/node_modules/\\.vinxi/.*/deps/"
+);
+const _error = console.error;
+let timeout: NodeJS.Timeout;
+console.error = function (message?: any, ...optionalParams: any[]) {
+  if (!linariaBugErrorRE.test(message)) {
+    console.log("other");
+    return _error(message, ...optionalParams);
+  }
+  clearTimeout(timeout);
+  timeout = setTimeout(() => {
+    const time = new Date();
+    fs.utimesSync("./app.config.ts", time, time);
+    console.log(
+      "restarting dev server due to linaria vite issue (https://github.com/vitejs/vite/issues/14493)"
+    );
+  }, 2000);
 };

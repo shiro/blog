@@ -4,6 +4,7 @@ import { getManifest as getVinxiManifest } from "vinxi/manifest";
 import { ModuleGraph } from "vite";
 import { routeMap } from "../../src/routeMap";
 import { createMatcher } from "./routerMatchingUtil";
+import { SSRManifest } from "~/registerRoute";
 
 const getModuleGraph = () => {
   return getVinxiManifest("client").dev.server.moduleGraph;
@@ -84,11 +85,11 @@ const collectRec = (
   }
 };
 
-const matchers: [(path: string) => boolean, string[]][] = Object.entries(
-  routeMap
-).map(([pattern, value]) => [createMatcher(pattern), value as string[]]);
-
 export const preloadSSRDev = () => {
+  const matchers: [(path: string) => boolean, string[]][] = Object.entries(
+    SSRManifest
+  ).map(([pattern, value]) => [createMatcher(pattern), value as string[]]);
+
   const pathname = new URL(getRequestEvent()!.request.url).pathname;
   const moduleGraph = getModuleGraph();
 
@@ -96,6 +97,7 @@ export const preloadSSRDev = () => {
   const inlineCSSToPreload: [string, string][] = [];
 
   for (const [matcher, matches] of matchers) {
+    console.log(pathname, matcher(pathname));
     if (matcher(pathname) == null) continue;
     for (const filename of matches) {
       collectRec(

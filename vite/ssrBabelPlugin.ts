@@ -1,42 +1,62 @@
 import type * as BabelCoreNamespace from "@babel/core";
 import { transformFileSync, PluginObj } from "@babel/core";
+import path from "path";
 
 type Babel = typeof BabelCoreNamespace;
 
 interface Options {
-    routesFile: string;
+  routesFile: string;
 }
 
-const ssrBabelPlugin = (babel: Babel, options: Options): PluginObj => {
-    const t = babel.types;
+export const ssrBabelPlugin = (babel: Babel, options: Options): PluginObj => {
+  const t = babel.types;
 
-    let imported = false;
-    let root: babel.NodePath<babel.types.Program>;
+  let imported = false;
+  let exclude = false;
+  let isImported = false;
+  let filename!: string;
 
-    return {
-        visitor: {
-            Program(path) {
-                root = path;
-                imported = false;
-            },
-            ImportDeclaration(
-                path: babel.NodePath<babel.types.ImportDeclaration>,
-                state
-            ) {
-                // const hasServerDecorator = path.node.leadingComments?.some(
-                //     (comment) => comment.value.trim() == "@server"
-                // );
-                // if (!hasServerDecorator) return;
-            },
-        },
-    };
+  return {
+    visitor: {
+      Program(p, state) {
+        imported = false;
+
+        const f = state.file.opts.filename!;
+
+        exclude = !f?.endsWith(".tsx");
+        filename = path.relative(process.cwd(), f);
+      },
+      ImportDeclaration(p, state) {
+        if (exclude) return;
+
+        const importSrc = p.node.source.value;
+        const isRegister = importSrc == "~/registerRoute";
+        if (isRegister) isImported = true;
+      },
+      CallExpression(p, state) {
+        if (
+          !isImported ||
+          p.node.callee.type != "Identifier" ||
+          p.node.callee.name != "registerRoute" ||
+          p.node.arguments[0]?.type != "ObjectExpression"
+        )
+          return;
+        p.node.arguments[0].properties.push(
+          t.objectProperty(
+            t.identifier("__INTERNAL_SSR_SRC__"),
+            t.stringLiteral(filename)
+          )
+        );
+      },
+    },
+  };
 };
 
-export const customBabelStuff = (routesFile: string) => {
-    //
-    const t = transformFileSync(routesFile, {
-        presets: ["@babel/preset-typescript", "babel-preset-solid"],
-        ast: true,
-    });
-    console.log("<<<<<< AST", t?.ast);
-};
+// export const customBabelStuff = (routesFile: string) => {
+//     //
+//     const t = transformFileSync(routesFile, {
+//         presets: ["@babel/preset-typescript", "babel-preset-solid"],
+//         ast: true,
+//     });
+//     console.log("<<<<<< AST", t?.ast);
+// };

@@ -9,6 +9,7 @@ import SnakeGame from "~/about/SnakeGame";
 import StatsBar from "~/about/StatsBar";
 import StatusButton from "~/about/StatusButton";
 import IconText from "~/components/IconText";
+import { registerRoute } from "~/registerRoute";
 import { breakpointUntil } from "~/style/commonStyle";
 
 interface Props {
@@ -131,5 +132,7 @@ const _AboutSite = css`
       / auto 1fr;
   }
 `;
+
+registerRoute({ path: "/about" });
 
 export default AboutSite;

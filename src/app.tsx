@@ -8,6 +8,7 @@ import Header from "~/Header";
 import { routes } from "~/routes";
 import BackgroundImage from "~/BackgroundImage";
 import Footer from "~/Footer";
+import { registerRoute } from "~/registerRoute";
 
 export default function App() {
   return (
@@ -32,3 +33,5 @@ export default function App() {
     </Router>
   );
 }
+
+registerRoute({ path: "/*" });

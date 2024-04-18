@@ -18,7 +18,7 @@ export const getArticlesSSG = () => {
         const title = frontmatter.title;
         if (!title) return;
 
-        const description = content.match(/\n\n([\s\S]+?)(?=\n\n)/)?.[1];
+        const description = content.match(/\n\n\n([\s\S]+?)(?=\n\n)/)?.[1];
 
         const url = `/articles/${slug.split(".")[0]}`;
         const date = slug.split("-").slice(0, 3).reverse().join(".");

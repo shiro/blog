@@ -45,7 +45,7 @@ const StatsBar: Component<Props> = (props) => {
       />
       <div
         class={cn(
-          "borde- h-0 w-0 border-r-[18px] border-t-[28px] border-transparent bg-transparent",
+          "h-0 w-0 border-r-[18px] border-t-[28px] border-transparent bg-transparent",
           {
             "border-t-colors-primary-500": type == "primary",
             "border-t-colors-secondary-500": type == "secondary",

@@ -3,19 +3,21 @@ import { defineConfig } from "@solidjs/start/config";
 import path from "node:path";
 import rehypeRaw from "rehype-raw";
 import remarkFrontmatter from "remark-frontmatter";
-import { PluginOption } from "vite";
 import compileTime from "vite-plugin-compile-time";
 import solidSvg from "vite-plugin-solid-svg";
 import { linariaVitePlugin } from "./vite/linariaVitePlugin";
 // @ts-ignore
-import _mdx from "@vinxi/plugin-mdx";
 import rehypeShiki from "@shikijs/rehype";
 import { transformerNotationDiff } from "@shikijs/transformers";
-import remarkGfm from "remark-gfm";
+// @ts-ignore
+import _mdx from "@vinxi/plugin-mdx";
+// @ts-ignore
 import remarkCaptions from "remark-captions";
-import tsconfig from "./tsconfig.json";
-import { viteImagePlugin } from "./vite/viteImagePlugin";
+import remarkGfm from "remark-gfm";
 import { parseDelimitedString } from "./src/util/parseDelimitedString";
+import tsconfig from "./tsconfig.json";
+import { ssrBabelPlugin } from "./vite/ssrBabelPlugin";
+import { viteImagePlugin } from "./vite/viteImagePlugin";
 
 // import devtools from "solid-devtools/vite";
 
@@ -27,51 +29,6 @@ const babelPluginLabels = [
   "solid-labels/babel",
   { dev: process.env.NODE_ENV == "development" },
 ];
-
-const SSRMapPlugin = (): PluginOption => {
-  // let config: UserConfig;
-  let config: any;
-  return {
-    name: "SSRManifest",
-    enforce: "post",
-    config(c) {
-      config = c;
-    },
-    transform(code, id) {
-      if (!id.includes("routeMap.tsx")) return;
-
-      const splitIdx = code.indexOf("export");
-      const importCode = code.slice(0, splitIdx);
-      let exportCode = code.slice(splitIdx);
-      const matches = importCode.matchAll(/import ([^ ]+) from .(.*).;/g)!;
-
-      const aliases = ((config.resolve?.alias as any[]) ?? []).map((a) => ({
-        ...a,
-        replacement: path.relative(root, a.replacement),
-      }));
-
-      const importMap = [...matches].reduce(
-        (acc, [_, importName, importPath]) => {
-          for (const { find, replacement } of aliases) {
-            importPath = importPath.replace(find, replacement);
-          }
-          importPath += ".tsx";
-          return { ...acc, [importName]: importPath };
-        },
-        {}
-      );
-
-      for (const [importName, importPath] of Object.entries(importMap)) {
-        exportCode = exportCode.replaceAll(
-          new RegExp(`${importName}(?=[^a-zA-Z0-9])`, "g"),
-          `"${importPath}"`
-        );
-      }
-
-      return { code: exportCode };
-    },
-  };
-};
 
 export default defineConfig({
   ssr: true,
@@ -90,7 +47,7 @@ export default defineConfig({
 
   solid: {
     babel: {
-      plugins: [babelPluginLabels],
+      plugins: [babelPluginLabels, ssrBabelPlugin],
     },
     ...({} as any),
   },
@@ -121,7 +78,6 @@ export default defineConfig({
         viteImagePlugin(),
         compileTime(),
         solidSvg(),
-        SSRMapPlugin(),
         // devtools({
         //   autoname: true,
         //   locator: {

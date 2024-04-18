@@ -1,8 +1,8 @@
 import fs from "fs";
 import { getRequestEvent } from "solid-js/web";
 import { config } from "~/config";
-import { routeMap } from "../../src/routeMap";
 import { createMatcher } from "./routerMatchingUtil";
+import { SSRManifest } from "../../src/registerRoute";
 
 type Manifest = Record<string, any>;
 
@@ -53,18 +53,19 @@ const collectRec = (output: string[], filename: string, manifest: Manifest) => {
   }
 };
 
-const matchers: [(path: string) => boolean, string[]][] = Object.entries(
-  routeMap
-).map(([pattern, value]) => [
-  createMatcher(`${config.base}${pattern}`),
-  value as string[],
-]);
-
 export const preloadSSR = () => {
   const pathname = new URL(getRequestEvent()!.request.url).pathname;
   const filesToPreload: string[] = [];
 
+  const matchers: [(path: string) => boolean, string[]][] = Object.entries(
+    SSRManifest
+  ).map(([pattern, value]) => [
+    createMatcher(`${config.base}${pattern}`),
+    value as string[],
+  ]);
+
   for (const [matcher, matches] of matchers) {
+    console.log("match?", pathname, !!matcher(pathname));
     if (matcher(pathname) == null) continue;
     for (const filename of matches) {
       collectRec(filesToPreload, filename, manifest);
