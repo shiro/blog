@@ -1507,7 +1507,7 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@rollup/pluginutils@^5.0.1", "@rollup/pluginutils@^5.0.4", "@rollup/pluginutils@^5.0.5", "@rollup/pluginutils@^5.1.0":
+"@rollup/pluginutils@^5.0.1", "@rollup/pluginutils@^5.0.5", "@rollup/pluginutils@^5.1.0":
   version "5.1.0"
   resolved "https://registry.npmjs.org/@rollup/pluginutils/-/pluginutils-5.1.0.tgz#7e53eddc8c7f483a4ad0b94afb1f7f5fd3c771e0"
   integrity sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g==
@@ -2110,13 +2110,13 @@
     magicast "^0.2.10"
     recast "^0.23.4"
 
-"@wyw-in-js/processor-utils@0.5.0":
-  version "0.5.0"
-  resolved "https://registry.npmjs.org/@wyw-in-js/processor-utils/-/processor-utils-0.5.0.tgz#10f0539b5faa63354cb9ac39a23c9e5eeec71243"
-  integrity sha512-3sRwuDTMy2GmD+44bhCTcBasCrjBexzYRzhxkmMrX49cpVDmQOH+4O7kX5OMRbmzMXe6Z5MsnxIlDlm3bJlcww==
+"@wyw-in-js/processor-utils@0.5.1":
+  version "0.5.1"
+  resolved "https://registry.npmjs.org/@wyw-in-js/processor-utils/-/processor-utils-0.5.1.tgz#6e12c6417a71f25b6ecc20be3d9038456728caba"
+  integrity sha512-02kE/J+yABu7P+7djqcHyCkBiZV/SW7wgK65yikVVn/t5FNF9u6rZxIKWjrioeeODy5kKWFGzGyFFa3utPZoIA==
   dependencies:
     "@babel/generator" "^7.23.5"
-    "@wyw-in-js/shared" "0.5.0"
+    "@wyw-in-js/shared" "0.5.1"
 
 "@wyw-in-js/processor-utils@^0.4.0":
   version "0.4.1"
@@ -2135,19 +2135,19 @@
     find-up "^5.0.0"
     minimatch "^9.0.3"
 
-"@wyw-in-js/shared@0.5.0":
-  version "0.5.0"
-  resolved "https://registry.npmjs.org/@wyw-in-js/shared/-/shared-0.5.0.tgz#94832b7064ed91e25a6b35a48678874ed07a79a3"
-  integrity sha512-W6Uic3cqRs75XZfXGOYH/0fADbl3Wz/kqnNaowgyNTdTN7/9vdlqk/D/gMT5WGolj4t418+rYe2FHHs0LdlmvA==
+"@wyw-in-js/shared@0.5.1":
+  version "0.5.1"
+  resolved "https://registry.npmjs.org/@wyw-in-js/shared/-/shared-0.5.1.tgz#2f7b8c57c02e3cd6a108b8fa1ee4e3f6505211cb"
+  integrity sha512-EXMP8oxXwAR4SMGgGcii8H/vahExT/e89ctm71KDbTNjG+AlQwzC3unyhMmxB5Jj2a0qnS8QTl4UuyHZ3HZeoQ==
   dependencies:
     debug "^4.3.4"
     find-up "^5.0.0"
     minimatch "^9.0.3"
 
-"@wyw-in-js/transform@0.5.0":
-  version "0.5.0"
-  resolved "https://registry.npmjs.org/@wyw-in-js/transform/-/transform-0.5.0.tgz#0a865c4175f9566231e37c7b70e3486ca04ce349"
-  integrity sha512-tpa2/FsB30fdXB1E+9MmfxQYbRgLv/+VMKzpBKNraDH39zwnA2eGGAEho5gpqK40cEV7NH6zhVbaBcEnV0HQyw==
+"@wyw-in-js/transform@0.5.1":
+  version "0.5.1"
+  resolved "https://registry.npmjs.org/@wyw-in-js/transform/-/transform-0.5.1.tgz#bc2fa3cead982000e792fb1b34d5d596017ff28d"
+  integrity sha512-ob0iORbQbRJgRiDvU4bYDvPrKbJ+rFW2+V+pz9gpaf2VWrO+fTF0jIB3SnPB14XYCHs6bMWhfH6kzlDjaj8whg==
   dependencies:
     "@babel/core" "^7.23.5"
     "@babel/generator" "^7.23.5"
@@ -2156,8 +2156,8 @@
     "@babel/template" "^7.22.15"
     "@babel/traverse" "^7.23.5"
     "@babel/types" "^7.23.5"
-    "@wyw-in-js/processor-utils" "0.5.0"
-    "@wyw-in-js/shared" "0.5.0"
+    "@wyw-in-js/processor-utils" "0.5.1"
+    "@wyw-in-js/shared" "0.5.1"
     babel-merge "^3.0.0"
     cosmiconfig "^8.0.0"
     happy-dom "^12.5.0"
@@ -2165,14 +2165,13 @@
     stylis "^4.3.0"
     ts-invariant "^0.10.3"
 
-"@wyw-in-js/vite@0.5.0":
-  version "0.5.0"
-  resolved "https://registry.npmjs.org/@wyw-in-js/vite/-/vite-0.5.0.tgz#3327c5aa2f4ac5534da7afbaf88d33fb9f2d3f80"
-  integrity sha512-vNqn3aPRXPfRILDFOSDU8RtGABK8ZWSQyU2uItcVc3p++WvIaoiMpVBsTl7ZFPKr/S3ZIVc/7dCeb7rTqHRI6A==
+"@wyw-in-js/vite@0.5.1":
+  version "0.5.1"
+  resolved "https://registry.npmjs.org/@wyw-in-js/vite/-/vite-0.5.1.tgz#392a9f148485aff054621b193f6a7190f81d5d47"
+  integrity sha512-+gFLewFjJ+pT5UmlvUn9cm+S4th74l9IVB/t9E0hIyXWkZrqt/tglQecwdnhA9YC+PntvBVF49Yrlk5PsEdB5A==
   dependencies:
-    "@rollup/pluginutils" "^5.0.4"
-    "@wyw-in-js/shared" "0.5.0"
-    "@wyw-in-js/transform" "0.5.0"
+    "@wyw-in-js/shared" "0.5.1"
+    "@wyw-in-js/transform" "0.5.1"
 
 abbrev@1:
   version "1.1.1"
