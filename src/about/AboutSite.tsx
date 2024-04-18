@@ -61,11 +61,11 @@ const AboutSite: Component<Props> = (props) => {
           </li>
           <li class="flex gap-2 text-nowrap xs:text-h3 s:text-body">
             <IconText icon="email" />
-            <a href="https://github.com/shiro">matic@uagi.io</a>
+            <a href="mailto:matic@uagi.io">matic@uagi.io</a>
           </li>
           <li class="flex gap-2 text-nowrap xs:text-h3 s:text-body">
             <IconText icon="globe" />
-            <a href="https://github.com/shiro">usagi.io</a>
+            <a href="https://usagi.io">usagi.io</a>
           </li>
           <li class="flex gap-2 text-nowrap xs:text-h3 s:text-body">
             <IconText icon="house" />
