@@ -95,7 +95,6 @@ const _error = console.error;
 let timeout: NodeJS.Timeout;
 console.error = function (message?: any, ...optionalParams: any[]) {
   if (!linariaBugErrorRE.test(message)) {
-    console.log("other");
     return _error(message, ...optionalParams);
   }
   clearTimeout(timeout);

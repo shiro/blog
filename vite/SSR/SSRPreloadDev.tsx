@@ -97,7 +97,6 @@ export const preloadSSRDev = () => {
   const inlineCSSToPreload: [string, string][] = [];
 
   for (const [matcher, matches] of matchers) {
-    console.log(pathname, matcher(pathname));
     if (matcher(pathname) == null) continue;
     for (const filename of matches) {
       collectRec(

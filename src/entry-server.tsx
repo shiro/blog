@@ -42,17 +42,17 @@ export default createHandler(
   },
   async () => {
     // recurse through route definitions and preload all components
-    const rec = (x: RouteDefinition): Promise<any>[] => {
+    const rec = (route: RouteDefinition): Promise<any>[] => {
       const ret = [];
-      if (x.component) {
-        ret.push((x.component as any).preload?.());
+      if (route.component) {
+        ret.push((route.component as any).preload?.());
       }
-      if (Array.isArray(x.children)) {
-        for (const c of x.children) {
+      if (Array.isArray(route.children)) {
+        for (const c of route.children) {
           ret.push(rec(c));
         }
-      } else if (x.children) {
-        ret.push(rec(x.children));
+      } else if (route.children) {
+        ret.push(rec(route.children));
       }
       return ret;
     };
