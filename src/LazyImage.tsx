@@ -56,8 +56,8 @@ const LazyImage: (meta: LazyImageMeta) => Component<Props> =
 
 const _LazyImage = css`
   background: linear-gradient(45deg, var(--color1) 0%, var(--color2) 100%);
-  width: var(--width) px;
-  height: var(--height) px;
+  width: calc(var(--width) * 1px);
+  height: calc(var(--height) * 1px);
 
   img {
     object-fit: inherit;
