@@ -1798,7 +1798,7 @@
   resolved "https://registry.npmjs.org/@solidjs/router/-/router-0.13.2.tgz#90d825fb4c2b50171fc325d9425cb5ea47c37cab"
   integrity sha512-zPlQUXaaUMFzz70SNN8scITooBaJyvIJci3ilyHUBXr9+mzEJGCUSohRJx/VXKo9+p+HEBHY48GnChiPYfLsjg==
 
-"@solidjs/start@^1.0.0-rc.0":
+"@solidjs/start@1.0.0-rc.0":
   version "1.0.0-rc.0"
   resolved "https://registry.npmjs.org/@solidjs/start/-/start-1.0.0-rc.0.tgz#3739f1d2507a76b71b6b88a55001e7cc14aa8a8e"
   integrity sha512-wimF6eqYx8L1XC1MMxwruOgS+BGmv6nEnCa1Fd/VPcYaSF8BKBvgIQYNJALl8QUjfJ7lMK4b41uKAXz451vNNA==
@@ -6413,7 +6413,7 @@ remark-rehype@^11.0.0:
     unified "^11.0.0"
     vfile "^6.0.0"
 
-remark-shiki-twoslash@^3.1.3:
+remark-shiki-twoslash@3.1.3:
   version "3.1.3"
   resolved "https://registry.npmjs.org/remark-shiki-twoslash/-/remark-shiki-twoslash-3.1.3.tgz#0edc4929a68ca24da2cdd80d662feb7811a6194b"
   integrity sha512-4e8OH3ySOCw5wUbDcPszokOKjKuebOqlP2WlySvC7ITBOq27BiGsFlq+FNWhxppZ+JzhTWah4gQrnMjX3KDbAQ==
@@ -6731,7 +6731,7 @@ solid-devtools@0.30.1:
     "@solid-devtools/debugger" "^0.23.4"
     "@solid-devtools/shared" "^0.13.2"
 
-solid-js@^1.8.16:
+solid-js@1.8.16:
   version "1.8.16"
   resolved "https://registry.npmjs.org/solid-js/-/solid-js-1.8.16.tgz#33ce9bff617154d5f4b889e1b2fb89d682b7a422"
   integrity sha512-rja94MNU9flF3qQRLNsu60QHKBDKBkVE1DldJZPIfn2ypIn3NV2WpSbGTQIvsyGPBo+9E2IMjwqnqpbgfWuzeg==
@@ -7548,7 +7548,7 @@ vfile@^6.0.0:
     unist-util-stringify-position "^4.0.0"
     vfile-message "^4.0.0"
 
-vinxi@^0.3.11:
+vinxi@0.3.11:
   version "0.3.11"
   resolved "https://registry.npmjs.org/vinxi/-/vinxi-0.3.11.tgz#6e94cf7151d8445fd9551e443c32c274c112281b"
   integrity sha512-ASEpiwldZIsViv2/ZlO6qnRhDAwxr92nKXxMOinA+5nCY7nlaKgekaLDjTyUmFzB8DSiXVZqmHnd6OZVkn4vzw==
