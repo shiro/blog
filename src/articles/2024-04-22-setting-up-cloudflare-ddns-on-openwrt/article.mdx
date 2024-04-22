@@ -1,0 +1,173 @@
+---
+title: Setting up Cloudflare DDNS on openWrt
+---
+import cloudflareAddDnsImg from "./cloudflare-add-dns.jpg?lazy"
+import cloudflareAddDnsThumb from "./cloudflare-add-dns.jpg?lazy&size=600x"
+import createTokenImg from "./create-token.jpg?lazy"
+import createTokenThumb from "./create-token.jpg?lazy&size=600x"
+import configureServiceAdvancedImg from "./configure-service-advanced.jpg?lazy"
+import configureServiceAdvancedThumb from "./configure-service-advanced.jpg?lazy&size=600x"
+import ddnsImg from "./ddns.jpg?lazy"
+import ddnsThumb from "./ddns.jpg?lazy&size=300x"
+import installImg from "./install.jpg?lazy"
+import installThumb from "./install.jpg?lazy&size=600x"
+import softwareImg from "./software.jpg?lazy"
+import softwareThumb from "./software.jpg?lazy&size=300x"
+import configureServiceImg from "./configure-service.jpg?lazy"
+import configureServiceThumb from "./configure-service.jpg?lazy&size=600x"
+import noIpv4Img from "./no-ipv4.jpg?lazy"
+import noIpv4Thumb from "./no-ipv4.jpg?lazy&size=x300"
+
+
+OpenWrt is an amazing open source OS for routers. Today we're looking at how to set
+up dynamic DNS to Cloudflare on it.
+
+
+Dynamic DNS is simply a service running on your router in a fixed interval (i.e. every hour)
+that updates your DNS record to point to the current IP address. This is pretty common
+for servers setups where the publicly accessible IP often changes, making manual updates
+not viable.
+
+Cloudflare is commonly used for managing DNS, since it's free, pretty stable and provides
+great UX through the web-UI and programmatic API. We'll first have to get an API token that
+allows our DDNS service to update DNS records through the API.
+All we need to set this up is a working router with OpenWrt running on it and a Cloudflare
+account with a configured domain name.
+
+This article will focus on IPv4, but you can still follow along for IPv6 and change
+some details in the configuration assuming you have some basic understanding of the tech.
+
+
+# Configure Cloudflare
+
+First, let's create a new DNS entry that will later be dynamically updated to point to the
+current public IP of the server. After logging in, navigate to
+`yourdomain > DNS > Add record` and add a new A (Ipv4) record.
+I'll be assigning mine to a subdomain (i.e. subdomain.domain.com), but feel free to use
+the root of the domain instead. I'll point it to 0.0.0.0 for now and disable Cloudflare
+proxying since it prevents me to SSH into the server (**important: your IP will be publicly
+visible if you disable the proxy**).
+
+
+<Img
+src={cloudflareAddDnsImg}
+thumbnail={cloudflareAddDnsThumb}
+caption="Add a new type IPv4 DNS entry"
+/>
+
+The next step is to create a new API token by visiting the
+[User API Tokens page](https://dash.cloudflare.com/profile/api-tokens)
+and clicking the `Create Token` button.
+
+Create a custom token and give it a name and the following **permissions**:
+- Zone > Zone > Read
+- Zone > DNS > Edit
+
+And select the following **resource**:
+- Include > Specific zone > domain.com
+
+
+<Img
+src={createTokenImg}
+thumbnail={createTokenThumb}
+caption="Create a new custom token with required permissions"
+/>
+
+Now continue and press the `Create Token` button. Once the token is created, copy it to a
+secure place such as a password manager. If you forget your token in the future, you'll have
+to create a new one and re-configure the DDNS service we'll set up momentarily.
+
+
+# Configuring the router
+
+Now that we have a Cloudflare API token, let's configure the router. Log into the web-UI and
+navigate to the `System > Software` section, so we can install some packages that will make DDNS work.
+
+<Img
+src={softwareImg}
+thumbnail={softwareThumb}
+caption="Navigate to the System > Software section"
+/>
+
+Click on `Update lists...` button to refresh the list of available packages.
+Into the filter search bar, type `ddns` and install both the `ddns-scripts` and
+`ddns-scripts-cloudflare` packages as shown in the picture.
+
+<Img
+src={installImg}
+thumbnail={installThumb}
+caption="Install DDNS packages through the web-UI"
+/>
+
+
+After installing both packages, reboot the router in `System > Reboot` and wait for it
+to boot up. Once that's done, log back in and you should see a new section in the header
+navigation called `Services`. Navigate to `Services > Dynamic DNS` so we can input the
+necessary Cloudflare account details.
+
+
+<Img
+src={ddnsImg}
+thumbnail={ddnsThumb}
+caption="The Services tab includes DDNS configuration"
+/>
+
+
+# Configuring Cloudflare DDNS service
+
+This is the last step, we simply need to input all necessary data to create our DDNS service.
+First click `Add new services...` button, give it a name and set the following settings:
+
+- Lookup Hostname: domain.subdomain.com
+- IP address version: IPv4-Address
+- DDNS Service provider: `cloudflare.com-v4`
+- Domain: domain@subdomain.com
+- Username: Bearer
+- Password: \<your Cloudflare API token\>
+- Use HTTP Secure: true
+- Path to CA-Certificate: /etc/ssl/certs
+
+<Img
+src={configureServiceImg}
+thumbnail={configureServiceThumb}
+caption="Configure the DDNS service using the API token"
+/>
+
+After saving the service, go to `Status > Overview` and check whether the router knows
+its current public IPv4 address. If it does, you're done, feel free to skip ahead.
+In my case it does not, as you can see here:
+
+<Img
+src={noIpv4Img}
+thumbnail={noIpv4Thumb}
+caption="Configure the DDNS service using the API token"
+/>
+
+As you can see, there's only `192.0.0.2` listed, which is not the public IP.
+Due to this, we need to use an external service for getting our IP address.
+Luckily this is easily done by going back to `Services > Dynamic DNS` and
+editing our DDNS service from earlier, then going to the `Advanced Settings` tab
+and setting:
+- the `IP address source` to `URL`
+- the `URL to detect` to `http://checkip.dyndns.com` (or alternatives)
+
+<Img
+src={configureServiceAdvancedImg}
+thumbnail={configureServiceAdvancedThumb}
+caption="Configure the DDNS service using the API token"
+/>
+
+
+# Checking if the DDNS service is working correctly
+
+Once we're done with configuring the service, reload it by hitting the `Reload` button
+next to the service name and finally `Restart DDNns` at the top of the page to ensure
+everything is running with the latest settings.
+
+When editing our service, we can check the `Log File Viewer` tab to see the
+logs and make sure everything is working as it should. If you see any errors,
+check your configuration and ensure you filled the login fields correctly.
+Finally try accessing your server through the domain/subdomain we just configured -
+if it works you're done 🎉.
+
+

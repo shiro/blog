@@ -1,0 +1,82 @@
+---
+private: true
+title: Setting up Cloudflare DDNS on openWrt 2
+---
+import DialogImage from "~/DialogImage";
+
+import configImg from "./config.jpg?lazy";
+import configThumb from "./config.jpg?lazy&size=x300";
+
+
+First, SSH into the PI:
+
+
+```sh
+[shiro@pc:~]# ssh shiro@pi.lan
+[shiro@pi:~]$ ifconfig end0
+end0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.1.200  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 AAAA:AAAA:AAAA:AAAA:9999:9999:9999:9999  prefixlen 64  scopeid 0x0<global>
+        inet6 fe80::AAAA:AAAA:AAAA:AAAA/64  prefixlen 64  scopeid 0x20<link>
+        ether dc:a6:32:46:28:c3  txqueuelen 1000  (Ethernet)
+        RX packets 11144325  bytes 16632198802 (15.4 GiB)
+        RX errors 0  dropped 53  overruns 0  frame 0
+        TX packets 545491  bytes 129096096 (123.1 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+```
+
+The IPv6 suffix of the PI is `9999:9999:9999:9999`.
+
+```sh
+[shiro@router]# ifconfig wan
+wan       Link encap:Ethernet  HWaddr 00:AA:BB:CC:DD:EE
+          inet6 addr: fe80::AAAA:AAAA:AAAA:AAAA/64 Scope:Link
+          inet6 addr: AAAA:AAAA:AAAA:AAAA:BBBB:BBBB:BBBB:BBBB/64 Scope:Global
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:25751557 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:10685514 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:25962272704 (24.1 GiB)  TX bytes:3129251777 (2.9 GiB)
+```
+
+The ipv6 prefix in the above output is `AAAA:AAAA:AAAA:AAAA`, so let's write a script:
+
+```sh
+#!/usr/bin/env sh
+
+prefix=$(ifconfig wan | grep 'inet6 addr: ' | tail -n1 | grep -o '.\{0,4\}:.\{0,4\}:.\{0,4\}:.\{0,4\}' | head -n1)
+
+pi_suffix="9999:9999:9999:9999"
+
+echo $prefix:$pi_suffix
+```
+
+Let's go through the above command for the prefix calculation, it goes through several steps:
+
+```sh
+grep 'inet6 addr: '
+```
+Filter only the lines containing `inet6` - ipv6 addresses
+
+```sh
+tail -n1
+```
+Grab the last result (in my case, that's my assigned public IPv6)
+
+```sh
+grep -o '.\{0,4\}:.\{0,4\}:.\{0,4\}:.\{0,4\}' | head -n1
+```
+Select the prefix portion (first 4 blocks)
+
+
+# Configure openWRT DDns script
+
+<Img
+src={configImg}
+caption="foo"
+/>
+
+
+
+`0000:0000:0000:0000:0000:0000:0000:0000`
+`http://checkipv6.dyndns.com`
