@@ -6,7 +6,7 @@ import { color, heading1Text } from "~/style/commonStyle";
 import { heading1TextHeight } from "~/style/textStylesTS";
 import LogoSVG from "../assets/logo.svg?component-solid";
 import { useLocation } from "@solidjs/router";
-import { registerRoute } from "~/registerRoute";
+import { registerRoute } from "solid-start-preload";
 
 interface Props {
   children?: JSX.Element;

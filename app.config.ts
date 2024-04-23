@@ -16,7 +16,8 @@ import remarkCaptions from "remark-captions";
 import remarkGfm from "remark-gfm";
 import { parseDelimitedString } from "./src/util/parseDelimitedString";
 import tsconfig from "./tsconfig.json";
-import { ssrBabelPlugin } from "./vite/ssrBabelPlugin";
+// import { ssrBabelPlugin } from "./vite/ssrBabelPlugin";
+import SSPreloadBabel from "solid-start-preload/babel";
 import { viteImagePlugin } from "./vite/viteImagePlugin";
 
 // import devtools from "solid-devtools/vite";
@@ -47,7 +48,7 @@ export default defineConfig({
 
   solid: {
     babel: {
-      plugins: [babelPluginLabels, ssrBabelPlugin],
+      plugins: [babelPluginLabels, SSPreloadBabel],
     },
     ...({} as any),
   },

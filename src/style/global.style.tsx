@@ -1,12 +1,10 @@
 import { colorVariablesCSS } from "~/style/colorVariableCSS";
 import {
-  bodyText,
   color,
   heading1Text,
   primaryFontBold,
   primaryFontBoldItalic,
   primaryFontItalic,
-  smallText,
   subText,
   text,
 } from "~/style/commonStyle";

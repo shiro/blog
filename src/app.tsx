@@ -8,7 +8,7 @@ import Header from "~/Header";
 import { routes } from "~/routes";
 import BackgroundImage from "~/BackgroundImage";
 import Footer from "~/Footer";
-import { registerRoute } from "~/registerRoute";
+import { registerRoute } from "solid-start-preload";
 
 export default function App() {
   return (

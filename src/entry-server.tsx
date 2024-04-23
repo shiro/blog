@@ -1,11 +1,10 @@
 // @refresh reload
 import { createHandler, StartServer } from "@solidjs/start/server";
 import { config } from "~/config";
-import { preloadSSR } from "../vite/SSR/SSRPreload";
-import { preloadSSRDev } from "../vite/SSR/SSRPreloadDev";
-
-import { RouteDefinition } from "@solidjs/router";
+import { getRequestEvent } from "solid-js/web";
+import { getManifest } from "vinxi/manifest";
 import { routes } from "~/routes";
+import { preloadStartAssets, warmupRoutes } from "solid-start-preload/server";
 
 const _warn = console.warn;
 console.warn = function (message?: any, ...optionalParams: any[]) {
@@ -27,7 +26,11 @@ export default createHandler(
               />
               <link rel="icon" href={`${config.base}/favicon.ico`} />
               {assets}
-              {import.meta.env.DEV ? preloadSSRDev() : preloadSSR()}
+              {preloadStartAssets({
+                request: getRequestEvent(),
+                manifest: getManifest("client"),
+                ignorePatterns: [/tw\.style.*\.css/, /routes\.tsx/],
+              })}
             </head>
             <body>
               <div id="app" class="flex min-h-[100vh] flex-col">
@@ -40,24 +43,5 @@ export default createHandler(
       />
     );
   },
-  async () => {
-    // recurse through route definitions and preload all components
-    const rec = (route: RouteDefinition): Promise<any>[] => {
-      const ret = [];
-      if (route.component) {
-        ret.push((route.component as any).preload?.());
-      }
-      if (Array.isArray(route.children)) {
-        for (const c of route.children) {
-          ret.push(rec(c));
-        }
-      } else if (route.children) {
-        ret.push(rec(route.children));
-      }
-      return ret;
-    };
-
-    await Promise.all(Object.values(routes).flatMap(rec));
-    return {};
-  }
+  () => warmupRoutes(routes)
 );
