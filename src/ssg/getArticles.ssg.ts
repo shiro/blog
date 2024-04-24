@@ -12,13 +12,23 @@ export const getArticlesSSG = () => {
         const raw = fs
           .readFileSync(path.join(base, slug, "article.mdx"))
           .toString();
-        const { data: frontmatter, content } = matter(raw);
+        let { data: frontmatter, content } = matter(raw);
         if (frontmatter.private) return;
 
         const title = frontmatter.title;
         if (!title) return;
 
-        const description = content.match(/\n\n\n([\s\S]+?)(?=\n\n)/)?.[1];
+        // trim import statements and empty lines
+        content = (() => {
+          const c = content.split("\n");
+          while (c.length && (!c[0] || c[0].startsWith("import "))) {
+            c.splice(0, 1);
+          }
+          console.log(c[0]);
+          return c.join("\n");
+        })();
+
+        const description = content.match(/([\s\S]+?)(?=\n\n)/)?.[1];
 
         const url = `/articles/${slug.split(".")[0]}`;
         const date = slug.split("-").slice(0, 3).reverse().join(".");

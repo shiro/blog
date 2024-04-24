@@ -17,9 +17,10 @@ import remarkGfm from "remark-gfm";
 import { parseDelimitedString } from "./src/util/parseDelimitedString";
 import tsconfig from "./tsconfig.json";
 // import { ssrBabelPlugin } from "./vite/ssrBabelPlugin";
+// @ts-ignore
 import SSPreloadBabel from "solid-start-preload/babel";
 import { viteImagePlugin } from "./vite/viteImagePlugin";
-import { viteMDPlugin } from "./vite/viteMDPlugin";
+import { viteMarkdownPlugin } from "./vite/markdown/viteMarkdownPlugin";
 
 // import devtools from "solid-devtools/vite";
 
@@ -78,7 +79,7 @@ export default defineConfig({
         viteImagePlugin(),
         compileTime(),
         solidSvg(),
-        viteMDPlugin(),
+        viteMarkdownPlugin(),
         // devtools({
         //   autoname: true,
         //   locator: {

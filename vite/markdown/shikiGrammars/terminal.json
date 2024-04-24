@@ -1,0 +1,24 @@
+{
+  "displayName": "Terminal",
+  "name": "terminal",
+  "patterns": [
+    {
+      "include": "#prompt"
+    }
+  ],
+  "repository": {
+    "prompt": {
+      "begin": "^\\[",
+      "end": "\\]# ([^ ]+)",
+      "beginCaptures": {
+        "0": { "name": "string" }
+      },
+      "endCaptures": {
+        "0": { "name": "string" },
+        "1": { "name": "variable" }
+      },
+      "name": "variable"
+    }
+  },
+  "scopeName": "text.colors"
+}

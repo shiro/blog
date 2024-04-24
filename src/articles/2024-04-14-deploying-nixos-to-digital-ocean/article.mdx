@@ -2,7 +2,6 @@
 title: Deploying NixOS to Digital Ocean
 private: false
 ---
-
 import DialogImage from "~/DialogImage";
 
 import NoNixOSImg from "./no-nixos.jpg?lazy";
@@ -137,7 +136,7 @@ the new packages we specified.
 After switching, the packages should be available as globally installed
 system packages.
 
-```txt
+```terminal colors
 [nix-shell:/etc/nixos]# exit
 [root@droplet:~]# nixos-rebuild switch
 [root@droplet:~]# echo "NixOS in the cloud!" | cowsay

@@ -4,3 +4,4 @@ node_modules/
 app.config.timestamp*
 input/
 generated/
+*.bundled_*.mjs

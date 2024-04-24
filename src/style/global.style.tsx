@@ -218,6 +218,15 @@ export const globals = css`
     .language-id {
       display: none;
     }
+    .color-red {
+      color: #f97583 !important;
+    }
+    .color-blue {
+      color: rgb(158, 203, 255) !important;
+    }
+    .color-gray {
+      color: ${color("colors/text-300a")} !important;
+    }
     &.diff {
       .line {
         &::before {
