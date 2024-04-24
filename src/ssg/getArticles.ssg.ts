@@ -24,7 +24,6 @@ export const getArticlesSSG = () => {
           while (c.length && (!c[0] || c[0].startsWith("import "))) {
             c.splice(0, 1);
           }
-          console.log(c[0]);
           return c.join("\n");
         })();
 

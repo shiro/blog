@@ -1,28 +1,13 @@
-import { nodeTypes } from "@mdx-js/mdx";
 import { defineConfig } from "@solidjs/start/config";
 import path from "node:path";
-import rehypeRaw from "rehype-raw";
-import remarkFrontmatter from "remark-frontmatter";
 import compileTime from "vite-plugin-compile-time";
 import solidSvg from "vite-plugin-solid-svg";
 import { linariaVitePlugin } from "./vite/linariaVitePlugin";
-// @ts-ignore
-import rehypeShiki from "@shikijs/rehype";
-import { transformerNotationDiff } from "@shikijs/transformers";
-// @ts-ignore
-import _mdx from "@vinxi/plugin-mdx";
-// @ts-ignore
-import remarkCaptions from "remark-captions";
-import remarkGfm from "remark-gfm";
-import { parseDelimitedString } from "./src/util/parseDelimitedString";
 import tsconfig from "./tsconfig.json";
-// import { ssrBabelPlugin } from "./vite/ssrBabelPlugin";
+import { viteMarkdownPlugin } from "./vite/markdown/viteMarkdownPlugin";
+import { viteImagePlugin } from "./vite/viteImagePlugin";
 // @ts-ignore
 import SSPreloadBabel from "solid-start-preload/babel";
-import { viteImagePlugin } from "./vite/viteImagePlugin";
-import { viteMarkdownPlugin } from "./vite/markdown/viteMarkdownPlugin";
-
-// import devtools from "solid-devtools/vite";
 
 const root = process.cwd();
 
@@ -80,14 +65,6 @@ export default defineConfig({
         compileTime(),
         solidSvg(),
         viteMarkdownPlugin(),
-        // devtools({
-        //   autoname: true,
-        //   locator: {
-        //     key: "Shift",
-        //     componentLocation: true,
-        //     jsxLocation: true,
-        //   } as any,
-        // }),
         linariaVitePlugin({
           include: [/\/src\//],
           exclude: [/solid-refresh/, /\/@babel\/runtime\//, /\.import\./],
