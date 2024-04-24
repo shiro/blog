@@ -118,14 +118,14 @@ no installed editor, we'll drop into a nix-shell.
 [nix-shell:/etc/nixos]# nvim configuration.nix
 ```
 
-```nix title="/etc/nixos/configuration.nix"
-{ pkgs, ... }: { # [!code ++]
+```nix diff title="/etc/nixos/configuration.nix"
++{ pkgs, ... }: {
   imports = [
     ./hardware-configuration.nix
     ./networking.nix # generated at runtime by nixos-infect
   ];
 
-  environment.systemPackages = with pkgs; [ neovim cowsay ]; # [!code ++]
++  environment.systemPackages = with pkgs; [ neovim cowsay ];
 
   # ... rest of the config file
 }
