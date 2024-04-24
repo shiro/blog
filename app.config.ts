@@ -9,6 +9,8 @@ import { viteImagePlugin } from "./vite/viteImagePlugin";
 // @ts-ignore
 import SSPreloadBabel from "solid-start-preload/babel";
 
+import lazyPlusPlugin from "solid-lazy-plus/vite";
+
 const root = process.cwd();
 
 const babelPluginLabels = [
@@ -29,6 +31,7 @@ export default defineConfig({
       crawlLinks: true,
     },
   },
+
   // experimental: {islands: true},
 
   solid: {
@@ -61,6 +64,7 @@ export default defineConfig({
         ),
       },
       plugins: [
+        lazyPlusPlugin({ router: options.router }),
         viteImagePlugin(),
         compileTime(),
         solidSvg(),

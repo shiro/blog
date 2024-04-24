@@ -12,25 +12,27 @@ import { registerRoute } from "solid-start-preload";
 
 export default function App() {
   return (
-    <Router
-      base={config.base}
-      root={(props) => (
-        <MetaProvider>
-          <Title>Blog of a programming rabbit</Title>
-          <Meta
-            name="description"
-            content="Matic Utsumi Gačar's blog and portfolio website discussing code, art and life."
-          />
-          <Header />
-          <BackgroundImage />
-          <div class="content-container">
-            <Suspense>{props.children}</Suspense>
-          </div>
-          <Footer />
-        </MetaProvider>
-      )}>
-      {routes}
-    </Router>
+    <MetaProvider>
+      <Router
+        base={config.base}
+        root={(props) => (
+          <>
+            <Title>Blog of a programming rabbit</Title>
+            <Meta
+              name="description"
+              content="Matic Utsumi Gačar's blog and portfolio website discussing code, art and life."
+            />
+            <Header />
+            <BackgroundImage />
+            <div class="content-container">
+              <Suspense>{props.children}</Suspense>
+            </div>
+            <Footer />
+          </>
+        )}>
+        {routes}
+      </Router>
+    </MetaProvider>
   );
 }
 

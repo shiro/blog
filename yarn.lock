@@ -6749,6 +6749,9 @@ solid-labels@0.16.0:
     "@babel/traverse" "^7.23.2"
     "@babel/types" "^7.23.0"
 
+"solid-lazy-plus@file:../../tmp/solid-lazy-plus":
+  version "0.1.0"
+
 solid-mdx@0.0.7:
   version "0.0.7"
   resolved "https://registry.npmjs.org/solid-mdx/-/solid-mdx-0.0.7.tgz#64f7903fe706f83ca166dc6ef95124a180094ede"
