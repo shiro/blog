@@ -17,7 +17,7 @@ const Footer: Component<Props> = (props) => {
       class={cn($class, "content-container mt-auto pb-4 pt-4 text-center")}
       {...rest}>
       Check the code on{" "}
-      <a href="https://gtithub.com/shiro/blog" target="_blank">
+      <a href="https://github.com/shiro/blog" target="_blank">
         <IconText icon="github" class="pl-1" /> Github
       </a>
     </div>
