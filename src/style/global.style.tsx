@@ -218,8 +218,26 @@ export const globals = css`
     .language-id {
       display: none;
     }
-    .diff.add {
-      background: rgba(53, 117, 42, 0.2);
+    &.diff {
+      .line {
+        &::before {
+          content: " ";
+          padding: 0 8px;
+          user-select: none;
+        }
+        &.add {
+          background: rgba(53, 117, 42, 0.15);
+          &::before {
+            content: "+";
+          }
+        }
+        &.remove {
+          background: rgba(193, 34, 34, 0.15);
+          &::before {
+            content: "-";
+          }
+        }
+      }
     }
   }
   .theme-light .shiki.github-dark {

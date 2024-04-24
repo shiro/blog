@@ -78,7 +78,7 @@ const Article: Component<Props> = (props) => {
             );
           },
           code: (props: any) => {
-            const { children: _c, title, ...rest } = $destructure(props);
+            const { children: _c, title, class: $class } = $destructure(props);
             const c = children(() => _c);
             return (
               <>
@@ -89,12 +89,12 @@ const Article: Component<Props> = (props) => {
                   </div>
                 </Show>
                 <code
-                  {...rest}
-                  class={
+                  class={cn(
+                    $class,
                     typeof c() == "string"
                       ? "rounded bg-colors-primary-300 pl-2 pr-2"
                       : ""
-                  }>
+                  )}>
                   {c()}
                 </code>
               </>

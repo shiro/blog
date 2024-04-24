@@ -1,0 +1,164 @@
+---
+title: Adding diff highlighting to Markdown using Shiki
+---
+
+import DialogImage from "~/DialogImage";
+import p1 from "./github.jpg?lazy";
+import t1 from "./github.jpg?lazy&size=900x";
+import p2 from "./shiki-diff.jpg?lazy";
+import t2 from "./shiki-diff.jpg?lazy&size=900x";
+
+
+Shiki is a great library for adding some color to markdown codeblocks, so let's add some
+awesome diff highlighting to it.
+
+
+For anyone unaware, [Shiki](https://shiki.style) is a neat little library that adds
+syntax highlihgting to your code blocks in markdown. There's a [wide list of languages
+supported](https://shiki.style/languages) as well as support for adding
+custom languages.
+The installation process is very quick and supports various markdown environments
+such as [MDX](https://mdxjs.com/), which I'll be using today.
+
+# The quest for existing solutions
+
+## Github
+
+First, let's look at how *not* to do diff highlighting - by looking at what Github
+does. At the time of writing, Github does not support syntax highlighting
+of languages in conjunction with diff highlighting - it's either one or the other.
+This means that, if you want to show any sort of diff highlighting, you loose all
+other syntax highlighting.
+
+<Img
+src={p1}
+thumbnail={t1}
+caption="Github's Markdown diff formatting"
+/>
+
+Yeah... doesn't look that great (in my opinion).
+Another big issue is, that selecting text also selects the diff `+` and `-` markers,
+which is very annoying since the markers need to be manually removed when pasted
+into an editor.
+
+Let's look at how the markup looks like:
+
+````txt
+```diff
+-console.log('hewwo')
++console.log('hello')
+console.log('goodbye')
+```
+````
+
+Alright, at least the markup looks pretty good in my opinion - simple and easy to understand, just
+add a `+` or `-` as the first character in a line and it gets highlighted!
+
+## Shiki/transformers
+
+Lucky for us, there seems to be a first-party plugin for adding all sorts of notions, including
+diff highlighting! I highly encourage everyone to look at the awesome
+[@shiki/transformers](https://shiki.style/packages/transformers#transformernotationdiff)
+package which seems to have just what we need, and it's just 1 line to add the plugin.
+
+Here's the example output from the documentation:
+
+<Img
+src={p2}
+thumbnail={t2}
+caption="Shiki diff transformer"
+/>
+
+It looks great, doesn't select the marker symbols, and it's not opinionated about the styling -
+lines just get some CSS classes assigned and we can style them however we want, neat!  
+Now let's look at the markup:
+
+````txt
+```ts
+console.log('hewwo') // [!code --]
+console.log('hello') // [!code ++]
+console.log('goodbye')
+```
+````
+
+Ok... I have to say it's not exactly my cup of tea. The same parsing logic is used for all sorts
+of notations the package supports, so it makes sense for it to be more complex so that it supports
+passing in additional arguments, etc. but it's a bit overkill for our use-case.
+
+Most people would just accept the notation and carry on with their day, but if you're like me,
+follow along as we make our own implementation.
+
+# A better notation
+
+I decided to work off the existing code and just change the necessary parts, so the first step
+was to copy the [original
+implementation](https://github.com/shikijs/shiki/blob/main/packages/transformers/src/transformers/notation-diff.ts) and
+it's dependencies.
+The next step was to decide on a notation, the Github one seems pretty good so I'll go with that.
+
+````txt
+```ts diff
+-console.log('hewwo')
++console.log('hello')
+console.log('goodbye')
+```
+````
+
+
+Implementing a shiki highlighter is incredibly easy, since the library provides all the hooks
+we need and more - there's even helpers for adding CSS classes to nodes.
+Here's what a simple implementation of the above looks like:
+
+```ts title="shikiDiffNotation.ts"
+export function shikiDiffNotation(
+  options: shikiDiffNotationOptions = {}
+): ShikiTransformer {
+  const {
+    classLineAdd = "add",
+    classLineRemove = "remove",
+    classActivePre = "diff",
+  } = options;
+
+  return {
+    name: "shiki-diff-notation",
+    code(node: MetaNode) {
+      if (!node.meta?.diff) return;
+      this.addClassToHast(this.pre, classActivePre);
+
+      const lines = node.children.filter(
+        (node) => node.type === "element"
+      ) as Element[];
+
+      lines.forEach((line) => {
+        for (const child of line.children) {
+          if (child.type !== "element") continue;
+          const text = child.children[0];
+          if (text.type !== "text") continue;
+
+          if (text.value.startsWith("+")) {
+            text.value = text.value.slice(1);
+            this.addClassToHast(line, classLineAdd);
+          }
+          if (text.value.startsWith("-")) {
+            text.value = text.value.slice(1);
+            this.addClassToHast(line, classLineRemove);
+          }
+        }
+      });
+    },
+  };
+}
+```
+
+I also added a couple of CSS classes to add highlighting and marker symbols that
+won't get included in user selections.
+After adding our plugin, we can now enjoy the new, superior, notation as it
+was originally intended:
+
+```ts diff
+-console.log('hewwo')
++console.log('hello')
+console.log('goodbye')
+```
+
+Perfection.

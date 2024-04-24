@@ -19,10 +19,9 @@ import tsconfig from "./tsconfig.json";
 // import { ssrBabelPlugin } from "./vite/ssrBabelPlugin";
 import SSPreloadBabel from "solid-start-preload/babel";
 import { viteImagePlugin } from "./vite/viteImagePlugin";
+import { viteMDPlugin } from "./vite/viteMDPlugin";
 
 // import devtools from "solid-devtools/vite";
-
-const { default: mdx } = _mdx;
 
 const root = process.cwd();
 
@@ -79,6 +78,7 @@ export default defineConfig({
         viteImagePlugin(),
         compileTime(),
         solidSvg(),
+        viteMDPlugin(),
         // devtools({
         //   autoname: true,
         //   locator: {
@@ -87,54 +87,6 @@ export default defineConfig({
         //     jsxLocation: true,
         //   } as any,
         // }),
-        mdx.withImports({})({
-          jsx: true,
-          jsxImportSource: "solid-js",
-          providerImportSource: "solid-mdx",
-          remarkPlugins: [
-            remarkFrontmatter,
-            remarkGfm,
-            [
-              remarkCaptions,
-              {
-                external: {
-                  table: "Table:",
-                },
-              },
-            ],
-          ],
-          rehypePlugins: [
-            [
-              rehypeShiki,
-              {
-                theme: "github-dark",
-                transformers: [
-                  transformerNotationDiff(),
-                  (() => {
-                    let meta: any;
-                    return {
-                      preprocess(raw: any, options: any) {
-                        meta = {};
-                        const rawMeta = options.meta.__raw;
-                        if (!rawMeta) return;
-                        meta = Object.fromEntries(
-                          Object.entries(
-                            parseDelimitedString(rawMeta, " ")
-                          ).map(([k, v]) => [k, JSON.parse(v)])
-                        );
-                      },
-                      code(node: any) {
-                        node.properties = { ...node.properties, ...meta };
-                        node.meta = meta;
-                      },
-                    };
-                  })(),
-                ],
-              },
-            ],
-            [rehypeRaw, { passThrough: nodeTypes }],
-          ],
-        }),
         linariaVitePlugin({
           include: [/\/src\//],
           exclude: [/solid-refresh/, /\/@babel\/runtime\//, /\.import\./],
