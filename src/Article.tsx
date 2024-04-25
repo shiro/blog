@@ -8,7 +8,6 @@ import LazyImage from "~/LazyImage";
 import Spoiler from "~/Spoiler";
 import Icon from "~/components/Icon";
 import IconText from "~/components/IconText";
-import { registerRoute } from "solid-start-preload";
 import { getArticles } from "~/ssg/getArticles";
 import { remBase } from "~/style/fluidSizeTS";
 
@@ -201,7 +200,5 @@ const _Article = css`
   //   justify-content: center;
   // }
 `;
-
-registerRoute({ path: "/articles/*" });
 
 export default Article;

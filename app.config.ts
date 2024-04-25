@@ -2,14 +2,12 @@ import { defineConfig } from "@solidjs/start/config";
 import path from "node:path";
 import compileTime from "vite-plugin-compile-time";
 import solidSvg from "vite-plugin-solid-svg";
-import { linariaVitePlugin } from "./vite/linariaVitePlugin";
 import tsconfig from "./tsconfig.json";
+import { linariaVitePlugin } from "./vite/linariaVitePlugin";
 import { viteMarkdownPlugin } from "./vite/markdown/viteMarkdownPlugin";
 import { viteImagePlugin } from "./vite/viteImagePlugin";
 // @ts-ignore
-import SSPreloadBabel from "solid-start-preload/babel";
-
-import lazyPlusPlugin from "solid-lazy-plus/vite";
+import babelPluginLazyPlus from "solid-lazy-plus/babel";
 
 const root = process.cwd();
 
@@ -36,7 +34,7 @@ export default defineConfig({
 
   solid: {
     babel: {
-      plugins: [babelPluginLabels, SSPreloadBabel],
+      plugins: [babelPluginLabels, babelPluginLazyPlus],
     },
     ...({} as any),
   },
@@ -51,9 +49,7 @@ export default defineConfig({
       css: { postcss: "./postcss.config.js" },
       server: {
         port: 3000,
-        warmup: {
-          clientFiles: ["./src/app.tsx"],
-        },
+        warmup: { clientFiles: ["./src/app.tsx"] },
       },
       resolve: {
         alias: Object.fromEntries(
@@ -64,7 +60,6 @@ export default defineConfig({
         ),
       },
       plugins: [
-        lazyPlusPlugin({ router: options.router }),
         viteImagePlugin(),
         compileTime(),
         solidSvg(),

@@ -1,12 +1,11 @@
 import { css } from "@linaria/core";
+import { useLocation } from "@solidjs/router";
 import cn from "classnames";
 import { Component, JSX, createMemo } from "solid-js";
 import { config } from "~/config";
-import { color, heading1Text } from "~/style/commonStyle";
+import { color } from "~/style/commonStyle";
 import { heading1TextHeight } from "~/style/textStylesTS";
 import LogoSVG from "../assets/logo.svg?component-solid";
-import { useLocation } from "@solidjs/router";
-import { registerRoute } from "solid-start-preload";
 
 interface Props {
   children?: JSX.Element;
@@ -66,7 +65,5 @@ const Logo = css`
     fill: ${color("colors/text-300a")} !important;
   }
 `;
-
-registerRoute({ path: ["/header"] });
 
 export default Header;

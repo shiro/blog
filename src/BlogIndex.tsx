@@ -4,7 +4,6 @@ import cn from "classnames";
 import { Component, JSX } from "solid-js";
 import { For } from "solid-js/web";
 import { config } from "~/config";
-import { registerRoute } from "solid-start-preload";
 import { getArticles } from "~/ssg/getArticles";
 
 const articles = getArticles();
@@ -51,7 +50,5 @@ const BlogIndex: Component<Props> = (props) => {
 };
 
 const _BlogIndex = css``;
-
-registerRoute({ path: "/" });
 
 export default BlogIndex;

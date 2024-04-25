@@ -21,11 +21,6 @@ export default createHandler(() => {
             />
             <link rel="icon" href={`${config.base}/favicon.ico`} />
             {assets}
-            {/* {preloadStartAssets({ */}
-            {/*   request: getRequestEvent(), */}
-            {/*   manifest: getManifest("client"), */}
-            {/*   ignorePatterns: [/tw\.style.*\.css/, /routes\.tsx/], */}
-            {/* })} */}
           </head>
           <body>
             <div id="app" class="flex min-h-[100vh] flex-col">

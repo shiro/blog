@@ -2,7 +2,6 @@ import { css } from "@linaria/core";
 import cn from "classnames";
 import { Component, JSX } from "solid-js";
 import DialogImage from "~/DialogImage";
-import { registerRoute } from "solid-start-preload";
 import { breakpoint, breakpointUntil } from "~/style/commonStyle";
 
 const images: Component[] = Object.values(
@@ -75,7 +74,5 @@ const card = css`
     height: 100%;
   }
 `;
-
-registerRoute({ path: "/gallery" });
 
 export default GallerySite;
