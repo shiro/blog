@@ -9,8 +9,6 @@ import { viteImagePlugin } from "./vite/viteImagePlugin";
 // @ts-ignore
 import babelPluginLazyPlus from "solid-lazy-plus/babel";
 
-const root = process.cwd();
-
 const babelPluginLabels = [
   "solid-labels/babel",
   { dev: process.env.NODE_ENV == "development" },
@@ -30,12 +28,11 @@ export default defineConfig({
     },
   },
 
-  // experimental: {islands: true},
-
   solid: {
     babel: {
       plugins: [babelPluginLabels, babelPluginLazyPlus],
     },
+    // the `solid` field is incorrectly typed
     ...({} as any),
   },
 
@@ -43,9 +40,6 @@ export default defineConfig({
 
   vite(options) {
     return {
-      // define: {
-      // "import.meta.env.BASE_URL": JSON.stringify("/foo"),
-      // },
       css: { postcss: "./postcss.config.js" },
       server: {
         port: 3000,
@@ -72,6 +66,3 @@ export default defineConfig({
     };
   },
 });
-
-// solid next:
-// https://github.com/solidjs/solid-docs-next/blob/fc5ec0b803f0ae2a9deb55e1c6fb7c2c60b46c87/app.config.ts
