@@ -1,7 +1,7 @@
 import { css } from "@linaria/core";
 import cn from "classnames";
 import { Component, ComponentProps, JSX } from "solid-js";
-import { withStyle } from "~/style/commonStyle";
+import { breakpoint, withStyle } from "~/style/commonStyle";
 
 const isImageCached = (url: string) => {
   const img = new Image();
@@ -58,11 +58,24 @@ const _LazyImage = css`
   background: linear-gradient(45deg, var(--color1) 0%, var(--color2) 100%);
   width: calc(var(--width) * 1px);
   height: calc(var(--height) * 1px);
+  object-fit: contain;
+
+  --w_limit: 100%;
+  --h_limit: 100vw;
+  // we multiply by 100 to avoid CSS precision loss
+  --x_sf_px: calc((1 / var(--width)) * var(--w_limit) * 100);
+  --y_sf_px: calc((1 / var(--height)) * var(--h_limit) * 100);
+  --sf_px: min(var(--x_sf_px), var(--y_sf_px));
+  width: calc((var(--width) * var(--sf_px) / 100));
+  height: calc((var(--height) * var(--sf_px) / 100));
+  ${breakpoint("xs")} {
+    object-fit: cover !important;
+  }
 
   img {
-    object-fit: inherit;
     width: 100%;
     height: 100%;
+    object-fit: inherit;
     // hide text when loading image
     text-indent: 100%;
 

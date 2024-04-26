@@ -164,7 +164,7 @@ const Project: Component<any> = (props: any) => {
               alt={`Project screenshot of project "${name}"`}
               class={cn(
                 ImageStyle,
-                "h-32 w-[30%] max-w-60 rounded border-2 border-colors-primary-800 object-cover xs:w-[50%]"
+                "h-32 w-[30%] max-w-60 rounded border-2 border-colors-primary-800 xs:w-[50%]"
               )}
               image={image}
               thumbnail={thumbnails[idx()]}

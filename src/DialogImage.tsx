@@ -27,7 +27,7 @@ const DialogImage: Component<Props> = (props) => {
     <div class={cn($class, "relative overflow-hidden")} {...rest}>
       <Dialog.Root>
         <Dialog.Trigger class="block">
-          <props.thumbnail class={cn(_Thumbnail, "object-cover")} alt={alt} />
+          <props.thumbnail class={cn(_Thumbnail, "max-w-[100vw]")} alt={alt} />
         </Dialog.Trigger>
         <Dialog.Portal>
           <Dialog.Overlay
@@ -38,9 +38,7 @@ const DialogImage: Component<Props> = (props) => {
             <Dialog.Content class="flex max-h-[90vh] items-center justify-center s:max-w-[90vw]">
               <Dialog.CloseButton>
                 <props.image
-                  class={cn(
-                    "max-h-[90vh] overflow-hidden object-contain s:max-w-[90vw]"
-                  )}
+                  class={cn(_FullscreenImage, "overflow-hidden object-contain")}
                   alt={alt}
                 />
               </Dialog.CloseButton>
@@ -53,5 +51,9 @@ const DialogImage: Component<Props> = (props) => {
 };
 
 const _Thumbnail = css``;
+
+const _FullscreenImage = css`
+  --h_limit: 90vh;
+`;
 
 export default withStyle(DialogImage, { Thumbnail: _Thumbnail });
