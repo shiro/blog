@@ -2110,13 +2110,13 @@
     magicast "^0.2.10"
     recast "^0.23.4"
 
-"@wyw-in-js/processor-utils@0.5.1":
-  version "0.5.1"
-  resolved "https://registry.npmjs.org/@wyw-in-js/processor-utils/-/processor-utils-0.5.1.tgz#6e12c6417a71f25b6ecc20be3d9038456728caba"
-  integrity sha512-02kE/J+yABu7P+7djqcHyCkBiZV/SW7wgK65yikVVn/t5FNF9u6rZxIKWjrioeeODy5kKWFGzGyFFa3utPZoIA==
+"@wyw-in-js/processor-utils@0.5.3":
+  version "0.5.3"
+  resolved "https://registry.npmjs.org/@wyw-in-js/processor-utils/-/processor-utils-0.5.3.tgz#eb1cf796d4f454f7496454e775f0137c64dd1c79"
+  integrity sha512-DATsRHLqq8cWYkTD8iwEmvWzG2UvmsFN6Poru4NJ1RwjxtcEdnNKCKZBaBdlH5XyhL7jRTcURUMyee3lqGljhg==
   dependencies:
     "@babel/generator" "^7.23.5"
-    "@wyw-in-js/shared" "0.5.1"
+    "@wyw-in-js/shared" "0.5.3"
 
 "@wyw-in-js/processor-utils@^0.4.0":
   version "0.4.1"
@@ -2135,19 +2135,19 @@
     find-up "^5.0.0"
     minimatch "^9.0.3"
 
-"@wyw-in-js/shared@0.5.1":
-  version "0.5.1"
-  resolved "https://registry.npmjs.org/@wyw-in-js/shared/-/shared-0.5.1.tgz#2f7b8c57c02e3cd6a108b8fa1ee4e3f6505211cb"
-  integrity sha512-EXMP8oxXwAR4SMGgGcii8H/vahExT/e89ctm71KDbTNjG+AlQwzC3unyhMmxB5Jj2a0qnS8QTl4UuyHZ3HZeoQ==
+"@wyw-in-js/shared@0.5.3":
+  version "0.5.3"
+  resolved "https://registry.npmjs.org/@wyw-in-js/shared/-/shared-0.5.3.tgz#2be6c58be57a5b40901f01dadada81b1e32923b2"
+  integrity sha512-sgST/P2QPIz4UwOK5NtpvaLXUsACcHRkd9/wTlNSOM5si2hOoeIRvakyuqK33wShHK3bpEZZOXQ9YztSXK3bwg==
   dependencies:
     debug "^4.3.4"
     find-up "^5.0.0"
     minimatch "^9.0.3"
 
-"@wyw-in-js/transform@0.5.1":
-  version "0.5.1"
-  resolved "https://registry.npmjs.org/@wyw-in-js/transform/-/transform-0.5.1.tgz#bc2fa3cead982000e792fb1b34d5d596017ff28d"
-  integrity sha512-ob0iORbQbRJgRiDvU4bYDvPrKbJ+rFW2+V+pz9gpaf2VWrO+fTF0jIB3SnPB14XYCHs6bMWhfH6kzlDjaj8whg==
+"@wyw-in-js/transform@0.5.3":
+  version "0.5.3"
+  resolved "https://registry.npmjs.org/@wyw-in-js/transform/-/transform-0.5.3.tgz#218baafac6f66cb3731d3034f161645fb4257950"
+  integrity sha512-Bt1Ey8MN88FzYJekvZBYFT69157UmwURj2N7Dy8yauErcxtpuNe/1P0Jxd56tdFz0f6uooat5ntzvWgej/iBZg==
   dependencies:
     "@babel/core" "^7.23.5"
     "@babel/generator" "^7.23.5"
@@ -2156,8 +2156,8 @@
     "@babel/template" "^7.22.15"
     "@babel/traverse" "^7.23.5"
     "@babel/types" "^7.23.5"
-    "@wyw-in-js/processor-utils" "0.5.1"
-    "@wyw-in-js/shared" "0.5.1"
+    "@wyw-in-js/processor-utils" "0.5.3"
+    "@wyw-in-js/shared" "0.5.3"
     babel-merge "^3.0.0"
     cosmiconfig "^8.0.0"
     happy-dom "^12.5.0"
@@ -2165,13 +2165,13 @@
     stylis "^4.3.0"
     ts-invariant "^0.10.3"
 
-"@wyw-in-js/vite@0.5.1":
-  version "0.5.1"
-  resolved "https://registry.npmjs.org/@wyw-in-js/vite/-/vite-0.5.1.tgz#392a9f148485aff054621b193f6a7190f81d5d47"
-  integrity sha512-+gFLewFjJ+pT5UmlvUn9cm+S4th74l9IVB/t9E0hIyXWkZrqt/tglQecwdnhA9YC+PntvBVF49Yrlk5PsEdB5A==
+"@wyw-in-js/vite@0.5.3":
+  version "0.5.3"
+  resolved "https://registry.npmjs.org/@wyw-in-js/vite/-/vite-0.5.3.tgz#73fe21577e68d3b927b430b2ce7e274bc6b0feef"
+  integrity sha512-rhgsAqototS/LAoe2dcClSO6+fAqElgbaFbzfnfyIJDDH5vXtFvYUHGpz9SojpYUmmzy7JoiFT+8GEE6WZIdwg==
   dependencies:
-    "@wyw-in-js/shared" "0.5.1"
-    "@wyw-in-js/transform" "0.5.1"
+    "@wyw-in-js/shared" "0.5.3"
+    "@wyw-in-js/transform" "0.5.3"
 
 abbrev@1:
   version "1.1.1"
