@@ -36,7 +36,7 @@ const DialogImage: Component<Props> = (props) => {
           />
           <div class="fixed inset-0 z-50 flex items-center justify-center">
             <Dialog.Content class="flex max-h-[90vh] items-center justify-center s:max-w-[90vw]">
-              <Dialog.CloseButton>
+              <Dialog.CloseButton class="flex justify-center">
                 <props.image
                   class={cn(_FullscreenImage, "overflow-hidden object-contain")}
                   alt={alt}
@@ -53,7 +53,8 @@ const DialogImage: Component<Props> = (props) => {
 const _Thumbnail = css``;
 
 const _FullscreenImage = css`
-  --h_limit: 90vh;
+  --w_limit: 90vw !important;
+  --h_limit: 90vh !important;
 `;
 
 export default withStyle(DialogImage, { Thumbnail: _Thumbnail });
