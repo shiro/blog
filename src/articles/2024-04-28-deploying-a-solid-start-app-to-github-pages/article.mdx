@@ -1,0 +1,236 @@
+---
+title: Deploying a Solid Start app to Github pages
+---
+
+import DialogImage from "~/DialogImage";
+import p1 from "./settings.jpg?lazy";
+import t1 from "./settings.jpg?lazy&size=700x";
+import p2 from "./workflow.jpg?lazy";
+import t2 from "./workflow.jpg?lazy&size=700x";
+import p3 from "./site.jpg?lazy";
+import t3 from "./site.jpg?lazy&size=500x";
+
+
+Solid Start is rapidly progressing toward the initial 1.0 stable release, so let's look
+at how we can build a pre-rendered page and deploy it to Github pages.
+
+[Github pages](https://pages.github.com) is a great (and free) place to host static sites
+such as blog and portfolio websites.
+While there's plenty of documentation how to build and deploy a React app there, consider
+using a superior framework like Solid.js, built with
+[Solid Start](https://start.solidjs.com/) - the official meta-framework
+for building and deploying apps quickly.
+
+# Creating a Github repository
+
+The first step is creating a new Github repository, for this example I'll be calling
+mine `my-blog`.
+Next we need to configure Github pages, navigate to the `Settings > Pages` tab
+and set the `Source` to `Github Actions` so that our page gets build and deployed
+automatically through the CI.
+
+<Img
+src={p1}
+thumbnail={t1}
+caption="We need to set the source to Github actions"
+/>
+
+Optionally it's also possible to configure the app to run with a custom domain name.
+There's plenty of documentation on how to do so, but I'll be sticking with the defaults
+for this article. Regardless, the rest of the configuration won't change much.
+
+
+# Creating a Solid Start app
+
+Follow the [offictial documentation](start.solidjs.com) to setup a new app, it's as simple
+as running a single command and selecting the presets you want.
+I'll be using the `basic` template, which comes with a simple landing page, a router
+and some simple client components to make sure things are working.
+
+
+```terminal
+[shiro@shiro-pc:~]# pnpm create solid
+   Create-Solid v0.5.8
+│
+◇ Project Name
+│  my-blog
+│
+◇ Is this a Solid-Start project?
+│  Yes
+│
+◇ Which template would you like to use?
+│  basic
+│
+◇ Use Typescript?
+│  Yes
+│
+◇ Project successfully created! 🎉
+│
+◇ To get started, run: ─╮
+│                        │
+│  cd my-blog            │
+│  pnpm install          │
+│  pnpm dev              │
+│                        │
+├────────────────────────╯
+[shiro@shiro-pc:~]# cd my-blog
+[shiro@shiro-pc:~/my-blog]# pnpm install
+Done in 23.3s
+```
+
+Since we don't really have a server for our backend (Github pages just serves
+static assets), we need to update the configuration, so that the output will be a
+pre-rendered static site with client side interactivity.
+If you need to display dynamic content that isn't known at compile-time, you
+might want to consider adding an external API server and loading the dynamic
+data from the client after page load.
+
+```tsx title="app.config.ts" diff
+import { defineConfig } from "@solidjs/start/config";
+
+export default defineConfig({
++  server: {
++    baseURL: process.env.BASE_PATH,
++    static: true,
++    prerender: {
++      failOnError: true,
++      routes: ["/"],
++      crawlLinks: true,
++    },
++  },
+});
+```
+It's also necessary to let the router know where the URL root of the site is, i.e. in
+the case of Github pages, it'll be the respository name, which we can inject as an
+environmental variable at build-time.
+
+```tsx title="src/app.tsx" diff
+export default function App() {
+  return (
+    <Router
++      base={import.meta.env.SERVER_BASE_URL}
+      root={(props) => (...)}
+    >
+      <FileRoutes />
+    </Router>
+  );
+}
+```
+
+With this, our router should now behave as expected.
+Let's add the Github Actions configuration so that our site will be built whenever
+a new commit is made to the `master` branch.
+You can customize the workflow in many ways, as described in the
+[docs](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions).
+
+```yaml title=".github/workflows/CI.yml"
+name: Build package
+
+on:
+  push:
+    branches: [ master ]
+    tags: [ '*' ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.12.0'
+          cache: 'pnpm'
+
+      - name: install
+        run: pnpm install --frozen-lockfile
+
+      - name: build
+        run: pnpm build
+        env:
+          BASE_PATH: '/my-blog'
+
+      - name: upload artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: '.output/public'
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4.0.5
+```
+
+While the configuration might look complicated, it's easy to look at individual steps
+and understand what they do. It's mostly about setting up the environment, install dependencies
+and finally build and deploy our app.
+Since the code is already hosted on Github, there's no need to pass in any secrets for deployment
+authorization, pretty convenient indeed.
+
+The last step is to initialize the git repository in our codebase and push it to Github.
+
+```terminal
+[shiro@shiro-pc:~/my-blog]# git init
+Initialized empty Git repository in ~/my-blog/.git/
+[shiro@shiro-pc:~/my-blog]# git remote add origin git@github.com:username/my-blog.git
+[shiro@shiro-pc:~/my-blog]# git add .
+[shiro@shiro-pc:~/my-blog]# git commit -m "Initial commit"
+[shiro@shiro-pc:~/my-blog]# git push
+To github.com:username/my-blog.git
+ * [new branch]      master -> master
+```
+
+Once the code is committed, you can visit the `Actions` tab in the Github repository
+UI and ensure the new workflow is being run.
+
+# Test it out
+
+If everything went as expected, you should now see the new workflow run being successful
+after a couple of seconds. This means the static site is now deployed at
+`https://username.github.io/my-blog`
+
+<Img
+src={p2}
+thumbnail={t2}
+caption="The workflow finished successfully"
+/>
+
+Let's try opening the page and ensuring everything works as it should.
+
+<Img
+src={p3}
+thumbnail={t3}
+caption="Our website hosted on Github pages"
+/>
+
+With this you should have a basic Solid Start app that auto-builds and deploys
+itself on new commits. If you're interested in a more complex site that uses
+the same base configuration we just built, check out the repository for my
+blog site.
+
+<Embed
+url="https://github.com/shiro/blog"
+description="My personal blog website"
+/>
+
+With services like Github actions making building and deploying sites free and
+easy, there's no limit to what we can build, let your imagination run wild!

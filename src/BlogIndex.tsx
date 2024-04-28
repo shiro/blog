@@ -1,20 +1,14 @@
 import { Separator } from "@kobalte/core";
-import { css } from "@linaria/core";
-import cn from "classnames";
-import { Component, JSX } from "solid-js";
+import { Component } from "solid-js";
 import { For } from "solid-js/web";
 import { config } from "~/config";
 import { getArticles } from "~/ssg/getArticles";
 
 const articles = getArticles();
 
-interface Props {
-  children?: JSX.Element;
-}
-
-const BlogIndex: Component<Props> = (props) => {
+const BlogIndex: Component = () => {
   return (
-    <main class={cn(_BlogIndex)}>
+    <main>
       <h1 class="mb-4 bg-colors-primary-500 pl-8 pr-8 text-center text-big text-colors-text-900a">
         Blog of a programming rabbit
       </h1>
@@ -48,7 +42,5 @@ const BlogIndex: Component<Props> = (props) => {
     </main>
   );
 };
-
-const _BlogIndex = css``;
 
 export default BlogIndex;

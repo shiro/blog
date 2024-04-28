@@ -15,9 +15,7 @@ const babelPluginLabels = [
 ];
 
 export default defineConfig({
-  ssr: true,
   devOverlay: false,
-
   server: {
     baseURL: process.env.BASE_PATH,
     static: true,
