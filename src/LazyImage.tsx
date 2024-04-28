@@ -56,8 +56,6 @@ const LazyImage: (meta: LazyImageMeta) => Component<Props> =
 
 const _LazyImage = css`
   background: linear-gradient(45deg, var(--color1) 0%, var(--color2) 100%);
-  width: calc(var(--width) * 1px);
-  height: calc(var(--height) * 1px);
   object-fit: contain;
 
   --w_limit: 100%;
@@ -68,6 +66,9 @@ const _LazyImage = css`
   --sf_px: min(var(--x_sf_px), var(--y_sf_px));
   width: calc((var(--width) * var(--sf_px) / 100));
   height: calc((var(--height) * var(--sf_px) / 100));
+  max-width: calc(var(--width) * 1px);
+  max-height: calc(var(--height) * 1px);
+
   ${breakpoint("xs")} {
     object-fit: cover !important;
   }
