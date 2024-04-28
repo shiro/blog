@@ -66,8 +66,6 @@ const _LazyImage = css`
   --sf_px: min(var(--x_sf_px), var(--y_sf_px));
   width: calc((var(--width) * var(--sf_px) / 100));
   height: calc((var(--height) * var(--sf_px) / 100));
-  max-width: calc(var(--width) * 1px);
-  max-height: calc(var(--height) * 1px);
 
   ${breakpoint("xs")} {
     object-fit: cover !important;

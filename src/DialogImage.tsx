@@ -55,6 +55,10 @@ const _Thumbnail = css``;
 const _FullscreenImage = css`
   --w_limit: 90vw !important;
   --h_limit: 90vh !important;
+
+  // don't upscale
+  max-width: calc(var(--width) * 1px);
+  max-height: calc(var(--height) * 1px);
 `;
 
 export default withStyle(DialogImage, { Thumbnail: _Thumbnail });
