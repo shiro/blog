@@ -35,6 +35,9 @@ importers:
       '@vinxi/plugin-mdx':
         specifier: 3.7.1
         version: 3.7.1(@mdx-js/mdx@3.0.1)
+      '@wyw-in-js/transform':
+        specifier: 0.5.3
+        version: 0.5.3(typescript@5.4.5)
       '@wyw-in-js/vite':
         specifier: 0.5.3
         version: 0.5.3(typescript@5.4.5)(vite@5.2.13(@types/node@20.14.2)(sass@1.77.4)(terser@5.31.1))

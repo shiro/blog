@@ -27,13 +27,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20.12.0'
-          cache: 'yarn'
+          # cache: 'yarn'
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
 
       - name: install
-        run: yarn --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: build
-        run: yarn build
+        run: pnpm build
         # env:
           # BASE_PATH: /blog
 

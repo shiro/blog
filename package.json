@@ -19,6 +19,7 @@
     "@solidjs/start": "1.0.1",
     "@vinxi/plugin-mdx": "3.7.1",
     "@wyw-in-js/vite": "0.5.3",
+    "@wyw-in-js/transform": "0.5.3",
     "babel-plugin-transform-remove-imports": "1.7.1",
     "classnames": "2.5.1",
     "cssnano": "6.1.2",
