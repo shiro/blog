@@ -1,11 +1,10 @@
-import { colorVariablesCSS } from "~/style/colorVariableCSS";
+import { css } from "@linaria/core";
 import {
   bigText,
   bodyText,
   breakpoint,
   breakpointFrom,
   breakpointUntil,
-  color,
   contentContainer,
   heading1Text,
   heading2Text,
@@ -13,12 +12,8 @@ import {
   jumboText,
   largeText,
   primaryFontBold,
-  primaryFontBoldItalic,
-  primaryFontItalic,
   subText,
-  text,
 } from "~/style/commonStyle";
-import { css } from "@linaria/core";
 
 export const globals = css`
   @layer tw-base {

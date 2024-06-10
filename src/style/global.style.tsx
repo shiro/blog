@@ -14,11 +14,7 @@ import "~/style/reset.scss";
 import "~/style/tw.style";
 // import "~/style/styleLoadOrder";
 import { css } from "@linaria/core";
-import {
-  baseText,
-  bodyTextHeight,
-  smallTextHeight,
-} from "~/style/textStylesTS";
+import { baseText, smallTextHeight } from "~/style/textStylesTS";
 
 export const globals = css`
   @layer tw-base {
