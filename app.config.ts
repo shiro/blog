@@ -43,6 +43,7 @@ export default defineConfig({
         port: 3000,
         warmup: { clientFiles: ["./src/app.tsx"] },
       },
+      build: { sourcemap: true },
       resolve: {
         alias: Object.fromEntries(
           Object.entries(tsconfig.compilerOptions.paths).map(([key, value]) => [

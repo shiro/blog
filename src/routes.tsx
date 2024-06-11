@@ -11,7 +11,8 @@ export const routes: RouteDefinition[] = [
     path: "/articles/:name",
     component: (p) => {
       // router bug: 'name' not in 'p', update when this is fixed
-      const name = p.location.pathname.replace(`${config.base}/articles/`, "");
+      let name = p.location.pathname.replace(`${config.base}/articles/`, "");
+      if (name.endsWith("/")) name = name.slice(0, -1);
       return (
         <div class="mb-16">
           <Article name={name} />

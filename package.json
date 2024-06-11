@@ -6,6 +6,7 @@
     "dev": "vinxi dev",
     "build": "vinxi build",
     "start": "vinxi start",
+    "serve": "cd .output && npx http-server public -p 3000",
     "version": "vinxi version"
   },
   "dependencies": {
