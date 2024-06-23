@@ -1,0 +1,293 @@
+---
+title: Installing NixOS on a MacBook M1/M2
+private: true
+---
+
+import DialogImage from "~/DialogImage";
+import p1 from "./settings.jpg?lazy";
+import t1 from "./settings.jpg?lazy&size=700x";
+import p2 from "./workflow.jpg?lazy";
+import t2 from "./workflow.jpg?lazy&size=700x";
+import p3 from "./site.jpg?lazy";
+import t3 from "./site.jpg?lazy&size=500x";
+
+
+Recent MacBook models with the M1/M2 chips show amazing performance and are popular among developers,
+however Apple refuses to officially support other operating systems.
+Today we will install NixOS on it and see how well it works!
+
+Since there is no official support for Linux, the only reason it's even possible to do is the
+amazing community, which developed lots of tools, kernel patches, drivers and more!  
+Most of the development effort is centralized around the [Asahi Linux](https://asahilinux.org)
+project, and I highly recommend you help them out financially or in other ways, if possible.
+
+Officially, Asahi ships Fedora, however there's also a community around running Asahi with
+NixOS, which is what we'll be looking at doing today.
+
+<Embed
+url="https://github.com/tpwrules/nixos-apple-silicon"
+description="Resources to install NixOS bare metal on Apple Silicon Macs"
+/>
+
+
+
+# Before starting
+
+First, it's important to check what is currently supported with your hardware, and luckily
+the Asahi Linux wiki provides all supported features in an easy to understand way.
+I'm currently working with an M2 MacBook Pro (2023) model, so I'll be looking at the
+[M2 Series Feature Support](https://github.com/AsahiLinux/docs/wiki/M2-Series-Feature-Support) page.
+There's also similar pages for other models.
+
+At the time of writing, several features are missing for my specific model:
+- GPU acceleration
+- Video Decoder support
+- Thunderbolt
+- DP Alt Mode (used to connect external monitors)
+- internal microphone
+
+If any of that is a deal-breaker, you might want to wait until it gets implemented.  
+We'll have to keep the original MacOS partition in tact regardless, since that's currently the only way
+to update the firmware, meaning you can dual-boot and play around with Linux even if it lacks some features.
+
+Installing NixOS is surprisingly easy, and mostly just means following the nicely written instructions.
+I'll be using the [instructions (UEFI Boot Standalone NixOS
+2024-05-23)](https://github.com/tpwrules/nixos-apple-silicon/blob/842306255856d7f5677c113e699101eb253e2e3f/docs/uefi-standalone.md),
+which is the up-to-date way of doing it at the time of writing. Make sure to follow the latest
+version of the document since some steps might change in the future.
+
+
+# Prepeartion
+
+Let's prepare everything we need to install NixOS.
+
+It is recommended to upgrade MacOS to the latest available version, since some features won't
+work otherwise. We'll also need access to an administrator account and some free disk space (at least 50Gb).
+
+We'll also need to flash the installation image onto a USB drive. You can build it yourself, but
+it's easier to just download a [pre-built image](https://github.com/tpwrules/nixos-apple-silicon/releases) and
+flashing it using:
+
+```terminal
+[shiro@shiro-pc:~]# lsblk
+# find your USB device (for me it's /dev/sdb)
+[shiro@shiro-pc:~]# cat macos-nixos.iso > /dev/sdb
+```
+
+Note that even though Thunderbolt is not supported by Asahi at the time of writing, my Thunderbold-based
+USB hub worked fine for booting the USB key (but wasn't usable in Linux).
+
+Now we're ready to move on to the actual installation.
+
+# Installing NixOS
+
+It is important to follow the latest up-to-date instructions, I'll just be sharing my experience at the
+time of writing, but the steps might change in the future!
+
+First I installed the bootloader by opening a terminal in MacOS and runnning:
+
+```terminal
+[shiro@shiro-macos:~]# curl https://alx.sh | sh
+# follow the interactive instructions
+```
+
+I resized the MacOS partition to 50Gb and used the rest for NixOS. After confirming everything, the
+machine shuts down. After that I had to start the machine by holding the power button for several seconds
+and inputing my admin password twice.
+
+With the bootloader ready, the machine should automatically boot from the USB stick when it's inserted,
+the rest is a straightforward NixOS install as per ususal.
+I opted for a simple `ext4` partition setup, but would like to try BTRFS and LUKS encryption in the future as well.
+Since there's no real difference compared to installing NixOS to any other machine, I won't go into
+too much detail here, but there's detailed info in the instructions.
+
+After installing NixOS, the machine should boot into it by default (when no USB is inserted), so all that's
+left is customizing the new system.
+
+# Customization
+
+TODO
+
+# Conclusion
+
+TODO
+
+
+# End
+
+
+The first step is creating a new Github repository, for this example I'll be calling
+mine `my-blog`.
+Next we need to configure Github pages, navigate to the `Settings > Pages` tab
+and set the `Source` to `Github Actions` so that our page gets build and deployed
+automatically through the CI.
+
+<Img
+src={p1}
+thumbnail={t1}
+caption="We need to set the source to Github actions"
+/>
+
+Optionally it's also possible to configure the app to run with a custom domain name.
+There's plenty of documentation on how to do so, but I'll be sticking with the defaults
+for this article. Regardless, the rest of the configuration won't change much.
+
+
+```terminal
+[shiro@shiro-pc:~]# echo wow
+```
+
+Since we don't really have a server for our backend (Github pages just serves
+static assets), we need to update the configuration, so that the output will be a
+pre-rendered static site with client side interactivity.
+If you need to display dynamic content that isn't known at compile-time, you
+might want to consider adding an external API server and loading the dynamic
+data from the client after page load.
+
+```tsx title="app.config.ts" diff
+import { defineConfig } from "@solidjs/start/config";
+
+export default defineConfig({
++  server: {
++    baseURL: process.env.BASE_PATH,
++    static: true,
++    prerender: {
++      failOnError: true,
++      routes: ["/"],
++      crawlLinks: true,
++    },
++  },
+});
+```
+It's also necessary to let the router know where the URL root of the site is, i.e. in
+the case of Github pages, it'll be the respository name, which we can inject as an
+environmental variable at build-time.
+
+```tsx title="src/app.tsx" diff
+export default function App() {
+  return (
+    <Router
++      base={import.meta.env.SERVER_BASE_URL}
+      root={(props) => (...)}
+    >
+      <FileRoutes />
+    </Router>
+  );
+}
+```
+
+With this, our router should now behave as expected.
+Let's add the Github Actions configuration so that our site will be built whenever
+a new commit is made to the `master` branch.
+You can customize the workflow in many ways, as described in the
+[docs](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions).
+
+```yaml title=".github/workflows/CI.yml"
+name: Build package
+
+on:
+  push:
+    branches: [ master ]
+    tags: [ '*' ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.12.0'
+          cache: 'pnpm'
+
+      - name: install
+        run: pnpm install --frozen-lockfile
+
+      - name: build
+        run: pnpm build
+        env:
+          BASE_PATH: '/my-blog'
+
+      - name: upload artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: '.output/public'
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4.0.5
+```
+
+While the configuration might look complicated, it's easy to look at individual steps
+and understand what they do. It's mostly about setting up the environment, install dependencies
+and finally build and deploy our app.
+Since the code is already hosted on Github, there's no need to pass in any secrets for deployment
+authorization, pretty convenient indeed.
+
+The last step is to initialize the git repository in our codebase and push it to Github.
+
+```terminal
+[shiro@shiro-pc:~/my-blog]# git init
+Initialized empty Git repository in ~/my-blog/.git/
+[shiro@shiro-pc:~/my-blog]# git remote add origin git@github.com:username/my-blog.git
+[shiro@shiro-pc:~/my-blog]# git add .
+[shiro@shiro-pc:~/my-blog]# git commit -m "Initial commit"
+[shiro@shiro-pc:~/my-blog]# git push
+To github.com:username/my-blog.git
+ * [new branch]      master -> master
+```
+
+Once the code is committed, you can visit the `Actions` tab in the Github repository
+UI and ensure the new workflow is being run.
+
+# Test it out
+
+If everything went as expected, you should now see the new workflow run being successful
+after a couple of seconds. This means the static site is now deployed at
+`https://username.github.io/my-blog`
+
+<Img
+src={p2}
+thumbnail={t2}
+caption="The workflow finished successfully"
+/>
+
+Let's try opening the page and ensuring everything works as it should.
+Also check for any errors in the console and try clicking the button to increase the counter.
+If the counter works, it means that JS hydrated successfully and client side Javascript works
+as expected.
+
+<Img
+src={p3}
+thumbnail={t3}
+caption="Our website hosted on Github pages"
+/>
+
+With this you should have a basic Solid Start app that auto-builds and deploys
+itself on new commits. If you're interested in a more complex site that uses
+the same base configuration we just built, check out the repository for my
+blog site.
+
+With services like Github actions making building and deploying sites free and
+easy, there's no limit to what we can build, let your imagination run wild!
