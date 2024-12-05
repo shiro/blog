@@ -60,7 +60,7 @@ const AboutSite: Component<Props> = (props) => {
           </li>
           <li class="flex gap-2 text-nowrap xs:text-h3 s:text-body">
             <IconText icon="email" />
-            <a href="mailto:matic@uagi.io">matic@uagi.io</a>
+            <a href="mailto:matic@usagi.io">matic@usagi.io</a>
           </li>
           <li class="flex gap-2 text-nowrap xs:text-h3 s:text-body">
             <IconText icon="globe" />
