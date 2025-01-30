@@ -1,4 +1,5 @@
-const theme = require("./src/style/theme");
+import theme from "./src/style/theme";
+
 const colors = theme.colors.light;
 
 const mappedColors = {};

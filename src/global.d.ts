@@ -1,5 +1,6 @@
 /// <reference types="@solidjs/start/env" />
 /// <reference types="solid-labels" />
+/// <reference types="vite-plugin-compile-time/client" />
 
 declare module "*.md";
 
