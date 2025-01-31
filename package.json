@@ -19,8 +19,8 @@
     "@solidjs/router": "0.15.3",
     "@solidjs/start": "1.0.11",
     "@vinxi/plugin-mdx": "3.7.2",
-    "@wyw-in-js/vite": "0.5.5",
     "@wyw-in-js/transform": "0.5.5",
+    "@wyw-in-js/vite": "0.5.5",
     "babel-plugin-transform-remove-imports": "1.8.0",
     "classnames": "2.5.1",
     "cssnano": "6.1.2",
@@ -41,11 +41,9 @@
     "node": ">=18.12.0"
   },
   "devDependencies": {
-    "shiki": "1.16.1",
     "@shikijs/core": "1.16.1",
     "@shikijs/rehype": "1.16.1",
     "@shikijs/transformers": "1.16.1",
-    "solid-lazy-plus": "file:./tarballs/solid-lazy-plus.tar.gz",
     "@types/imagemagick": "0.0.35",
     "babel-plugin-transform-define": "2.1.4",
     "gray-matter": "4.0.3",
@@ -56,7 +54,9 @@
     "remark-captions": "2.2.4",
     "remark-frontmatter": "5.0.0",
     "remark-gfm": "4.0.0",
+    "shiki": "1.16.1",
     "solid-devtools": "0.33.0",
+    "solid-lazy-plus": "file:tarballs/solid-lazy-plus.tar.gz",
     "ts-node": "10.9.2",
     "vite-plugin-solid-svg": "0.8.1"
   }
