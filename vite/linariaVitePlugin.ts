@@ -1,6 +1,6 @@
 import { shaker } from "@wyw-in-js/transform";
 import wyw from "@wyw-in-js/vite";
-import fs from "fs";
+import fs from "node:fs";
 import * as sass from "sass";
 import { PluginOption } from "vite";
 
@@ -74,11 +74,13 @@ export const linariaVitePlugin = (options: Options = {}): PluginOption => {
     displayName: true,
     configFile: false,
     preprocessor: (selector, cssText) =>
-      sass.compileString(
-        selector.startsWith(".globals_")
-          ? cssText
-          : `${selector} { ${cssText} }`
-      ).css,
+      sass
+        .compileString(
+          selector.startsWith(".globals_")
+            ? cssText
+            : `${selector} { ${cssText} }`
+        )
+        .css.replaceAll("@_", "@"),
     ...options,
   });
 };

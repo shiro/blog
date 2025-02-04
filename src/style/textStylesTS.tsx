@@ -29,62 +29,73 @@ export const _primaryFontBoldItalic = style`
 `;
 
 const scaleFactor = 1.2;
-// base
-const bodyText = { size: 17, lineHeight: 28, fontAdjustment: 0 };
-// small
-const subText = {
-  size: bodyText.size * (1 / scaleFactor),
+const body = {
+  size: 17,
+  lineHeight: 28,
+  fontAdjustment: 0,
+};
+const sub = {
+  size: body.size * (1 / scaleFactor),
   lineHeight: 22,
   fontAdjustment: 0,
 };
-const smallText = {
-  size: subText.size * (1 / scaleFactor),
+const small = {
+  size: sub.size * (1 / scaleFactor),
   lineHeight: 18,
   fontAdjustment: 0,
 };
-// big
-const heading3Text = {
-  size: bodyText.size * scaleFactor,
+const heading3 = {
+  size: body.size * scaleFactor,
   lineHeight: 32,
   fontAdjustment: 0,
 };
-const heading2Text = {
-  size: heading3Text.size * scaleFactor,
+const heading2 = {
+  size: heading3.size * scaleFactor,
   lineHeight: 36,
   fontAdjustment: 0,
 };
-const heading1Text = {
-  size: heading2Text.size * scaleFactor,
+const heading1 = {
+  size: heading2.size * scaleFactor,
   lineHeight: 44,
   fontAdjustment: 0,
 };
-const bigText = {
-  size: heading1Text.size * scaleFactor,
+const big = {
+  size: heading1.size * scaleFactor,
   lineHeight: 52,
   fontAdjustment: 0,
 };
-const largeText = {
-  size: bigText.size * scaleFactor,
+const large = {
+  size: big.size * scaleFactor,
   lineHeight: 64,
   fontAdjustment: 0,
 };
-const jumboText = {
-  size: largeText.size * scaleFactor,
+const jumbo = {
+  size: large.size * scaleFactor,
   lineHeight: 76,
   fontAdjustment: 0,
 };
+export const _textDefinitions = {
+  sub,
+  small,
+  body,
+  heading1,
+  heading2,
+  heading3,
+  large,
+  jumbo,
+};
 
-export const subTextHeight = subText.lineHeight;
-export const smallTextHeight = smallText.lineHeight;
-export const bodyTextHeight = bodyText.lineHeight;
-export const heading3TextHeight = heading3Text.lineHeight;
-export const heading2TextHeight = heading2Text.lineHeight;
-export const heading1TextHeight = heading1Text.lineHeight;
-export const bigTextHeight = bigText.lineHeight;
-export const largeTextHeight = largeText.lineHeight;
-export const jumboTextHeight = jumboText.lineHeight;
+export const subTextHeight = sub.lineHeight;
+export const smallTextHeight = small.lineHeight;
+export const bodyTextHeight = body.lineHeight;
+export const heading3TextHeight = heading3.lineHeight;
+export const heading2TextHeight = heading2.lineHeight;
+export const heading1TextHeight = heading1.lineHeight;
+export const bigTextHeight = big.lineHeight;
+export const largeTextHeight = large.lineHeight;
+export const jumboTextHeight = jumbo.lineHeight;
 
-export const heading1TextSize = heading1Text.size;
+export const heading1TextSize = heading1.size;
 
 const textFragment = (currentSize: {
   size: number;
@@ -96,15 +107,15 @@ const textFragment = (currentSize: {
 export const baseText = fluidFontSize(`${remBase}px`);
 export const baseTextImportant = fluidFontSize(`${remBase}px`, true);
 
-export const _jumboText = textFragment(jumboText);
-export const _largeText = textFragment(largeText);
-export const _bigText = textFragment(bigText);
-export const _heading1Text = textFragment(heading1Text);
-export const _heading2Text = textFragment(heading2Text);
-export const _heading3Text = textFragment(heading3Text);
-export const _bodyText = textFragment(bodyText);
-export const _subText = textFragment(subText);
-export const _smallText = textFragment(smallText);
+export const _jumboText = textFragment(jumbo);
+export const _largeText = textFragment(large);
+export const _bigText = textFragment(big);
+export const _heading1Text = textFragment(heading1);
+export const _heading2Text = textFragment(heading2);
+export const _heading3Text = textFragment(heading3);
+export const _bodyText = textFragment(body);
+export const _subText = textFragment(sub);
+export const _smallText = textFragment(small);
 
 export type _FontStyle = "primary" | "primaryItalic" | "primaryBold";
 export type _FontSize =
@@ -120,7 +131,7 @@ export type _FontSize =
 export const _text = (
   font: _FontStyle,
   size: _FontSize,
-  textColor?: string,
+  textColor?: string
 ) => {
   let resultStyle = "";
 

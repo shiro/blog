@@ -20,6 +20,7 @@ export const isValidArticle = (name: string) => !!getArticleComponent(name);
 
 interface Props {
   name: string;
+  className?: string;
 }
 
 const Article: Component<Props> = (props) => {
@@ -28,7 +29,7 @@ const Article: Component<Props> = (props) => {
   const meta = articles.find((x: any) => x.slug == name)!;
 
   return (
-    <div class={_Article}>
+    <div class={cn(_Article, props.className)}>
       <Meta name="description" content={meta.description} />
       <span class="mb-2">
         <a href="/">Articles</a>{" "}
@@ -100,13 +101,13 @@ const Article: Component<Props> = (props) => {
             );
           },
           h1: (props: any) => (
-            <h2 {...props} class="text-h2 text-colors-text-900a" />
+            <h2 {...props} class="text-heading2 text-colors-text-900a" />
           ),
           h2: (props: any) => (
-            <h3 {...props} class="text-h3 text-colors-text-900a" />
+            <h3 {...props} class="text-heading3 text-colors-text-900a" />
           ),
           h3: (props: any) => (
-            <h4 {...props} class="text-h4 text-colors-text-900a" />
+            <h4 {...props} class="text-heading4 text-colors-text-900a" />
           ),
 
           ul: (props: any) => (
@@ -170,7 +171,7 @@ const Article: Component<Props> = (props) => {
                     class="ml-8 mr-8 h-full w-16 flex-shrink-0"
                   />
                   <div class="flex flex-1 flex-col gap-2 bg-colors-primary-200 pl-4 pr-4 shadow">
-                    <span class="mt-6 text-h2">
+                    <span class="text-heading2 mt-6">
                       <span class="text-colors-text-300a">{username}/</span>
                       <span class="text-colors-text-900a">{projectName}</span>
                     </span>

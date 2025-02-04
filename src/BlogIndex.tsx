@@ -20,7 +20,7 @@ const BlogIndex: Component = () => {
                 <a
                   href={`${config.base}${item.url}`}
                   class="flex flex-col p-4 no-underline">
-                  <span class="text-h2 text-colors-primary-800">
+                  <span class="text-heading2 text-colors-primary-800">
                     {item.title}
                   </span>
                   <span class="textbody mb-4 mt-1 text-colors-text-300a !no-underline">

@@ -8,6 +8,12 @@ console.warn = function (message?: any, ...optionalParams: any[]) {
   _warn(message, ...optionalParams);
 };
 
+const filterAssets = (input: any): any => {
+  if (Array.isArray(input)) return input.map(filterAssets).filter(Boolean);
+  if (input.t.startsWith("<style")) return null;
+  return input;
+};
+
 export default createHandler(() => {
   return (
     <StartServer
@@ -20,6 +26,7 @@ export default createHandler(() => {
               content="width=device-width, initial-scale=1"
             />
             <link rel="icon" href={`${config.base}/favicon.ico`} />
+            {/* {filterAssets(assets)} */}
             {assets}
           </head>
           <body>

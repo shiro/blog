@@ -1,4 +1,5 @@
 import { css } from "@linaria/core";
+import { normalizeColorName, themeColorList } from "~/style/colorsTs";
 import {
   bigText,
   bodyText,
@@ -12,18 +13,38 @@ import {
   jumboText,
   largeText,
   primaryFontBold,
+  smallText,
+  style,
   subText,
+  textDefinitions,
 } from "~/style/commonStyle";
+import { pxToRem } from "~/style/fluidSizeTS";
+
+const twColors = themeColorList
+  .map(normalizeColorName)
+  .map((color) => `--color-${color}: var(--color-${color});`)
+  .join("\n");
+
+const twTextStyles = Object.entries(textDefinitions)
+  .map(
+    ([name, text]) => style`
+--text-${name}: ${text.size}px; 
+--text-${name}--line-height: ${text.lineHeight}px;
+`
+  )
+  .join("\n");
 
 export const globals = css`
-  @layer tw-base {
-    @tailwind base;
-  }
-  //
-  @layer tw-utilities {
-    @tailwind components;
-    @tailwind utilities;
-    @tailwind variants;
+  @_import "tailwindcss";
+
+  @theme {
+    ${twColors}
+    ${twTextStyles}
+    --breakpoint-xs: 0px;
+    --breakpoint-s: ${pxToRem("600px")};
+    --breakpoint-m: ${pxToRem("960px")};
+    --breakpoint-l: ${pxToRem("1280px")};
+    --breakpoint-xl: ${pxToRem("1920px")};
   }
 
   @layer tw-base {

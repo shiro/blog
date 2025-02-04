@@ -1,5 +1,7 @@
 import { css } from "@linaria/core";
 
 export const globals = css`
-    @layer root, tw-base, c, tw-utilities;
+  // @layer root
+  // tailwind layers
+  @layer theme, base, root, components, utilities;
 `;

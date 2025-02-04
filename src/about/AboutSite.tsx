@@ -18,8 +18,8 @@ interface Props {
 const AboutSite: Component<Props> = (props) => {
   return (
     <div class={cn(_AboutSite, "mb-8 grid gap-4")}>
-      <div class="flex flex-col gap-2 " style={{ "grid-area": "picture" }}>
-        <div class="flex h-[192px] w-[192px] items-center justify-center rounded border-4 border-colors-primary-500">
+      <div class="flex flex-col gap-2" style={{ "grid-area": "picture" }}>
+        <div class="flex h-[192px] w-[192px] items-center justify-center overflow-hidden rounded border-4 border-colors-primary-500">
           <ProfilePicture
             alt="Profile picture showing an manga-style face with glasses"
             class="h-full w-full"
@@ -27,7 +27,7 @@ const AboutSite: Component<Props> = (props) => {
         </div>
       </div>
 
-      <div class="flex flex-col gap-2 " style={{ "grid-area": "stats" }}>
+      <div class="flex flex-col gap-2" style={{ "grid-area": "stats" }}>
         <StatsBar icon="heart" progress={28} type="secondary" label="HP">
           12/85
         </StatsBar>
@@ -39,34 +39,34 @@ const AboutSite: Component<Props> = (props) => {
       <div
         class="flex flex-col gap-2 text-center"
         style={{ "grid-area": "name" }}>
-        <div class="bg-colors-primary-500 pl-8 pr-8 text-h1 text-colors-text-900a">
+        <div class="text-heading1 bg-colors-primary-500 pl-8 pr-8 text-colors-text-900a">
           Matic Utsumi Gačar
         </div>
       </div>
 
       <div
-        class="flex flex-col gap-2 s:flex-row"
+        class="text-heading3 flex gap-2 s:flex-row"
         style={{ "grid-area": "title" }}>
-        <div class="text-nowrap text-h3">Level 21</div>
-        <div class="text-nowrap text-h3 xs:text-h3">
+        <div class="text-nowrap">Level 21</div>
+        <div class="xs:text-heading3 text-nowrap">
           Enthusiastic Software Engineer
         </div>
       </div>
       <LabeledBox label="general" style={{ "grid-area": "general" }}>
         <ul class="flex min-h-full flex-col gap-1">
-          <li class="flex gap-2 text-nowrap xs:text-h3 s:text-body">
+          <li class="xs:text-heading3 flex gap-2 text-nowrap s:text-body">
             <IconText icon="github" />
             <a href="https://github.com/shiro">github.com/shiro</a>
           </li>
-          <li class="flex gap-2 text-nowrap xs:text-h3 s:text-body">
+          <li class="xs:text-heading3 flex gap-2 text-nowrap s:text-body">
             <IconText icon="email" />
             <a href="mailto:matic@usagi.io">matic@usagi.io</a>
           </li>
-          <li class="flex gap-2 text-nowrap xs:text-h3 s:text-body">
+          <li class="xs:text-heading3 flex gap-2 text-nowrap s:text-body">
             <IconText icon="globe" />
             <a href="https://usagi.io">usagi.io</a>
           </li>
-          <li class="flex gap-2 text-nowrap xs:text-h3 s:text-body">
+          <li class="xs:text-heading3 flex gap-2 text-nowrap s:text-body">
             <IconText icon="house" />
             <span>Tokyo</span>
           </li>

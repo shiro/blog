@@ -152,8 +152,8 @@ const Project: Component<any> = (props: any) => {
   return (
     <div>
       <div class="mb-8 flex xs:flex-col xs:gap-1 s:flex-row s:gap-4">
-        <span class="text-nowrap text-h3 text-colors-text-900a">{name}</span>
-        <span class="text-nowrap text-h3 text-colors-text-300a">
+        <span class="text-nowrap text-heading3 text-colors-text-900a">{name}</span>
+        <span class="text-nowrap text-heading3 text-colors-text-300a">
           {descripton}
         </span>
       </div>

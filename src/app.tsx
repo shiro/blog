@@ -1,4 +1,6 @@
 import "~/style/global.style";
+// the vite graph is generated before the babel plugin adds the imports, so we add it here
+import "~/LazyImage";
 
 import { Meta, MetaProvider, Title } from "@solidjs/meta";
 import { Router } from "@solidjs/router";

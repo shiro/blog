@@ -10,17 +10,19 @@ import {
 } from "~/style/commonStyle";
 import "~/style/fontPreamble.style";
 import "~/style/layerPreamble.style";
-import "~/style/reset.scss";
+import "~/style/reset.style";
 import "~/style/tw.style";
 // import "~/style/styleLoadOrder";
 import { css } from "@linaria/core";
 import { baseText, smallTextHeight } from "~/style/textStylesTS";
 
 export const globals = css`
-  @layer tw-base {
+  html {
+    ${colorVariablesCSS}
+  }
+  @layer root {
     html {
       ${baseText}
-      ${colorVariablesCSS}
     }
 
     a,
@@ -195,64 +197,64 @@ export const globals = css`
         border-left-width: 0;
       }
     }
-  }
 
-  pre.shiki {
-    margin-top: 32px;
-    margin-bottom: 32px;
-    background-color: ${color("colors/primary-50")};
-    padding: 8px;
-    & > code {
-      display: flex;
-      flex-direction: column;
-    }
-    .line {
-      ${subText};
-      width: 100%;
-      min-height: ${smallTextHeight}px;
-      white-space: pre-wrap !important;
-      &:last-child {
+    pre.shiki {
+      margin-top: 32px;
+      margin-bottom: 32px;
+      background-color: ${color("colors/primary-50")};
+      padding: 8px;
+      & > code {
+        display: flex;
+        flex-direction: column;
+      }
+      .line {
+        ${subText};
+        width: 100%;
+        min-height: ${smallTextHeight}px;
+        white-space: pre-wrap !important;
+        &:last-child {
+          display: none;
+        }
+      }
+      .language-id {
         display: none;
       }
-    }
-    .language-id {
-      display: none;
-    }
-    .color-red {
-      color: #f97583 !important;
-    }
-    .color-blue {
-      color: rgb(158, 203, 255) !important;
-    }
-    .color-gray {
-      color: ${color("colors/text-300a")} !important;
-    }
-    &.diff {
-      .line {
-        &::before {
-          content: " ";
-          padding: 0 8px;
-          user-select: none;
-        }
-        &.add {
-          background: rgba(53, 117, 42, 0.15);
+      .color-red {
+        color: #f97583 !important;
+      }
+      .color-blue {
+        color: rgb(158, 203, 255) !important;
+      }
+      .color-gray {
+        color: ${color("colors/text-300a")} !important;
+      }
+      &.diff {
+        .line {
           &::before {
-            content: "+";
+            content: " ";
+            padding: 0 8px;
+            user-select: none;
           }
-        }
-        &.remove {
-          background: rgba(193, 34, 34, 0.15);
-          &::before {
-            content: "-";
+          &.add {
+            background: rgba(53, 117, 42, 0.15);
+            &::before {
+              content: "+";
+            }
+          }
+          &.remove {
+            background: rgba(193, 34, 34, 0.15);
+            &::before {
+              content: "-";
+            }
           }
         }
       }
     }
-  }
-  .theme-light .shiki.github-dark {
-    display: none;
-  }
-  .theme-dark .shiki.github-light {
-    display: none;
+    .theme-light .shiki.github-dark {
+      display: none;
+    }
+    .theme-dark .shiki.github-light {
+      display: none;
+    }
   }
 `;

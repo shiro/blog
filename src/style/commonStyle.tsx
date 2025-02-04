@@ -1,13 +1,11 @@
 import * as layoutMixins from "~/style/mixins/layoutTs";
-import {
-    _boxShadowMixin,
-    _dropShadowMixin,
-} from "~/style/mixins/shadowMixins";
+import { _boxShadowMixin, _dropShadowMixin } from "~/style/mixins/shadowMixins";
 import * as sizes from "~/style/sizesTS";
 import * as reactStyleUtil from "~/style/styleUtil";
 import * as styleUtils from "~/style/styleUtilTS";
 import * as textStyles from "~/style/textStylesTS";
 
+export const textDefinitions = textStyles._textDefinitions;
 export const jumboText = textStyles._jumboText;
 export const largeText = textStyles._largeText;
 export const bigText = textStyles._bigText;

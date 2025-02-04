@@ -6,6 +6,7 @@ import tsconfig from "./tsconfig.json";
 import { linariaVitePlugin } from "./vite/linariaVitePlugin";
 import { viteMarkdownPlugin } from "./vite/markdown/viteMarkdownPlugin";
 import { viteImagePlugin } from "./vite/viteImagePlugin";
+import tailwindcss from "@tailwindcss/vite";
 // @ts-ignore
 import babelPluginLazyPlus from "solid-lazy-plus/babel";
 
@@ -38,7 +39,7 @@ export default defineConfig({
 
   vite(options) {
     return {
-      css: { postcss: "./postcss.config.js" },
+      // css: { postcss: "./postcss.config.js" },
       server: {
         port: 3000,
         warmup: { clientFiles: ["./src/app.tsx"] },
@@ -49,7 +50,7 @@ export default defineConfig({
           Object.entries(tsconfig.compilerOptions.paths).map(([key, value]) => [
             key.replace(/\/\*$/, ""),
             path.join(process.cwd(), value[0].replace(/\/\*$/, "")),
-          ])
+          ]),
         ),
       },
       plugins: [
@@ -61,6 +62,7 @@ export default defineConfig({
           include: [/\/src\//],
           exclude: [/solid-refresh/, /\/@babel\/runtime\//, /\.import\./],
         }) as any,
+        tailwindcss(),
       ],
     };
   },

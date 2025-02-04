@@ -40,7 +40,9 @@ const LazyImage: (meta: LazyImageMeta) => Component<Props> =
         <img
           ref={imageRef}
           class={cn({ hasJS, loaded })}
-          onLoad={() => { loaded = true; }}
+          onLoad={() => {
+            loaded = true;
+          }}
           src={meta.url}
           {...rest}
         />
@@ -67,7 +69,9 @@ const _LazyImage = css`
 
   img {
     width: 100%;
-    height: 100%;
+    @layer components {
+      height: 100%;
+    }
     object-fit: inherit;
     // hide text when loading image
     font-size: 0;
