@@ -3,6 +3,13 @@ import cn from "classnames";
 import { Component, ComponentProps, JSX } from "solid-js";
 import { breakpoint, withStyle } from "~/style/commonStyle";
 
+const isImageCached = (url: string, onLoad?: () => void) => {
+  const img = new Image();
+  img.src = url;
+  img.decode().then(onLoad);
+  return img.complete;
+};
+
 interface Props extends ComponentProps<"img"> {
   style?: JSX.CSSProperties;
   class?: string;
@@ -18,13 +25,14 @@ export interface LazyImageMeta {
 const LazyImage: (meta: LazyImageMeta) => Component<Props> =
   (meta) => (props) => {
     const { class: $class, style, ...rest } = $destructure(props);
-    let imageRef!: HTMLImageElement;
     let hasJS = $signal(false);
     let loaded = $signal(false);
 
     $effect(() => {
       hasJS = true;
-      loaded ||= imageRef.complete;
+      loaded ||= isImageCached(meta.url, () => {
+        loaded = true;
+      });
     });
 
     return (
@@ -38,11 +46,7 @@ const LazyImage: (meta: LazyImageMeta) => Component<Props> =
           "--color2": meta.gradient[0],
         }}>
         <img
-          ref={imageRef}
           class={cn({ hasJS, loaded })}
-          onLoad={() => {
-            loaded = true;
-          }}
           src={meta.url}
           {...rest}
         />
@@ -69,16 +73,14 @@ const _LazyImage = css`
 
   img {
     width: 100%;
-    @layer components {
-      height: 100%;
-    }
+    height: 100%;
     object-fit: inherit;
     // hide text when loading image
-    font-size: 0;
+    text-indent: 100%;
 
     @supports (animation-name: fadeIn) {
       opacity: 0;
-      animation: fadeIn 200ms 1s forwards;
+      animation: fadeIn 200ms 4s forwards;
     }
     @keyframes fadeIn {
       0% {
@@ -91,10 +93,10 @@ const _LazyImage = css`
 
     &.hasJS {
       animation: none;
+      transition: opacity 200ms ease-in-out;
       &.loaded {
         opacity: 1;
       }
-      transition: opacity 200ms ease-in-out;
     }
   }
 `;

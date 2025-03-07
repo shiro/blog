@@ -48,10 +48,10 @@ const _GallerySite = css``;
 const Grid = css`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-gap: 0;
   ${breakpointUntil("m")} {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
-  grid-gap: 0;
 `;
 
 const card = css`
