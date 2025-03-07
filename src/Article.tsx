@@ -36,10 +36,10 @@ const Article: Component<Props> = (props) => {
         <span class="text-colors-textb;e-300a">{">"}</span> {meta.title}
       </span>
       <h1 class="text-colors-text-900a">{meta.title}</h1>
-      <div class="mb-4 mt-1 text-colors-text-300a">
+      <div class="text-colors-text-300a mt-1 mb-4">
         {meta.date} by <a href="/about">Matic Utsumi Gačar</a>
       </div>
-      <Separator.Root class="mb-4 mt-4 border-colors-text-100a" />
+      <Separator.Root class="border-colors-text-100a mt-4 mb-4" />
       <RawArticle
         components={{
           ["data-lsp"]: (props: any) => {
@@ -60,7 +60,7 @@ const Article: Component<Props> = (props) => {
           pre: (props: any) => <pre {...props} title={null} />,
           Img: (props: any) => {
             return (
-              <figure class="mb-8 mt-8 flex justify-center">
+              <figure class="mt-8 mb-8 flex justify-center">
                 <div>
                   {/* <img {...props} class="ml-auto mr-auto" /> */}
                   <DialogImage
@@ -69,7 +69,7 @@ const Article: Component<Props> = (props) => {
                     alt="image"
                   />
                   <Show when={props.caption}>
-                    <figcaption class="mt-1 text-colors-text-300a">
+                    <figcaption class="text-colors-text-300a mt-1">
                       {props.caption}
                     </figcaption>
                   </Show>
@@ -83,7 +83,7 @@ const Article: Component<Props> = (props) => {
             return (
               <>
                 <Show when={title}>
-                  <div class="relative left-[-8px] top-[-8px] flex w-[calc(100%+16px)] gap-2 bg-colors-primary-200 pb-1 pl-4 pr-4 pt-1">
+                  <div class="bg-colors-primary-200 relative top-[-8px] left-[-8px] flex w-[calc(100%+16px)] gap-2 pt-1 pr-4 pb-1 pl-4">
                     <IconText icon="code" />
                     {title}
                   </div>
@@ -92,7 +92,7 @@ const Article: Component<Props> = (props) => {
                   class={cn(
                     $class,
                     typeof c() == "string"
-                      ? "rounded bg-colors-primary-300 pl-2 pr-2"
+                      ? "bg-colors-primary-300 rounded pr-2 pl-2"
                       : ""
                   )}>
                   {c()}
@@ -136,7 +136,7 @@ const Article: Component<Props> = (props) => {
           table: (props: any) => (
             <table
               {...props}
-              class="mb-8 ml-auto mr-auto mt-8 border-2 border-colors-text-300a"
+              class="border-colors-text-300a mt-8 mr-auto mb-8 ml-auto border-2"
             />
           ),
           th: (props: any) => {
@@ -144,17 +144,17 @@ const Article: Component<Props> = (props) => {
               <th
                 {...props}
                 style={{ ...props.style, "text-align": props.style.textAlign }}
-                class="pb-1 pl-2 pr-2 pt-1 text-colors-text-900a"
+                class="text-colors-text-900a pt-1 pr-2 pb-1 pl-2"
               />
             );
           },
           figcaption: (props: any) => (
             <figcaption
               {...props}
-              class="relative top-[-24px] text-colors-text-300a"
+              class="text-colors-text-300a relative top-[-24px]"
             />
           ),
-          td: (props: any) => <td {...props} class="pb-1 pl-2 pr-2 pt-1" />,
+          td: (props: any) => <td {...props} class="pt-1 pr-2 pb-1 pl-2" />,
           Spoiler: (props: any) => <Spoiler>{props.children}</Spoiler>,
           Embed: (props: any) => {
             if (props.url?.includes("://github.com")) {
@@ -163,14 +163,14 @@ const Article: Component<Props> = (props) => {
               );
               return (
                 <a
-                  class="mb-8 ml-auto mr-auto mt-8 flex h-40 w-[440px] rounded bg-colors-primary-300 text-colors-text-600a no-underline"
+                  class="bg-colors-primary-300 text-colors-text-600a mt-8 mr-auto mb-8 ml-auto flex h-40 w-[440px] rounded no-underline"
                   target="_blank"
                   href={props.url}>
                   <Icon
                     icon="github"
-                    class="ml-8 mr-8 h-full w-16 flex-shrink-0"
+                    class="mr-8 ml-8 h-full w-16 flex-shrink-0"
                   />
-                  <div class="flex flex-1 flex-col gap-2 bg-colors-primary-200 pl-4 pr-4 shadow">
+                  <div class="bg-colors-primary-200 flex flex-1 flex-col gap-2 pr-4 pl-4 shadow">
                     <span class="text-heading2 mt-6">
                       <span class="text-colors-text-300a">{username}/</span>
                       <span class="text-colors-text-900a">{projectName}</span>
