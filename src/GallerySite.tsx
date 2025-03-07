@@ -2,7 +2,11 @@ import { css } from "@linaria/core";
 import cn from "classnames";
 import { Component, JSX } from "solid-js";
 import DialogImage from "~/DialogImage";
-import { breakpoint, breakpointUntil } from "~/style/commonStyle";
+import {
+  breakpoint,
+  breakpointFrom,
+  breakpointUntil,
+} from "~/style/commonStyle";
 
 const images: Component[] = Object.values(
   import.meta.glob("@assets/gallery/*.jpg", {
@@ -47,20 +51,21 @@ const _GallerySite = css``;
 
 const Grid = css`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: 0;
-  ${breakpointUntil("m")} {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  ${breakpoint("xs")} {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  ${breakpoint("l")} {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  ${breakpoint("xl")} {
+    grid-template-columns: repeat(5, 1fr);
   }
 `;
 
 const card = css`
-  ${breakpoint("s")} {
-    &:nth-child(1n + 18) + div {
-      display: none;
-    }
-  }
-  ${breakpoint("m")} {
+  ${breakpoint("s", "m")} {
     &:nth-child(1n + 18) + div {
       display: none;
     }

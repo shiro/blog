@@ -9,21 +9,21 @@ const articles = getArticles();
 const BlogIndex: Component = () => {
   return (
     <main>
-      <h1 class="mb-4 bg-colors-primary-500 pl-8 pr-8 text-center text-big text-colors-text-900a">
+      <h1 class="bg-colors-primary-500 text-big text-colors-text-900a mb-4 pr-8 pl-8 text-center">
         Blog of a programming rabbit
       </h1>
       <ul class="flex flex-col gap-4">
         <For each={articles}>
           {(item, idx) => (
             <>
-              <li class="flex flex-col hover:bg-colors-primary-100">
+              <li class="hover:bg-colors-primary-100 flex flex-col">
                 <a
                   href={`${config.base}${item.url}`}
                   class="flex flex-col p-4 no-underline">
                   <span class="text-heading2 text-colors-primary-800">
                     {item.title}
                   </span>
-                  <span class="textbody mb-4 mt-1 text-colors-text-300a !no-underline">
+                  <span class="textbody text-colors-text-300a mt-1 mb-4 !no-underline">
                     {item.date} by Matic Utsumi Gačar
                   </span>
                   <span
