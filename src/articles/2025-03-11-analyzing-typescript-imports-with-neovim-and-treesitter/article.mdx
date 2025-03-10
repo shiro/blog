@@ -1,0 +1,82 @@
+---
+title: Analyzing typescript imports with neovim and treesitter
+---
+
+Ever wanted to do automate a task that requires looking at typescript imports and doing something boring and repetitive
+with them?
+Neovim offers tooling to do that, and more, out of the box!
+
+There's many use-cases for scanning over parts of the code and automating tasks, but chances are you can imagine at
+least a few that would improve your workflow when writing code.
+That recently happened to me, when I couldn't find a way to copy imports automatically when copying typescript code
+between files (but that's a story for next time).
+
+Neovim uses treesitter for code highlighting, but that's not all it can be used for. Treesitter builds an AST over code
+tokens, but instead of using that for highlighting, we'll extract some information from it.
+
+
+We can inspect the tree by running:
+
+```text
+:InspectTree
+```
+
+The output depends on the filetype and its contents. For a typescript file, the beginning might look something like: 
+
+```ansi
+(program ; [0, 0] - [342, 0]
+  (import_statement ; [0, 0] - [0, 77]
+    (import_clause ; [0, 7] - [0, 27]
+      (named_imports ; [0, 7] - [0, 27]
+        (import_specifier ; [0, 9] - [0, 25]
+          name: (identifier)))) ; [0, 9] - [0, 25]
+
+[more nodes...]
+```
+
+Which is exactly what we were looking for. It breaks down parts of the code into smaller and smaller tokens and gives
+us the row/column ranges for each token.
+
+Nodes can then be queried using the treesitter query language. After running the query we can back the matched nodes.
+
+
+```lua
+local import_query = "((import_statement) @node)"
+local bufnr = 0
+
+local language_tree = vim.treesitter.get_parser(bufnr)
+local root = language_tree:trees()[1]:root()
+
+local query = vim.treesitter.query.parse(language_tree:lang(), import_query)
+if query == nil then return end
+
+for _, node in query:iter_captures(root, bufnr) do
+    -- do something with node
+end
+```
+
+And that's all there's to it! As long as we know the structure of the AST, parsing out the info we need is pretty
+trivial. Do mind that there are several possible ways to import things in typescript:
+- named (`import {foo} from "bar"`)
+- named with alias (`import {foo as moo} from "bar"`)
+- namespace (`import * as foo from "bar"`)
+- default (`import foo from "bar"`)
+- ambient (`import "bar"`)
+
+We need to write code defensively to breaking our code logic throwing an error.
+
+There's also a handy utility method to get the text at a node range:
+
+```lua
+if node:type() == "named_imports" then
+    local text = vim.treesitter.get_node_text(node, bufnr)
+
+    local first_child = node.child(0)
+    local child_text = vim.treesitter.get_node_text(first_child, bufnr)
+end
+```
+
+Treesitter knows how to deal with most languages, so there's virtually no limit to what we can use scripting for (i.e.
+we could find all variable declarations in a python file, all global function names in a go file, etc.).
+
+Next time we'll write a small plugin that uses treesitter info to do something useful!

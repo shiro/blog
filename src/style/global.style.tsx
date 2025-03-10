@@ -12,7 +12,6 @@ import "~/style/fontPreamble.style";
 import "~/style/layerPreamble.style";
 import "~/style/reset.style";
 import "~/style/tw.style";
-// import "~/style/styleLoadOrder";
 import { css } from "@linaria/core";
 import { baseText, smallTextHeight } from "~/style/textStylesTS";
 
@@ -48,9 +47,6 @@ export const globals = css`
     * {
       box-sizing: border-box;
     }
-    /* #root * { */
-    /*     position: relative; */
-    /* } */
 
     body {
       min-height: 100vh;
@@ -212,9 +208,6 @@ export const globals = css`
         width: 100%;
         min-height: ${smallTextHeight}px;
         white-space: pre-wrap !important;
-        &:last-child {
-          display: none;
-        }
       }
       .language-id {
         display: none;
