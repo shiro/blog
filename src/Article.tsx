@@ -92,7 +92,7 @@ const Article: Component<Props> = (props) => {
                   class={cn(
                     $class,
                     typeof c() == "string"
-                      ? "bg-colors-primary-300 rounded pr-2 pl-2"
+                      ? "bg-colors-primary-300 rounded pr-1 pl-1"
                       : ""
                   )}>
                   {c()}
