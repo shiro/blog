@@ -26,7 +26,7 @@ export const globals = css`
 
     a,
     span {
-      display: inline-block;
+      // display: inline-block;
     }
 
     a,
@@ -199,6 +199,8 @@ export const globals = css`
       margin-bottom: 32px;
       background-color: ${color("colors/primary-50")};
       padding: 8px;
+      font-family: "Roboto Mono";
+
       & > code {
         display: flex;
         flex-direction: column;
@@ -206,8 +208,13 @@ export const globals = css`
       .line {
         ${subText};
         width: 100%;
-        min-height: ${smallTextHeight}px;
         white-space: pre-wrap !important;
+        display: inline-block;
+        line-height: 1.1;
+
+        &:empty::before {
+          content: "\\200b"; /* unicode zero width space character */
+        }
       }
       .language-id {
         display: none;

@@ -10,6 +10,8 @@ import Icon from "~/components/Icon";
 import IconText from "~/components/IconText";
 import { getArticles } from "~/ssg/getArticles";
 import { remBase } from "~/style/fluidSizeTS";
+import { testHtml } from "~/test.compile";
+import applyPatch from "textdiff-patch";
 
 const articlesImportMap = import.meta.glob("./articles/*/*.mdx");
 const articles = getArticles();
@@ -28,6 +30,20 @@ const Article: Component<Props> = (props) => {
   const RawArticle = lazy(getArticleComponent(name) as any);
   const meta = articles.find((x: any) => x.slug == name)!;
 
+  const frames = testHtml() as any as string[];
+  let lastFrame = frames[0];
+  for (let i = 1; i < frames.length; i++) {
+    frames[i] = applyPatch(lastFrame, frames[i]) as any;
+    lastFrame = frames[i];
+  }
+
+  let frame = $signal(0);
+  $effect(() => {
+    setInterval(() => {
+      frame = (frame + 1) % frames.length;
+    }, 500);
+  });
+
   return (
     <div class={cn(_Article, props.className)}>
       <Meta name="description" content={meta.description} />
@@ -40,6 +56,7 @@ const Article: Component<Props> = (props) => {
         {meta.date} by <a href="/about">Matic Utsumi Gačar</a>
       </div>
       <Separator.Root class="border-colors-text-100a mt-4 mb-4" />
+      <div innerHTML={frames[frame]} />
       <RawArticle
         components={{
           ["data-lsp"]: (props: any) => {

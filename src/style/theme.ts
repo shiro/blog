@@ -14,6 +14,7 @@ export default {
     },
     colors: {
         "light": {
+            "terminal/blue": "rgba(18.36, 92.53, 165.24, 1)",
             "figma-component-outline": "rgba(75, 117, 159, 1)",
             "link-primary-600": "rgba(75, 117, 159, 1)",
             "link-primary-900": "rgba(73.19, 103.5, 135.91, 1)",
@@ -111,6 +112,7 @@ export default {
             "checkbox/on-bg": "rgba(75, 117, 159, 1)"
         },
         "dark": {
+            "terminal/blue": "rgba(151, 189, 227, 1)",
             "figma-component-outline": "rgba(59.7, 92.44, 125.18, 1)",
             "link-primary-600": "rgba(127.93, 171.27, 213.77, 1)",
             "link-secondary-600": "rgba(214, 128, 128, 1)",

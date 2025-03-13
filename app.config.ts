@@ -50,7 +50,7 @@ export default defineConfig({
           Object.entries(tsconfig.compilerOptions.paths).map(([key, value]) => [
             key.replace(/\/\*$/, ""),
             path.join(process.cwd(), value[0].replace(/\/\*$/, "")),
-          ]),
+          ])
         ),
       },
       plugins: [
