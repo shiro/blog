@@ -50,6 +50,9 @@ importers:
       '@wyw-in-js/vite':
         specifier: 0.5.5
         version: 0.5.5(typescript@5.8.2)(vite@6.2.1(@types/node@22.12.0)(jiti@2.4.2)(lightningcss@1.29.1)(sass@1.84.0)(terser@5.37.0)(yaml@2.7.0))
+      ansi-sequence-parser:
+        specifier: ^1.1.3
+        version: 1.1.3
       babel-plugin-transform-remove-imports:
         specifier: 1.8.0
         version: 1.8.0(@babel/core@7.26.7)
@@ -114,6 +117,12 @@ importers:
       '@types/lodash':
         specifier: ^4.17.16
         version: 4.17.16
+      '@types/textdiff-create':
+        specifier: ^1.0.2
+        version: 1.0.2
+      '@types/textdiff-patch':
+        specifier: ^1.0.2
+        version: 1.0.2
       babel-plugin-transform-define:
         specifier: 2.1.4
         version: 2.1.4
@@ -1900,6 +1909,12 @@ packages:
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
 
+  '@types/textdiff-create@1.0.2':
+    resolution: {integrity: sha512-RX8m1qqOtkM/5QQW327pIYscyF3gM0IuzH+DcLQ9D36BwpSGeavkTix/yLtMt1cmtliCmql0dYxaZBVc5GVZqA==}
+
+  '@types/textdiff-patch@1.0.2':
+    resolution: {integrity: sha512-Gs+BskLlpP6qC148g4NxZ50aqEuJxsUwbQSWI9virgL9qT0JjeXL/i7OR8nouJ7jcIKA8ozJodHttmZ+wXkpKg==}
+
   '@types/unist@2.0.11':
     resolution: {integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==}
 
@@ -2014,6 +2029,9 @@ packages:
   ansi-regex@6.1.0:
     resolution: {integrity: sha512-7HSX4QQb4CspciLpVFwyRe79O3xsIZDDLER21kERQ71oaPodF8jL725AgJMFAYbooIqolJoRLuM81SpeUkpkvA==}
     engines: {node: '>=12'}
+
+  ansi-sequence-parser@1.1.3:
+    resolution: {integrity: sha512-+fksAx9eG3Ab6LDnLs3ZqZa8KVJ/jYnX+D4Qe1azX+LFGFAXqynCQLOdLpNYN/l9e7l6hMWwZbrnctqr6eSQSw==}
 
   ansi-styles@4.3.0:
     resolution: {integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==}
@@ -6739,6 +6757,10 @@ snapshots:
 
   '@types/resolve@1.20.2': {}
 
+  '@types/textdiff-create@1.0.2': {}
+
+  '@types/textdiff-patch@1.0.2': {}
+
   '@types/unist@2.0.11': {}
 
   '@types/unist@3.0.3': {}
@@ -6921,6 +6943,8 @@ snapshots:
   ansi-regex@5.0.1: {}
 
   ansi-regex@6.1.0: {}
+
+  ansi-sequence-parser@1.1.3: {}
 
   ansi-styles@4.3.0:
     dependencies:
