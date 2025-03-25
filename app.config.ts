@@ -4,6 +4,7 @@ import compileTime from "vite-plugin-compile-time";
 import solidSvg from "vite-plugin-solid-svg";
 import tsconfig from "./tsconfig.json";
 import { linariaVitePlugin } from "./vite/linariaVitePlugin";
+import { terminalcapVitePlugin } from "./vite/viteTerminalcapPlugin";
 import { viteMarkdownPlugin } from "./vite/markdown/viteMarkdownPlugin";
 import { viteImagePlugin } from "./vite/viteImagePlugin";
 import tailwindcss from "@tailwindcss/vite";
@@ -55,6 +56,7 @@ export default defineConfig({
       },
       plugins: [
         viteImagePlugin(),
+        terminalcapVitePlugin(),
         compileTime(),
         solidSvg(),
         viteMarkdownPlugin(),

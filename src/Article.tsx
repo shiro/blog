@@ -10,7 +10,6 @@ import Icon from "~/components/Icon";
 import IconText from "~/components/IconText";
 import { getArticles } from "~/ssg/getArticles";
 import { remBase } from "~/style/fluidSizeTS";
-import { testHtml } from "~/test.compile";
 import Terminalcap from "~/Terminalcap";
 
 const articlesImportMap = import.meta.glob("./articles/*/*.mdx");
@@ -42,7 +41,6 @@ const Article: Component<Props> = (props) => {
         {meta.date} by <a href="/about">Matic Utsumi Gačar</a>
       </div>
       <Separator.Root class="border-colors-text-100a mt-4 mb-4" />
-      <Terminalcap encodedFrames={testHtml() as any} />
       <RawArticle
         components={{
           ["data-lsp"]: (props: any) => {

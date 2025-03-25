@@ -1,0 +1,353 @@
+=== frame ==={"time":3,"cursor_x":35,"cursor_y":0,"cursor_shape":"underline","cursor_blinking":false,"cursor_color":"#e7e7f1"}
+[1m[34mshiro[0m at [92m~/.dotfiles[39m on master[32m✔[39m 兎
+=== frame ==={"time":588,"cursor_x":36,"cursor_y":0,"cursor_shape":"underline","cursor_blinking":false,"cursor_color":"#e7e7f1"}
+[1m[34mshiro[0m at [92m~/.dotfiles[39m on master[32m✔[39m 兎 r
+=== frame ==={"time":1070,"cursor_x":10,"cursor_y":1,"cursor_shape":"underline","cursor_blinking":false,"cursor_color":"#e7e7f1"}
+loading...
+=== frame ==={"time":2680,"cursor_x":8,"cursor_y":21,"cursor_shape":"underline","cursor_blinking":false,"cursor_color":"#e7e7f1"}
+[1m[32mshiro@shiro-pc [34m/home/shiro/.dotfiles/[39mscripts[0m
+[1;7m[94m Videos  [0m [1;7m[94m scripts                   5 [0m [1;7m[94m target
+[0;1m[91m [94mproject [0m [1m[91m [94msrc[0m                       [1m[94m2 [0m [1m[91m [94msrc[0m
+[1m[91m [94mDocumen~[0m [1m[91m [94mbrowser[0m                   [1m[94m2 [0m [1m[91m [94mdeprecated[0m
+[1m[91m [94mtmp     [0m [1m[91m [94mtmux[0m                      [1m[94m2 [0m [1m[91m [0mCargo.toml
+[1m[91m [94mnode_mo~[0m [1m[91m [94mtarget[0m                    [1m[94m4 [0m [1m[91m [0mCargo.lock
+[1m[91m [94mDownloa~[0m [1m[91m [94midea[0m                      [1m[94m6 [0m
+[1m[91m [94mbin     [0m [1m[91m [94mwallpapers[0m                [1m[94m1 [0m
+[1m[91m*[94mmappings[0m [1m[91m [94mnixos[0m                     [1m[94m8 [0m
+[1m[91m [94mgo      [0m [1m[91m [94mconfig[0m                   [1m[94m14 [0m
+[1m[91m [94mwine    [0m [1m[91m [94mcolor_themes[0m              [1m[94m1 [0m
+[1m[91m [94mwallpap~[0m [1m[91m [94mlinux[0m                     [1m[94m6 [0m
+[1m[91m [94mPictures[0m [1m[91m [94mtemplate[0m                  [1m[94m1 [0m
+[1m[91m [94mqmk_fir~[0m [1m[91m [94mwindows[0m                   [1m[94m2 [0m
+[1m[91m [94mPostman [0m [1m[91m [94mconfig-partial            2 [0m
+[1m[91m [94mimport  [0m [1m[91m [0mshell.nix             465 B
+[1m[91m [94mDesktop [0m [1m[91m [0mCargo.lock           15.7 K
+[1m[91m [94mnearme-~[0m [1m[91m [92mrustup[0m                [1m[92m122 B [0m
+[1m[91m [94mPublic  [0m [1m[91m [92mdot[0m                    [1m[92m41 B [0m
+[1m[91m [94marchive [0m [1m[91m [92mdot.old[0m               [1m[92m743 B [0m
+[1m[91m [94mMusic   [0m [1m[91m [0mCargo.toml            162 B
+:search
+=== frame ==={"time":3343,"cursor_x":9,"cursor_y":21,"cursor_shape":"underline","cursor_blinking":false,"cursor_color":"#e7e7f1"}
+[1m[32mshiro@shiro-pc [34m/home/shiro/.dotfiles/[39mscripts[0m
+[1;7m[94m Videos  [0m [1;7m[94m scripts                   5 [0m [1;7m[94m target
+[0;1m[91m [94mproject [0m [1m[91m [94msrc[0m                       [1m[94m2 [0m [1m[91m [94msrc[0m
+[1m[91m [94mDocumen~[0m [1m[91m [94mbrowser[0m                   [1m[94m2 [0m [1m[91m [94mdeprecated[0m
+[1m[91m [94mtmp     [0m [1m[91m [94mtmux[0m                      [1m[94m2 [0m [1m[91m [0mCargo.toml
+[1m[91m [94mnode_mo~[0m [1m[91m [94mtarget[0m                    [1m[94m4 [0m [1m[91m [0mCargo.lock
+[1m[91m [94mDownloa~[0m [1m[91m [94midea[0m                      [1m[94m6 [0m
+[1m[91m [94mbin     [0m [1m[91m [94mwallpapers[0m                [1m[94m1 [0m
+[1m[91m*[94mmappings[0m [1m[91m [94mnixos[0m                     [1m[94m8 [0m
+[1m[91m [94mgo      [0m [1m[91m [94mconfig[0m                   [1m[94m14 [0m
+[1m[91m [94mwine    [0m [1m[91m [94mcolor_themes[0m              [1m[94m1 [0m
+[1m[91m [94mwallpap~[0m [1m[91m [94mlinux[0m                     [1m[94m6 [0m
+[1m[91m [94mPictures[0m [1m[91m [94mtemplate[0m                  [1m[94m1 [0m
+[1m[91m [94mqmk_fir~[0m [1m[91m [94mwindows[0m                   [1m[94m2 [0m
+[1m[91m [94mPostman [0m [1m[91m [94mconfig-partial            2 [0m
+[1m[91m [94mimport  [0m [1m[91m [0mshell.nix             465 B
+[1m[91m [94mDesktop [0m [1m[91m [0mCargo.lock           15.7 K
+[1m[91m [94mnearme-~[0m [1m[91m [92mrustup[0m                [1m[92m122 B [0m
+[1m[91m [94mPublic  [0m [1m[91m [92mdot[0m                    [1m[92m41 B [0m
+[1m[91m [94marchive [0m [1m[91m [92mdot.old[0m               [1m[92m743 B [0m
+[1m[91m [94mMusic   [0m [1m[91m [0mCargo.toml            162 B
+:search d
+=== frame ==={"time":3394,"cursor_x":10,"cursor_y":21,"cursor_shape":"underline","cursor_blinking":false,"cursor_color":"#e7e7f1"}
+[1m[32mshiro@shiro-pc [34m/home/shiro/.dotfiles/[39mscripts[0m
+[1;7m[94m Videos  [0m [1;7m[94m scripts                   5 [0m [1;7m[94m target
+[0;1m[91m [94mproject [0m [1m[91m [94msrc[0m                       [1m[94m2 [0m [1m[91m [94msrc[0m
+[1m[91m [94mDocumen~[0m [1m[91m [94mbrowser[0m                   [1m[94m2 [0m [1m[91m [94mdeprecated[0m
+[1m[91m [94mtmp     [0m [1m[91m [94mtmux[0m                      [1m[94m2 [0m [1m[91m [0mCargo.toml
+[1m[91m [94mnode_mo~[0m [1m[91m [94mtarget[0m                    [1m[94m4 [0m [1m[91m [0mCargo.lock
+[1m[91m [94mDownloa~[0m [1m[91m [94midea[0m                      [1m[94m6 [0m
+[1m[91m [94mbin     [0m [1m[91m [94mwallpapers[0m                [1m[94m1 [0m
+[1m[91m*[94mmappings[0m [1m[91m [94mnixos[0m                     [1m[94m8 [0m
+[1m[91m [94mgo      [0m [1m[91m [94mconfig[0m                   [1m[94m14 [0m
+[1m[91m [94mwine    [0m [1m[91m [94mcolor_themes[0m              [1m[94m1 [0m
+[1m[91m [94mwallpap~[0m [1m[91m [94mlinux[0m                     [1m[94m6 [0m
+[1m[91m [94mPictures[0m [1m[91m [94mtemplate[0m                  [1m[94m1 [0m
+[1m[91m [94mqmk_fir~[0m [1m[91m [94mwindows[0m                   [1m[94m2 [0m
+[1m[91m [94mPostman [0m [1m[91m [94mconfig-partial            2 [0m
+[1m[91m [94mimport  [0m [1m[91m [0mshell.nix             465 B
+[1m[91m [94mDesktop [0m [1m[91m [0mCargo.lock           15.7 K
+[1m[91m [94mnearme-~[0m [1m[91m [92mrustup[0m                [1m[92m122 B [0m
+[1m[91m [94mPublic  [0m [1m[91m [92mdot[0m                    [1m[92m41 B [0m
+[1m[91m [94marchive [0m [1m[91m [92mdot.old[0m               [1m[92m743 B [0m
+[1m[91m [94mMusic   [0m [1m[91m [0mCargo.toml            162 B
+:search do
+=== frame ==={"time":3815,"cursor_x":11,"cursor_y":21,"cursor_shape":"underline","cursor_blinking":false,"cursor_color":"#e7e7f1"}
+[1m[32mshiro@shiro-pc [34m/home/shiro/.dotfiles/[39mscripts[0m
+[1;7m[94m Videos  [0m [1;7m[94m scripts                   5 [0m [1;7m[94m target
+[0;1m[91m [94mproject [0m [1m[91m [94msrc[0m                       [1m[94m2 [0m [1m[91m [94msrc[0m
+[1m[91m [94mDocumen~[0m [1m[91m [94mbrowser[0m                   [1m[94m2 [0m [1m[91m [94mdeprecated[0m
+[1m[91m [94mtmp     [0m [1m[91m [94mtmux[0m                      [1m[94m2 [0m [1m[91m [0mCargo.toml
+[1m[91m [94mnode_mo~[0m [1m[91m [94mtarget[0m                    [1m[94m4 [0m [1m[91m [0mCargo.lock
+[1m[91m [94mDownloa~[0m [1m[91m [94midea[0m                      [1m[94m6 [0m
+[1m[91m [94mbin     [0m [1m[91m [94mwallpapers[0m                [1m[94m1 [0m
+[1m[91m*[94mmappings[0m [1m[91m [94mnixos[0m                     [1m[94m8 [0m
+[1m[91m [94mgo      [0m [1m[91m [94mconfig[0m                   [1m[94m14 [0m
+[1m[91m [94mwine    [0m [1m[91m [94mcolor_themes[0m              [1m[94m1 [0m
+[1m[91m [94mwallpap~[0m [1m[91m [94mlinux[0m                     [1m[94m6 [0m
+[1m[91m [94mPictures[0m [1m[91m [94mtemplate[0m                  [1m[94m1 [0m
+[1m[91m [94mqmk_fir~[0m [1m[91m [94mwindows[0m                   [1m[94m2 [0m
+[1m[91m [94mPostman [0m [1m[91m [94mconfig-partial            2 [0m
+[1m[91m [94mimport  [0m [1m[91m [0mshell.nix             465 B
+[1m[91m [94mDesktop [0m [1m[91m [0mCargo.lock           15.7 K
+[1m[91m [94mnearme-~[0m [1m[91m [92mrustup[0m                [1m[92m122 B [0m
+[1m[91m [94mPublic  [0m [1m[91m [92mdot[0m                    [1m[92m41 B [0m
+[1m[91m [94marchive [0m [1m[91m [92mdot.old[0m               [1m[92m743 B [0m
+[1m[91m [94mMusic   [0m [1m[91m [0mCargo.toml            162 B
+:search dot
+=== frame ==={"time":4023,"cursor_x":10,"cursor_y":15,"cursor_shape":"underline","cursor_blinking":false,"cursor_color":"#e7e7f1"}
+[1m[32mshiro@shiro-pc [34m/home/shiro/.dotfiles/[39mdot[0m
+[1;7m[94m Videos  [0m [1m[91m [94mtmux[0m                      [1m[94m2 [0m
+[1m[91m [94mproject [0m [1m[91m [94mtarget[0m                    [1m[94m4 [0m
+[1m[91m [94mDocumen~[0m [1m[91m [94midea   [0m                   [1m[94m6 [0m
+[1m[91m [94mtmp     [0m [1m[91m [94mwallpapers[0m                [1m[94m1 [0m
+[1m[91m [94mnode_mo~[0m [1m[91m [94mnixos [0m                    [1m[94m8 [0m
+[1m[91m [94mDownloa~[0m [1m[91m [94mconfig[0m                   [1m[94m14 [0m
+[1m[91m [94mbin     [0m [1m[91m [94mcolor_themes[0m              [1m[94m1 [0m
+[1m[91m*[94mmappings[0m [1m[91m [94mlinux[0m                     [1m[94m6 [0m
+[1m[91m [94mgo      [0m [1m[91m [94mtemplate[0m                 [1m[94m 1 [0m
+[1m[91m [94mwine    [0m [1m[91m [94mwindows     [0m              [1m[94m2 [0m
+[1m[91m [94mwallpap~[0m [1m[91m [94mconfig-partial[0m            [1m[94m2 [0m
+[1m[91m [94mPictures[0m [1m[91m [0mshell.nix             465 B
+[1m[91m [94mqmk_fir~[0m [1m[91m [0mCargo.lock           15.7 K
+[1m[91m [94mPostman [0m [1m[91m [92mrustup[0m                [1m[92m122 B [0m
+[1m[91m [94mimport  [0m [1;7m[92m dot                    41 B [0m
+[1m[91m [94mDesktop [0m [1m[91m [92mdot.old[0m               [1m[92m743 B [0m
+[1m[91m [94mnearme-~[0m [1m[91m [0mCargo.toml            162 B
+[1m[91m [94mPublic  [0m [1m[91m [92minstall[0m               [1m[92m522 B [0m
+[1m[91m [94marchive [0m [1m[91m [0mLICENSE              1.03 K
+[1m[91m [94mMusic   [0m [1m[91m [0mREADME.md             477 B
+[36m-rwxr-xr-x[39m 1 shiro shiro 41B 2024-11-05 08:08    19.7K sum, 5.12T free  18/23  Bot
+=== frame ==={"time":5023,"cursor_x":1,"cursor_y":21,"cursor_shape":"underline","cursor_blinking":false,"cursor_color":"#e7e7f1"}
+[1m[32mshiro@shiro-pc [34m/home/shiro/.dotfiles/[39mdot[0m
+[1;7m[94m Videos  [0m [1m[91m [94mtmux[0m                      [1m[94m2 [0m [38;5;244m#!/usr/bin/env zsh[39m
+[1m[91m [94mproject [0m [1m[91m [94mtarget[0m                    [1m[94m4 [0m
+[1m[91m [94mDocumen~[0m [1m[91m [94midea   [0m                   [1m[94m6 [0m
+[1m[91m [94mtmp     [0m [1m[91m [94mwallpapers[0m                [1m[94m1 [0m [97mcargo run[39m [1m[32m--release[0m
+[1m[91m [94mnode_mo~[0m [1m[91m [94mnixos [0m                    [1m[94m8 [0m
+[1m[91m [94mDownloa~[0m [1m[91m [94mconfig[0m                   [1m[94m14 [0m
+[1m[91m [94mbin     [0m [1m[91m [94mcolor_themes[0m              [1m[94m1 [0m
+[1m[91m*[94mmappings[0m [1m[91m [94mlinux[0m                     [1m[94m6 [0m
+[1m[91m [94mgo      [0m [1m[91m [94mtemplate[0m                 [1m[94m 1 [0m
+[1m[91m [94mwine    [0m [1m[91m [94mwindows     [0m              [1m[94m2 [0m
+[1m[91m [94mwallpap~[0m [1m[91m [94mconfig-partial[0m            [1m[94m2 [0m
+[1m[91m [94mPictures[0m [1m[91m [0mshell.nix             465 B
+[1m[91m [94mqmk_fir~[0m [1m[91m [0mCargo.lock           15.7 K
+[1m[91m [94mPostman [0m [1m[91m [92mrustup[0m                [1m[92m122 B [0m
+[1m[91m [94mimport  [0m [1;7m[92m dot                    41 B [0m
+[1m[91m [94mDesktop [0m [1m[91m [92mdot.old[0m               [1m[92m743 B [0m
+[1m[91m [94mnearme-~[0m [1m[91m [0mCargo.toml            162 B
+[1m[91m [94mPublic  [0m [1m[91m [92minstall[0m               [1m[92m522 B [0m
+[1m[91m [94marchive [0m [1m[91m [0mLICENSE              1.03 K
+[1m[91m [94mMusic   [0m [1m[91m [0mREADME.md             477 B
+:
+=== frame ==={"time":5297,"cursor_x":2,"cursor_y":21,"cursor_shape":"underline","cursor_blinking":false,"cursor_color":"#e7e7f1"}
+[1m[32mshiro@shiro-pc [34m/home/shiro/.dotfiles/[39mdot[0m
+[1;7m[94m Videos  [0m [1m[91m [94mtmux[0m                      [1m[94m2 [0m [38;5;244m#!/usr/bin/env zsh[39m
+[1m[91m [94mproject [0m [1m[91m [94mtarget[0m                    [1m[94m4 [0m
+[1m[91m [94mDocumen~[0m [1m[91m [94midea   [0m                   [1m[94m6 [0m
+[1m[91m [94mtmp     [0m [1m[91m [94mwallpapers[0m                [1m[94m1 [0m [97mcargo run[39m [1m[32m--release[0m
+[1m[91m [94mnode_mo~[0m [1m[91m [94mnixos [0m                    [1m[94m8 [0m
+[1m[91m [94mDownloa~[0m [1m[91m [94mconfig[0m                   [1m[94m14 [0m
+[1m[91m [94mbin     [0m [1m[91m [94mcolor_themes[0m              [1m[94m1 [0m
+[1m[91m*[94mmappings[0m [1m[91m [94mlinux[0m                     [1m[94m6 [0m
+[1m[91m [94mgo      [0m [1m[91m [94mtemplate[0m                 [1m[94m 1 [0m
+[1m[91m [94mwine    [0m [1m[91m [94mwindows     [0m              [1m[94m2 [0m
+[1m[91m [94mwallpap~[0m [1m[91m [94mconfig-partial[0m            [1m[94m2 [0m
+[1m[91m [94mPictures[0m [1m[91m [0mshell.nix             465 B
+[1m[91m [94mqmk_fir~[0m [1m[91m [0mCargo.lock           15.7 K
+[1m[91m [94mPostman [0m [1m[91m [92mrustup[0m                [1m[92m122 B [0m
+[1m[91m [94mimport  [0m [1;7m[92m dot                    41 B [0m
+[1m[91m [94mDesktop [0m [1m[91m [92mdot.old[0m               [1m[92m743 B [0m
+[1m[91m [94mnearme-~[0m [1m[91m [0mCargo.toml            162 B
+[1m[91m [94mPublic  [0m [1m[91m [92minstall[0m               [1m[92m522 B [0m
+[1m[91m [94marchive [0m [1m[91m [0mLICENSE              1.03 K
+[1m[91m [94mMusic   [0m [1m[91m [0mREADME.md             477 B
+:e
+=== frame ==={"time":5581,"cursor_x":0,"cursor_y":0,"cursor_shape":"underline","cursor_blinking":false,"cursor_color":"#e7e7f1"}
+
+=== frame ==={"time":5713,"cursor_x":2,"cursor_y":0,"cursor_shape":"block","cursor_blinking":false,"cursor_color":"#c0d5c1"}
+[38;2;39;93;120m  [38;2;144;201;63m#!/usr/bin/env zsh
+[38;2;39;93;120m  [39m
+[38;2;39;93;120m  [39m
+[38;2;39;93;120m  [38;2;192;213;193mcargo run --release[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;91;89;87mdot                                                             1,1            All
+=== frame ==={"time":6724,"cursor_x":3,"cursor_y":0,"cursor_shape":"block","cursor_blinking":false,"cursor_color":"#c0d5c1"}
+[38;2;39;93;120m  [38;2;144;201;63m#!/usr/bin/env zsh
+[38;2;39;93;120m  [39m
+[38;2;39;93;120m  [39m
+[38;2;39;93;120m  [38;2;192;213;193mcargo run --release[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;91;89;87mdot                                                             1,2            All
+=== frame ==={"time":6889,"cursor_x":4,"cursor_y":0,"cursor_shape":"block","cursor_blinking":false,"cursor_color":"#c0d5c1"}
+[38;2;39;93;120m  [38;2;144;201;63m#!/usr/bin/env zsh
+[38;2;39;93;120m  [39m
+[38;2;39;93;120m  [39m
+[38;2;39;93;120m  [38;2;192;213;193mcargo run --release[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;91;89;87mdot                                                             1,3            All
+=== frame ==={"time":7045,"cursor_x":5,"cursor_y":0,"cursor_shape":"block","cursor_blinking":false,"cursor_color":"#c0d5c1"}
+[38;2;39;93;120m  [38;2;144;201;63m#!/usr/bin/env zsh
+[38;2;39;93;120m  [39m
+[38;2;39;93;120m  [39m
+[38;2;39;93;120m  [38;2;192;213;193mcargo run --release[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;91;89;87mdot                                                             1,4            All
+=== frame ==={"time":7185,"cursor_x":6,"cursor_y":0,"cursor_shape":"block","cursor_blinking":false,"cursor_color":"#c0d5c1"}
+[38;2;39;93;120m  [38;2;144;201;63m#!/usr/bin/env zsh
+[38;2;39;93;120m  [39m
+[38;2;39;93;120m  [39m
+[38;2;39;93;120m  [38;2;192;213;193mcargo run --release[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;91;89;87mdot                                                             1,5            All
+=== frame ==={"time":8279,"cursor_x":2,"cursor_y":1,"cursor_shape":"block","cursor_blinking":false,"cursor_color":"#c0d5c1"}
+[38;2;39;93;120m  [38;2;144;201;63m#!/usr/bin/env zsh
+[38;2;39;93;120m  [39m
+[38;2;39;93;120m  [39m
+[38;2;39;93;120m  [38;2;192;213;193mcargo run --release[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;91;89;87mdot                                                             2,0-1          All
+=== frame ==={"time":8430,"cursor_x":2,"cursor_y":2,"cursor_shape":"block","cursor_blinking":false,"cursor_color":"#c0d5c1"}
+[38;2;39;93;120m  [38;2;144;201;63m#!/usr/bin/env zsh
+[38;2;39;93;120m  [39m
+[38;2;39;93;120m  [39m
+[38;2;39;93;120m  [38;2;192;213;193mcargo run --release[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;91;89;87mdot                                                             3,0-1          All
+=== frame ==={"time":8603,"cursor_x":6,"cursor_y":3,"cursor_shape":"block","cursor_blinking":false,"cursor_color":"#c0d5c1"}
+[38;2;39;93;120m  [38;2;144;201;63m#!/usr/bin/env zsh
+[38;2;39;93;120m  [39m
+[38;2;39;93;120m  [39m
+[38;2;39;93;120m  [38;2;192;213;193mcargo run --release[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;192;213;193m~[39m
+[38;2;91;89;87mdot                                                             4,5            All

@@ -1,12 +1,10 @@
 import { tokensToHast } from "shiki";
-import { tokenizeAnsiWithTheme } from "shiki";
-import { bundledThemes } from "shiki";
 import { hastToHtml } from "shiki";
 import fs from "fs";
-import trim from "lodash/trim";
-import max from "lodash/max";
-import repeat from "lodash/repeat";
+import trim from "lodash/trim.js";
+import repeat from "lodash/repeat.js";
 import createPatch from "textdiff-create";
+import { tokenizeAnsiWithTheme } from "./ansiParser";
 
 const hexToRGB = (hex: string) => {
   hex = hex.replace("#", "");
@@ -22,9 +20,15 @@ export interface FrameHeader {
   time: number;
   cursor_x: number;
   cursor_y: number;
+  cursor_shape: "underline" | "block" | "bar" | "default";
   cursor_blinking: boolean;
   cursor_very_visible: boolean;
   cursor_color: string | null;
+}
+
+export interface TermcapHeader {
+  width: number;
+  height: number;
 }
 
 const closestColor = (targetColor: string, colorArray: string[]) => {
@@ -47,18 +51,117 @@ const closestColor = (targetColor: string, colorArray: string[]) => {
   return closestColor;
 };
 
+const namedColorsMap = {
+  black: "#000000",
+  red: "#bb0000",
+  green: "#00bb00",
+  yellow: "#bbbb00",
+  blue: "#97bde3",
+  magenta: "#ff00ff",
+  cyan: "#00bbbb",
+  white: "#eeeeee",
+  brightBlack: "#555555",
+  brightRed: "#ff5555",
+  brightGreen: "#00ff00",
+  brightYellow: "#ffff55",
+  brightBlue: "#97bde3",
+  brightMagenta: "#ff55ff",
+  brightCyan: "#55ffff",
+  brightWhite: "#ffffff",
+};
+
 const colors = [
-  "##97bde3", // blue
+  ...Object.values(namedColorsMap),
+
+  "#97bde3", // blue
   "#e39797", // red
   "#51c640", // green
+
+  "#CC4542",
+  // "#C0D5C1",
+  "#F5C504",
+  "#90C93F",
+  "#569E16",
+  "#93784E",
+  "#CE830D",
+  "#458383",
+  "#007E8A",
+  "#7A7A43",
+  "#DD6718",
+  "#CC4542",
+  // "#716D6A",
+  // "#989BA2",
+  // "#5B5957",
 ];
 
-export const testHtml = async () => {
-  const t = (await bundledThemes.nord()) as any;
+function findSequence(value: string, position: number) {
+  const nextEscape = value.indexOf("\u001b", position);
 
+  if (nextEscape !== -1) {
+    if (value[nextEscape + 1] === "[") {
+      const nextClose = value.indexOf("m", nextEscape);
+      if (nextClose !== -1) {
+        return {
+          sequence: value.substring(nextEscape + 2, nextClose).split(";"),
+          startPosition: nextEscape,
+          endPosition: nextClose,
+        };
+      }
+    }
+  }
+
+  return undefined;
+}
+
+const addCursor = (header: FrameHeader, frame: string) => {
+  let cursorCol = header.cursor_x;
+  let cursorRow = header.cursor_y;
+
+  let pos = 0;
+  let line = 0;
+
+  while (line != cursorRow) {
+    const nextLineBreakIdx = frame.indexOf("\n", pos);
+    if (nextLineBreakIdx == -1) return undefined;
+    ++line;
+    pos = nextLineBreakIdx + 1;
+    continue;
+  }
+
+  let nextLineBreakIdx = frame.indexOf("\n", pos);
+  if (nextLineBreakIdx == -1) nextLineBreakIdx = frame.length;
+
+  // we're on the right row now
+  while (pos < nextLineBreakIdx + 1) {
+    const nextSeq = findSequence(frame, pos);
+
+    if (!nextSeq || nextSeq.startPosition > pos + cursorCol) {
+      pos += cursorCol;
+
+      // out of bounds (column)
+      if (pos >= nextLineBreakIdx) {
+        frame =
+          frame.slice(0, nextLineBreakIdx) +
+          repeat(" ", pos - nextLineBreakIdx + 1) +
+          frame.slice(nextLineBreakIdx);
+      }
+
+      return { frame, offset: pos };
+    }
+
+    // reduce the target column by the number of chars until the next ctrl seq
+    cursorCol -= nextSeq.startPosition - pos;
+    pos = nextSeq.endPosition + 1;
+  }
+
+  return undefined;
+};
+
+export const compileTermcap = async (filepath: string) => {
   let raw = fs
     .readFileSync(
-      fs.readdirSync(".").filter((p) => p.startsWith("termcap-"))[0]
+      // fs.readdirSync(".").filter((p) => p.startsWith("termcap-"))[0]
+      filepath
     )
     .toString();
 
@@ -92,128 +195,114 @@ export const testHtml = async () => {
     raw = raw.slice(nextFrameIdx);
   }
 
-  frames = padFrames(frames);
-  frames = addCursor(frames);
+  // frames = frames.slice(17, 18);
+
+  const mainHeader = { width: 0, height: 0 };
+
+  const parsedFrames: [FrameHeader, string][] = [];
+  for (const [header, frame] of frames) {
+    const addCursorRet = addCursor(header, frame);
+
+    const tokenizedLines = tokenizeAnsiWithTheme(
+      {
+        name: "",
+        type: "dark",
+        bg: "",
+        fg: "",
+        settings: [],
+        colors: Object.fromEntries(
+          Object.entries(namedColorsMap).map(([name, value]) => [
+            `terminal.ansi${name[0].toUpperCase()}${name.substring(1)}`,
+            value,
+          ])
+        ),
+      },
+      addCursorRet?.frame ?? frame
+    );
+
+    // add in the cursor
+    if (addCursorRet) {
+      const lineTokens = tokenizedLines[header.cursor_y];
+      if (lineTokens) {
+        for (let i = 0; i < lineTokens.length; i++) {
+          const token = lineTokens[i];
+          const startOffset = token.offset;
+          const endOffset = lineTokens[i + 1]?.offset ?? Number.MAX_VALUE;
+
+          if (
+            startOffset > addCursorRet.offset ||
+            endOffset <= addCursorRet.offset
+          )
+            continue;
+
+          const pos = addCursorRet.offset - startOffset;
+
+          const hidden = token.htmlAttrs?.class == "reverse" && !token.color;
+
+          lineTokens.splice(
+            i,
+            1,
+            { ...token, content: token.content.slice(0, pos) },
+            {
+              ...token,
+              content: token.content[pos],
+              // content: token.content.slice(pos, pos + 1),
+              color: header.cursor_color ?? token.color,
+              htmlAttrs: {
+                class: `cursor cursor-${header.cursor_shape} cursor-${!hidden ? "visible" : "hidden"}`,
+              },
+            },
+            { ...token, content: token.content.slice(pos + 1) }
+          );
+          break;
+        }
+      }
+    }
+
+    // update frame size
+    mainHeader.height = Math.max(mainHeader.height, tokenizedLines.length);
+    for (const lineTokens of tokenizedLines) {
+      let lineLength = lineTokens.reduce(
+        (acc, token) => acc + token.content.length,
+        0
+      );
+      mainHeader.width = Math.max(mainHeader.width, lineLength);
+    }
+
+    // map colors
+    for (const lineTokens of tokenizedLines) {
+      for (const token of lineTokens) {
+        if (token.color && !token.color.startsWith("var(")) {
+          token.color = closestColor(token.color, colors);
+        }
+        if (token.bgColor && !token.bgColor.startsWith("var(")) {
+          token.bgColor = closestColor(token.bgColor, colors);
+        }
+      }
+    }
+
+    const hast = tokensToHast(
+      tokenizedLines,
+      { themes: {}, lang: "typescript" },
+      {} as any
+    );
+    const html = hastToHtml(hast);
+    parsedFrames.push([header, html]);
+  }
 
   let lastFrame = frames[0][1];
-  return frames
-    .map(([header, frame]) => [header, parseFrame(t, frame)] as const)
-    .map(([header, frame], idx, frames) => {
-      if (idx == 0) {
-        lastFrame = frames[idx][1];
-        return [header, frame] as const;
-      }
-      const delta = createPatch(lastFrame, frame) as any;
-      lastFrame = frame;
-      return [header, delta] as const;
-    });
-};
-
-const padFrames = (
-  frames: [FrameHeader, string][]
-): [FrameHeader, string][] => {
-  const lines = frames.map(([_, frame]) =>
-    frame.split("\n").filter((line) => line != "")
-  );
-  const maxLines = max(lines.map(([frame]) => frame.length)) ?? 0;
-
-  return frames.map(([header], idx) => [
-    header,
-    lines[idx].join("\n") + repeat("\n", maxLines - lines[idx].length),
-  ]);
-};
-
-function findSequence(value: string, position: number) {
-  const nextEscape = value.indexOf("\u001b", position);
-
-  if (nextEscape !== -1) {
-    if (value[nextEscape + 1] === "[") {
-      const nextClose = value.indexOf("m", nextEscape);
-      if (nextClose !== -1) {
-        return {
-          sequence: value.substring(nextEscape + 2, nextClose).split(";"),
-          startPosition: nextEscape,
-          endPosition: nextClose,
-        };
-      }
+  const encodedFrames = parsedFrames.map(([header, frame], idx, frames) => {
+    if (idx == 0) {
+      lastFrame = frames[idx][1];
+      return [header, frame] as const;
     }
-  }
-
-  // return { position: value.length };
-  return undefined;
-}
-
-const addCursor = (
-  frames: [FrameHeader, string][]
-): [FrameHeader, string][] => {
-  // const lines = frames.map(([_, frame]) =>
-  //   frame.split("\n").filter((line) => line != "")
-  // );
-  // const maxLines = max(lines.map(([frame]) => frame.length)) ?? 0;
-
-  return frames.map(([header, frame]) => {
-    let cursorCol = 2;
-    let cursorRow = 0;
-
-    const lines = frame.split("\n");
-    if (cursorRow >= lines.length) return [header, frame];
-
-    // https://github.com/blake-mealey/ansi-sequence-parser/blob/main/src/parser.ts
-    let line = lines[cursorRow];
-
-    let pos = 0;
-    let offset = 0;
-    let bgColorSeqCode = `\x1b[49m`;
-
-    while (pos < line.length) {
-      const nextSeq = findSequence(line, pos);
-
-      if (!nextSeq || nextSeq.startPosition > cursorCol + offset) {
-        pos = cursorCol + offset;
-
-        if (pos >= line.length) break;
-
-        lines[cursorRow] =
-          line.slice(0, pos) +
-          "[41m" +
-          line[pos] +
-          bgColorSeqCode +
-          line.slice(pos + 1);
-        break;
-      }
-
-      for (const seqCode of nextSeq.sequence) {
-        if (Number(seqCode) < 40 || Number(seqCode) > 49) continue;
-        bgColorSeqCode = `\x1b[${seqCode}m`;
-      }
-
-      pos = nextSeq.endPosition + 1;
-      offset += nextSeq.endPosition - nextSeq.startPosition + 1;
-    }
-
-    return [header, lines.join("\n")];
+    const delta = createPatch(lastFrame, frame) as any;
+    lastFrame = frame;
+    return [header, delta] as const;
   });
-};
 
-const parseFrame = (t: any, text: string) => {
-  const tokens = tokenizeAnsiWithTheme(t.default as any, text);
-
-  for (const tokenList of tokens) {
-    for (const token of tokenList) {
-      if (token.color && !token.color.startsWith("var(")) {
-        // token.color = closestColor(token.color, colors);
-      }
-      if (token.bgColor && !token.bgColor.startsWith("var(")) {
-        // token.bgColor = closestColor(token.bgColor, colors);
-      }
-    }
-  }
-
-  const hast = tokensToHast(
-    tokens,
-    { themes: {}, lang: "typescript" },
-    {} as any
-  );
-  const html = hastToHtml(hast);
-  return html;
+  return {
+    header: mainHeader,
+    encodedFrames,
+  };
 };

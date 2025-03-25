@@ -199,7 +199,7 @@ export const globals = css`
       margin-bottom: 32px;
       background-color: ${color("colors/primary-50")};
       padding: 8px;
-      font-family: "Roboto Mono";
+      font-family: Courier New;
 
       & > code {
         display: flex;
