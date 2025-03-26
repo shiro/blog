@@ -1,4 +1,3 @@
-import { type ResolvedConfig } from "vite";
 import { compileTermcap } from "../src/test.compile";
 import { PluginOption } from "vite";
 

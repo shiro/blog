@@ -103,9 +103,17 @@ const SVG: Component<Props> = (props) => {
 
   let ref!: SVGSVGElement;
 
+  let effectTime = 0;
   $effect(async () => {
+    effectTime = +new Date();
+    const _effectTime = effectTime;
+
     // if SSR content is there, cache it for reuse
-    if (!mounted && ref.childNodes.length) {
+    if (
+      !mounted &&
+      ref.childNodes.length &&
+      ref.attributes.getNamedItem("data-src")!.value == src
+    ) {
       const currentAttrs: Record<string, any> = {};
       for (const attr of ref.attributes) {
         if (!allowedAttrs.includes(attr.name)) continue;
@@ -115,7 +123,7 @@ const SVG: Component<Props> = (props) => {
         attrs: currentAttrs,
         data: ref.innerHTML,
       };
-      _cache.set(props.src, parsed);
+      _cache.set(src, parsed);
 
       mounted = true;
       loaded = true;
@@ -126,14 +134,17 @@ const SVG: Component<Props> = (props) => {
     const parsed =
       _cache?.get(src) ??
       (await (async () => {
-        const res = await fetch(props.src);
+        const res = await fetch(src);
         const resText = await res.text();
         const parsed = parseSVG(resText);
-        _cache.set(props.src, parsed);
+        _cache.set(src, parsed);
         return parsed;
       })());
 
+    if (effectTime != _effectTime) return;
+
     ref.innerHTML = parsed.data;
+
     for (const attr of ref.attributes) {
       if (["class", ...Object.keys(rest)].includes(attr.name)) continue;
       ref.removeAttribute(attr.name);
@@ -151,6 +162,7 @@ const SVG: Component<Props> = (props) => {
     <Show when={loaded} fallback={loader}>
       <svg
         {...(initial?.attrs ?? {})}
+        data-src={src}
         ref={ref}
         class={cn(className)}
         innerHTML={initial?.data}
