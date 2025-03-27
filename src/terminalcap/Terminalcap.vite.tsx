@@ -1,7 +1,7 @@
 import { Change } from "textdiff-create";
 import { FrameHeader, TermcapHeader } from "~/test.compile";
-import Terminalcap from "~/terminalcap/Terminalcap";
 import { Component } from "solid-js";
+import DialogTerminalcap from "~/terminalcap/DialogTerminalcap";
 
 interface Meta {
   header: TermcapHeader;
@@ -9,7 +9,7 @@ interface Meta {
 }
 
 const TerminalcapVite: (meta: Meta) => Component = (meta) => () => {
-  return <Terminalcap {...meta} />;
+  return <DialogTerminalcap {...meta} />;
 };
 
 export default TerminalcapVite;

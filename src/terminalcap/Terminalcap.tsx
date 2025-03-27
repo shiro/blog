@@ -9,12 +9,13 @@ import { color } from "~/style/commonStyle";
 import Icon from "~/components/Icon";
 
 interface Props {
+  class?: string;
   header: TermcapHeader;
   encodedFrames: [[FrameHeader, string], ...[FrameHeader, Change[]][]];
 }
 
 const FINAL_FRAME_TIME = 1000;
-const COLS = 300;
+const COLS = 100;
 
 // const getScale = (x: number) => (-0.29 * x + 138) / 100;
 
@@ -38,7 +39,7 @@ const decode = (encodedFrames: Props["encodedFrames"]) => {
 };
 
 const Terminalcap = (props: Props) => {
-  const { encodedFrames, header } = $destructure(props);
+  const { class: $class, encodedFrames, header } = $destructure(props);
 
   header.width = COLS;
 
@@ -177,12 +178,12 @@ const Terminalcap = (props: Props) => {
   });
 
   return (
-    <div class={cn(container)}>
+    <div class={cn(container, $class, "w-full")}>
       <div
         class={cn(innerContainer, "flex justify-center")}
         style={{ "--scale": 0.6 }}>
         <div
-          ref={boxRef}
+          // ref={boxRef}
           class={cn("bg-colors-primary-50 mt-16 mb-16 flex flex-col", box)}
           onFocusOut={() => (contentFocused = false)}
           onKeyDown={handleKeyDown}
@@ -210,7 +211,7 @@ const Terminalcap = (props: Props) => {
               {/* content */}
               <div
                 ref={contentRef}
-                class={cn(content, "absolute top-0")}
+                class={cn(content, "absolute top-0 w-full")}
                 onFocusIn={() => (contentFocused = true)}
                 onFocusOut={() => (contentFocused = false)}
                 innerHTML={decodedFrames[activeFrameIdx][1]}
@@ -317,9 +318,7 @@ const container = css`
   font-family: Courier New;
   ${subText};
   line-height: 1.1;
-
-  font-size: 0;
-  container-type: size;
+  container-type: inline-size;
 `;
 
 const innerContainer = css`
@@ -339,7 +338,10 @@ const innerContainer = css`
   //   ${textDefinitions.body.size}px,
   //   1.1cqw
   // );
-  font-size: min(${getScale(COLS)}cqw, ${textDefinitions.sub.size}px);
+  font-size: min(
+    ${getScale(COLS)}cqw,
+    var(--max-font-size, ${textDefinitions.sub.size}px)
+  );
   // font-size: ${getScale(COLS)}cqw;
   // font-size: 1.5cqw;
   // }
@@ -372,13 +374,15 @@ const content = css`
   display: flex;
   justify-content: center;
 
-  pre {
+  pre.shiki {
+    width: 100%;
     display: inline-flex;
     margin: 0;
     padding: 0;
     background: none;
   }
   code {
+    width: 100%;
     // display: initial;
     // flex-direction: column;
     // align-items: flex-start;
@@ -386,12 +390,14 @@ const content = css`
 
   .line {
     width: initial;
-    display: flex;
+    // display: inline;
+    display: inline-flex;
     font-size: inherit !important;
     line-height: inherit !important;
 
     span:last-child {
       flex: 1;
+      // width: 100%;
     }
   }
 

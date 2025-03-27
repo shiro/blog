@@ -78,9 +78,9 @@ export const _textDefinitions = {
   sub,
   small,
   body,
-  heading1,
-  heading2,
   heading3,
+  heading2,
+  heading1,
   large,
   jumbo,
 };
