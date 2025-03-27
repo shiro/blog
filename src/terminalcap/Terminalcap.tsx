@@ -2,10 +2,11 @@ import { css } from "@linaria/core";
 import { Change } from "textdiff-create";
 import cn from "classnames";
 import applyPatch from "textdiff-patch";
-import { boxShadow } from "~/style/commonStyle";
+import { boxShadow, textDefinitions } from "~/style/commonStyle";
 import { FrameHeader, TermcapHeader } from "~/test.compile";
 import { subText } from "~/style/commonStyle";
-import IconText from "~/components/IconText";
+import { color } from "~/style/commonStyle";
+import Icon from "~/components/Icon";
 
 interface Props {
   header: TermcapHeader;
@@ -13,6 +14,13 @@ interface Props {
 }
 
 const FINAL_FRAME_TIME = 1000;
+const COLS = 300;
+
+// const getScale = (x: number) => (-0.29 * x + 138) / 100;
+
+/** Supports up to 300 columns. */
+const getScale = (x: number) =>
+  (266.3 - 1.388 * x + 0.002235 * Math.pow(x, 2)) / 100;
 
 const decode = (encodedFrames: Props["encodedFrames"]) => {
   if (!encodedFrames.length) return [];
@@ -32,6 +40,8 @@ const decode = (encodedFrames: Props["encodedFrames"]) => {
 const Terminalcap = (props: Props) => {
   const { encodedFrames, header } = $destructure(props);
 
+  header.width = COLS;
+
   let decodedFrames = $memo(decode(encodedFrames));
 
   const totalTime = $memo(
@@ -47,7 +57,9 @@ const Terminalcap = (props: Props) => {
   let activeFrameIdx = $signal(0);
   let progress = $memo(currentTime / totalTime);
 
-  let ref!: HTMLDivElement;
+  let seekbarRef!: HTMLDivElement;
+  let contentRef!: HTMLDivElement;
+  let boxRef!: HTMLDivElement;
 
   let lastUpdate = +new Date();
 
@@ -146,11 +158,35 @@ const Terminalcap = (props: Props) => {
 
   $mount(() => playPause());
 
+  let contentFocused = $signal(false);
+  $effect(() => {
+    const observer = new MutationObserver((mutations) => {
+      if (!contentFocused || document.activeElement !== document.body) return;
+      if (!mutations.some((mutation) => mutation.removedNodes.length > 0))
+        return;
+      boxRef.focus();
+    });
+
+    observer.observe(contentRef, {
+      subtree: true,
+      attributes: false,
+      childList: true,
+    });
+
+    return () => observer.disconnect();
+  });
+
   return (
-    <div class={cn(container)} onKeyDown={handleKeyDown} tabIndex={0}>
-      <div class="flex justify-center">
+    <div class={cn(container)}>
+      <div
+        class={cn(innerContainer, "flex justify-center")}
+        style={{ "--scale": 0.6 }}>
         <div
-          class={cn("bg-colors-primary-50 mt-16 mb-16 flex flex-col", shadow)}>
+          ref={boxRef}
+          class={cn("bg-colors-primary-50 mt-16 mb-16 flex flex-col", box)}
+          onFocusOut={() => (contentFocused = false)}
+          onKeyDown={handleKeyDown}
+          tabindex={0}>
           <div class="m-2">
             <div class="relative flex flex-col">
               {/* X spacer */}
@@ -173,27 +209,39 @@ const Terminalcap = (props: Props) => {
               </Show>
               {/* content */}
               <div
+                ref={contentRef}
                 class={cn(content, "absolute top-0")}
+                onFocusIn={() => (contentFocused = true)}
+                onFocusOut={() => (contentFocused = false)}
                 innerHTML={decodedFrames[activeFrameIdx][1]}
               />
             </div>
           </div>
           <div class="flex h-6 w-full">
             <div class="text-sub mr-2 ml-2 flex gap-2">
-              <IconText icon="skip" class="scale-x-[-1]" onclick={seekPrev} />
-              <IconText icon={playing ? "pause" : "play"} onclick={playPause} />
-              <IconText icon="skip" onclick={seekNext} />
+              <Icon
+                icon="skip"
+                class="h-5 w-5 scale-x-[-1]"
+                onClick={seekPrev}
+              />
+              <Icon
+                icon={playing ? "pause" : "play"}
+                class="h-5 w-5"
+                onClick={playPause}
+              />
+              <Icon icon="skip" onClick={seekNext} class="h-5 w-5" />
             </div>
             <div
               class="bg-colors-primary-200 relative m-1 flex flex-1 cursor-pointer rounded-sm"
-              onclick={(ev) =>
+              onclick={(ev) => {
+                ev.preventDefault();
                 handleSeekRelative(
                   (ev.clientX - ev.target.getBoundingClientRect().left) /
                     ev.target.clientWidth
-                )
-              }>
+                );
+              }}>
               <div
-                ref={ref}
+                ref={seekbarRef}
                 class={cn(
                   seekbar,
                   "bg-colors-primary-600 w-full origin-left rounded-sm"
@@ -218,8 +266,87 @@ const Terminalcap = (props: Props) => {
   );
 };
 
+/**
+ * Generate a CSS property value that scales linearly in `[minFontSize..maxFontSize]`, proportional to `[minWidth..maxWidth]`
+ */
+export const fluidProperty = (
+  minWidth: string,
+  maxVW: string,
+  minFontSize: string,
+  fontSizeDelta: string
+) => {
+  // const usesVariables = [minWidth, maxVW, minFontSize, maxFonSize].some((v) =>
+  //   v.startsWith("var(")
+  // );
+
+  // only check if units are the same on static values, no way to do it on variables
+  // if (!usesVariables) {
+  //   const units = [minWidth, maxVW, minFontSize, maxFonSize].map(getUnit);
+  //   const allEqual = units.every((u) => u == units[0]);
+  //   if (!allEqual) {
+  //     throw new Error(
+  //       `_calculateFluidProperty: all 4 values need to have the same units, got ${units}`
+  //     );
+  //   }
+  // }
+
+  // calculate values without unit
+  // const minFontSizeNumber = usesVariables
+  //   ? minFontSize.replace(/(px|rem)/g, "")
+  //   : parseFloat(minFontSize);
+  // const maxFontSizeNumber = usesVariables
+  //   ? maxFonSize.replace(/(px|rem)/g, "")
+  //   : parseFloat(maxFonSize);
+
+  // the pxToRem plugin converts "0px" to "0", which breaks things
+  if (minWidth == "0px") minWidth = "0rem";
+
+  const deltaVW = parseFloat(maxVW) - parseFloat(minWidth);
+
+  return `calc(${minFontSize} + ${fontSizeDelta} * ((100cqw - ${minWidth}) / ${
+    deltaVW
+  }))`;
+};
+
+const widthFrom = "200px";
+const widthTo = "1500px";
+const fontFrom = textDefinitions.sub.size;
+const fontTo = textDefinitions.body.size;
+
 const container = css`
   font-family: Courier New;
+  ${subText};
+  line-height: 1.1;
+
+  font-size: 0;
+  container-type: size;
+`;
+
+const innerContainer = css`
+  // @container (min-width: ${widthFrom}) {
+  // --cols: 140;
+  --unit: 1px;
+
+  --scale: 2 !important;
+
+  --from: calc(${fontFrom} * var(--scale));
+  --from-unit: calc(var(--from) * var(--unit));
+  --to: calc(${fontTo} * var(--scale));
+  --delta: calc(var(--to) - var(--from));
+
+  // font-size: min(
+  //   ${fluidProperty(widthFrom, widthTo, "var(--from-unit)", "var(--delta)")},
+  //   ${textDefinitions.body.size}px,
+  //   1.1cqw
+  // );
+  font-size: min(${getScale(COLS)}cqw, ${textDefinitions.sub.size}px);
+  // font-size: ${getScale(COLS)}cqw;
+  // font-size: 1.5cqw;
+  // }
+  // 300 = 0.51
+  // 70 = 2.2
+  // m = -0.00734782608
+  // b = 1.6856521744
 `;
 
 const seekbar = css`
@@ -227,15 +354,18 @@ const seekbar = css`
   // transition: width linear 10000ms;
 `;
 
-const shadow = css`
-  ${boxShadow(0, 2, 16, "rgba(0, 0, 0, 0.1)")};
+const box = css`
+  ${boxShadow(0, 2, 16, "rgba(0, 0, 0, 0.1)")}
+
+  &:focus, &:focus-within {
+    outline: 2px solid ${color("colors/primary-500")};
+    ${boxShadow(0, 2, 16, "rgba(0, 0, 0, 0.35)")}
+  }
 `;
 
 const spacer = css`
   display: inline-block;
   overflow: hidden;
-  ${subText};
-  line-height: 1.1;
 `;
 
 const content = css`
@@ -257,6 +387,8 @@ const content = css`
   .line {
     width: initial;
     display: flex;
+    font-size: inherit !important;
+    line-height: inherit !important;
 
     span:last-child {
       flex: 1;
