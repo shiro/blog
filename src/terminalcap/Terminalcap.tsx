@@ -7,11 +7,22 @@ import { FrameHeader, TermcapHeader } from "~/test.compile";
 import { subText } from "~/style/commonStyle";
 import { color } from "~/style/commonStyle";
 import Icon from "~/components/Icon";
+import {
+  createEffect,
+  createSignal,
+  on,
+  Signal,
+  untrack,
+  ValidComponent,
+} from "solid-js";
 
-interface Props {
+interface Props extends Partial<ReturnType<typeof useTerminalcapState>> {
   class?: string;
   header: TermcapHeader;
   encodedFrames: [[FrameHeader, string], ...[FrameHeader, Change[]][]];
+  fullscreenButtonComponent?: ValidComponent;
+  fullscreenExitButtonComponent?: ValidComponent;
+  onClickOutside?: () => void;
 }
 
 const FINAL_FRAME_TIME = 1000;
@@ -38,8 +49,48 @@ const decode = (encodedFrames: Props["encodedFrames"]) => {
   return frames;
 };
 
+export const useTerminalcapState = () => {
+  const playing = createSignal(false);
+  const currentTime = createSignal(0);
+
+  return {
+    playing,
+    currentTime,
+  };
+};
+
+const shadowSignal = <T extends unknown>(
+  [getInner, setInner]: Signal<T>,
+  effectFn: (value: T) => void
+): Signal<T> => {
+  const [getOuter, setOuter] = createSignal(getInner());
+  createEffect(
+    on(
+      () => getInner(),
+      (value) => {
+        if (value == untrack(getOuter)) return;
+        effectFn(value);
+        setOuter(value as any);
+      }
+    )
+  );
+  const setter: Setter<T> = (...args) => {
+    const ret = setOuter(...(args as any));
+    if (getOuter() != untrack(getInner)) setInner(...(args as any));
+    return ret;
+  };
+  return [getOuter, setter];
+};
+
 const Terminalcap = (props: Props) => {
-  const { class: $class, encodedFrames, header } = $destructure(props);
+  const {
+    class: $class,
+    encodedFrames,
+    header,
+    fullscreenButtonComponent,
+    fullscreenExitButtonComponent,
+    ...state
+  } = $destructure(props);
 
   header.width = COLS;
 
@@ -53,9 +104,14 @@ const Terminalcap = (props: Props) => {
     })()
   );
 
-  let playing = $signal(false);
-  let currentTime = $signal(0);
+  let playing = $derefSignal(state.playing ?? createSignal(false));
+  let currentTime = $derefSignal(
+    shadowSignal(state.currentTime ?? createSignal(0), (v) => {
+      handleSeekAbsolute(v);
+    })
+  );
   let activeFrameIdx = $signal(0);
+
   let progress = $memo(currentTime / totalTime);
 
   let seekbarRef!: HTMLDivElement;
@@ -67,6 +123,8 @@ const Terminalcap = (props: Props) => {
   let interval: NodeJS.Timeout | undefined;
   const startPlayLoop = () => {
     const tickDuration = 10;
+
+    clearInterval(interval);
     lastUpdate = +new Date();
 
     interval = setInterval(() => {
@@ -94,24 +152,23 @@ const Terminalcap = (props: Props) => {
         currentTime += delta;
       });
     }, tickDuration);
-    return () => clearInterval(interval);
+    $cleanup(() => clearInterval(interval));
   };
 
-  const play = () => {
-    playing = true;
-    startPlayLoop();
-  };
+  $effect(
+    $on(
+      [playing],
+      () => (playing ? startPlayLoop() : clearInterval(interval)),
+      { defer: true }
+    )
+  );
 
-  const pause = () => {
-    playing = false;
-    clearInterval(interval);
-  };
+  const playPause = () => (playing = !playing);
 
-  const playPause = () => (playing ? pause() : play());
+  const handleSeekRelative = (progress: number) =>
+    handleSeekAbsolute(progress * totalTime);
 
-  const handleSeekRelative = (progress: number) => {
-    const seekTime = progress * totalTime;
-
+  const handleSeekAbsolute = (seekTime: number) => {
     let nextFrameIdx = decodedFrames.findIndex(
       ([header]) => header.time > seekTime
     );
@@ -123,18 +180,21 @@ const Terminalcap = (props: Props) => {
     activeFrameIdx = frameIdx;
     currentTime = seekTime;
   };
+
   const seekPrev = () => {
-    pause();
+    playing = false;
     if (activeFrameIdx == 0) return;
     --activeFrameIdx;
     currentTime = decodedFrames[activeFrameIdx][0].time;
   };
+
   const seekNext = () => {
-    pause();
+    playing = false;
     if (activeFrameIdx == decodedFrames.length - 1) return;
     ++activeFrameIdx;
     currentTime = decodedFrames[activeFrameIdx][0].time;
   };
+
   const handleKeyDown = (ev: KeyboardEvent) => {
     switch (ev.key) {
       case " ": {
@@ -157,7 +217,7 @@ const Terminalcap = (props: Props) => {
     }
   };
 
-  $mount(() => playPause());
+  $mount(() => (playing = true));
 
   let contentFocused = $signal(false);
   $effect(() => {
@@ -165,7 +225,7 @@ const Terminalcap = (props: Props) => {
       if (!contentFocused || document.activeElement !== document.body) return;
       if (!mutations.some((mutation) => mutation.removedNodes.length > 0))
         return;
-      boxRef.focus();
+      boxRef?.focus();
     });
 
     observer.observe(contentRef, {
@@ -174,17 +234,27 @@ const Terminalcap = (props: Props) => {
       childList: true,
     });
 
-    return () => observer.disconnect();
+    $cleanup(() => observer.disconnect());
   });
 
   return (
     <div class={cn(container, $class, "w-full")}>
       <div
-        class={cn(innerContainer, "flex justify-center")}
+        class={cn(innerContainer, "flex justify-center", {
+          "cursor-pointer": props.onClickOutside,
+        })}
+        onclick={
+          !!props.onClickOutside
+            ? (ev) => {
+                if (ev.currentTarget != ev.target) return;
+                props.onClickOutside?.();
+              }
+            : undefined
+        }
         style={{ "--scale": 0.6 }}>
         <div
-          // ref={boxRef}
-          class={cn("bg-colors-primary-50 mt-16 mb-16 flex flex-col", box)}
+          ref={boxRef}
+          class={cn("bg-colors-primary-50 flex cursor-auto flex-col", box)}
           onFocusOut={() => (contentFocused = false)}
           onKeyDown={handleKeyDown}
           tabindex={0}>
@@ -260,6 +330,20 @@ const Terminalcap = (props: Props) => {
                 )}
               </For>
             </div>
+            <Show when={fullscreenButtonComponent}>
+              <div class="text-sub mr-2 ml-2 flex gap-2">
+                <Dynamic component={fullscreenButtonComponent}>
+                  <Icon icon="fullscreen" class="h-5 w-5" />
+                </Dynamic>
+              </div>
+            </Show>
+            <Show when={fullscreenExitButtonComponent}>
+              <div class="text-sub mr-2 ml-2 flex gap-2">
+                <Dynamic component={fullscreenExitButtonComponent}>
+                  <Icon icon="fullscreen-exit" class="h-5 w-5" />
+                </Dynamic>
+              </div>
+            </Show>
           </div>
         </div>
       </div>
