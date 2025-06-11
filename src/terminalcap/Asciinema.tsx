@@ -1,9 +1,6 @@
 import { css } from "@linaria/core";
-import { Change } from "textdiff-create";
 import cn from "classnames";
-import applyPatch from "textdiff-patch";
 import { boxShadow, textDefinitions } from "~/style/commonStyle";
-import { FrameHeader, TermcapHeader } from "~/test.compile";
 import { subText } from "~/style/commonStyle";
 import { color } from "~/style/commonStyle";
 import Icon from "~/components/Icon";
@@ -15,11 +12,18 @@ import {
   untrack,
   ValidComponent,
 } from "solid-js";
+import {
+  Cursor,
+  Frame,
+  Segment,
+  TermcapHeader,
+} from "~/terminalcap/asciinema.server";
+import { cloneDeep } from "lodash";
 
 interface Props extends Partial<ReturnType<typeof useTerminalcapState>> {
   class?: string;
   header: TermcapHeader;
-  encodedFrames: [[FrameHeader, string], ...[FrameHeader, Change[]][]];
+  encodedFrames: Frame[];
   fullscreenButtonComponent?: ValidComponent;
   fullscreenExitButtonComponent?: ValidComponent;
   onClickOutside?: () => void;
@@ -28,6 +32,10 @@ interface Props extends Partial<ReturnType<typeof useTerminalcapState>> {
 const FINAL_FRAME_TIME = 1000;
 const COLS = 100;
 
+interface ClientSegment extends Segment {
+  cursor?: Cursor;
+}
+
 // const getScale = (x: number) => (-0.29 * x + 138) / 100;
 
 /** Supports up to 300 columns. */
@@ -35,15 +43,79 @@ const getScale = (x: number) =>
   (266.3 - 1.388 * x + 0.002235 * Math.pow(x, 2)) / 100;
 
 const decode = (encodedFrames: Props["encodedFrames"]) => {
-  if (!encodedFrames.length) return [];
+  const firstFrame = encodedFrames[0];
+  if (!firstFrame) return [];
 
-  const frames = [encodedFrames[0]];
-  let lastFrame = encodedFrames[0][1];
+  const frames = [firstFrame];
+  let prevLines = cloneDeep(firstFrame.lines);
 
-  for (let i = 1; i < encodedFrames.length; i++) {
-    const [header, change] = encodedFrames[i] as [FrameHeader, Change[]];
-    frames[i] = [header, applyPatch(lastFrame, change)];
-    lastFrame = frames[i][1];
+  // fill in empty lines from the previous frame
+  for (const [frameIdx, frame] of encodedFrames.slice(1).entries()) {
+    // apply changed lines
+    frame.lines = { ...prevLines, ...frame.lines };
+    prevLines = cloneDeep(frame.lines);
+
+    if (frame.cursor.visible) {
+      const [row, col] = frame.cursor.pos;
+      const segments = frame.lines[row].segments as ClientSegment[];
+
+      let cellOffset = 0;
+      for (const [segmentIdx, segment] of segments.entries()) {
+        if (segment.text === undefined) {
+          break;
+        }
+
+        const charIdx = Math.floor((col - cellOffset) / segment.charWidth);
+        const chars = segment.text?.split("") ?? [];
+
+        // if cursor is in current segment
+        if (col < cellOffset + segment.cellCount) {
+          // split segment into half and put a new cursor segment in the middle
+          // this invalidates offset positions, but we don't care
+
+          // remove segment, we'll replace it with new ones
+          segments.splice(segmentIdx, 1);
+
+          // after segment
+          if (chars.length > charIdx) {
+            segments.splice(segmentIdx, 0, {
+              ...segment,
+              text: chars.slice(charIdx + 1).join(""),
+            });
+          }
+
+          // cursor segment
+          segments.splice(segmentIdx, 0, {
+            ...segment,
+            text: chars[charIdx],
+            // class: cn(`cursor cursor-${frame.cursor.shape}`, {
+            //   blinking: frame.cursor.blinking,
+            // }),
+            cursor: frame.cursor,
+            pen: {
+              ...segment.pen,
+              inverse:
+                frame.cursor.shape == "block" || frame.cursor.shape == "box",
+            },
+          });
+
+          // before segment
+          if (charIdx != 0) {
+            segments.splice(segmentIdx, 0, {
+              ...segment,
+              text: chars.slice(0, charIdx).join(""),
+            });
+          }
+
+          // keep segments after this one as they are
+          break;
+        }
+
+        cellOffset += segment.cellCount;
+      }
+    }
+
+    frames.push(frame);
   }
 
   return frames;
@@ -82,7 +154,7 @@ const shadowSignal = <T extends unknown>(
   return [getOuter, setter];
 };
 
-const Terminalcap = (props: Props) => {
+const Asciinema = (props: Props) => {
   const {
     class: $class,
     encodedFrames,
@@ -92,15 +164,24 @@ const Terminalcap = (props: Props) => {
     ...state
   } = $destructure(props);
 
-  header.width = COLS;
+  // header.width = COLS;
 
   let decodedFrames = $memo(decode(encodedFrames));
+
+  const getSegmentColor = (segment: ClientSegment, name: "fg" | "bg") =>
+    name == "fg"
+      ? segment.pen.inverse
+        ? (segment.pen.bg ?? "var(--fallback-bg)")
+        : (segment.pen.fg ?? header.theme.foreground)
+      : segment.pen.inverse
+        ? (segment.pen.fg ?? header.theme.foreground)
+        : (segment.pen.bg ?? "var(--fallback-bg)");
 
   const totalTime = $memo(
     (() => {
       const lastFrame = decodedFrames[decodedFrames.length - 1];
       if (!lastFrame) return 0;
-      return lastFrame[0].time + FINAL_FRAME_TIME;
+      return lastFrame.time + FINAL_FRAME_TIME;
     })()
   );
 
@@ -137,8 +218,8 @@ const Terminalcap = (props: Props) => {
 
         const nextFrameTime =
           nextFrameIdx != 0
-            ? decodedFrames[nextFrameIdx][0].time
-            : decodedFrames[activeFrameIdx][0].time + FINAL_FRAME_TIME;
+            ? decodedFrames[nextFrameIdx].time
+            : decodedFrames[activeFrameIdx].time + FINAL_FRAME_TIME;
 
         if (nextFrameTime <= currentTime) {
           activeFrameIdx = nextFrameIdx;
@@ -169,9 +250,7 @@ const Terminalcap = (props: Props) => {
     handleSeekAbsolute(progress * totalTime);
 
   const handleSeekAbsolute = (seekTime: number) => {
-    let nextFrameIdx = decodedFrames.findIndex(
-      ([header]) => header.time > seekTime
-    );
+    let nextFrameIdx = decodedFrames.findIndex(({ time }) => time > seekTime);
     if (nextFrameIdx == -1) nextFrameIdx = decodedFrames.length;
 
     const frameIdx = Math.max(0, nextFrameIdx - 1);
@@ -185,14 +264,14 @@ const Terminalcap = (props: Props) => {
     playing = false;
     if (activeFrameIdx == 0) return;
     --activeFrameIdx;
-    currentTime = decodedFrames[activeFrameIdx][0].time;
+    currentTime = decodedFrames[activeFrameIdx].time;
   };
 
   const seekNext = () => {
     playing = false;
     if (activeFrameIdx == decodedFrames.length - 1) return;
     ++activeFrameIdx;
-    currentTime = decodedFrames[activeFrameIdx][0].time;
+    currentTime = decodedFrames[activeFrameIdx].time;
   };
 
   const handleKeyDown = (ev: KeyboardEvent) => {
@@ -255,6 +334,7 @@ const Terminalcap = (props: Props) => {
         <div
           ref={boxRef}
           class={cn("bg-colors-primary-50 flex cursor-auto flex-col", box)}
+          style={{ "--fallback-bg": color("colors/primary-50") }}
           onFocusOut={() => (contentFocused = false)}
           onKeyDown={handleKeyDown}
           tabindex={0}>
@@ -279,13 +359,47 @@ const Terminalcap = (props: Props) => {
                 </span>
               </Show>
               {/* content */}
-              <div
+              <code
                 ref={contentRef}
-                class={cn(content, "absolute top-0 w-full")}
+                class={cn(content, "absolute top-0 flex w-full flex-col")}
                 onFocusIn={() => (contentFocused = true)}
-                onFocusOut={() => (contentFocused = false)}
-                innerHTML={decodedFrames[activeFrameIdx][1]}
-              />
+                onFocusOut={() => (contentFocused = false)}>
+                <For each={Object.values(decodedFrames[activeFrameIdx].lines)}>
+                  {(line) => (
+                    <span class="line">
+                      <For each={line.segments as ClientSegment[]}>
+                        {(segment) => (
+                          <span
+                            class={cn(
+                              { "font-bold": segment.pen.bold },
+                              segment.cursor
+                                ? [
+                                    `cursor cursor-${segment.cursor.shape}`,
+                                    {
+                                      "cursor-blinking":
+                                        segment.cursor.blinking,
+                                    },
+                                  ]
+                                : []
+                            )}
+                            style={{
+                              color: getSegmentColor(segment, "fg"),
+                              background: getSegmentColor(segment, "bg"),
+                              ...(segment.cursor
+                                ? {
+                                    "--fg": getSegmentColor(segment, "fg"),
+                                    "--bg": getSegmentColor(segment, "bg"),
+                                  }
+                                : {}),
+                            }}>
+                            {segment.text}
+                          </span>
+                        )}
+                      </For>
+                    </span>
+                  )}
+                </For>
+              </code>
             </div>
           </div>
           <div class="flex h-6 w-full">
@@ -320,11 +434,11 @@ const Terminalcap = (props: Props) => {
                 style={{ transform: `scaleX(${progress})` }}
               />
               <For each={decodedFrames}>
-                {([header]) => (
+                {({ time }) => (
                   <div
                     class="bg-colors-primary-700 absolute top-0 h-full w-px"
                     style={{
-                      left: `${Math.round((header.time / totalTime) * 100)}%`,
+                      left: `${Math.round((time / totalTime) * 100)}%`,
                     }}
                   />
                 )}
@@ -458,26 +572,27 @@ const content = css`
   display: flex;
   justify-content: center;
 
-  pre.shiki {
-    width: 100%;
-    display: inline-flex;
-    margin: 0;
-    padding: 0;
-    background: none;
-  }
-  code {
-    width: 100%;
-    // display: initial;
-    // flex-direction: column;
-    // align-items: flex-start;
-  }
+  // pre.shiki {
+  //   width: 100%;
+  //   display: inline-flex;
+  //   margin: 0;
+  //   padding: 0;
+  //   background: none;
+  // }
+  // code {
+  //   width: 100%;
+  //   // display: initial;
+  //   // flex-direction: column;
+  //   // align-items: flex-start;
+  // }
 
   .line {
     width: initial;
     // display: inline;
-    display: inline-flex;
+    // display: inline-flex;
     font-size: inherit !important;
     line-height: inherit !important;
+    white-space: pre;
 
     span:last-child {
       flex: 1;
@@ -485,18 +600,41 @@ const content = css`
     }
   }
 
-  .cursor-underline {
+  .cursor-block {
+    &.cursor-blinking {
+      animation: blinkingCursor 1s step-end infinite;
+    }
+  }
+  .cursor-underscore {
     text-decoration: underline;
   }
-  .cursor-block {
-    background: red;
+  .cursor-line {
+    margin-left: -2px;
+    border-left: solid 2px currentColor;
   }
   .cursor {
-    // background: red;
+    //
   }
   .cursor-hidden {
     text-decoration: none !important;
   }
+
+  :root {
+    --blink-bg-color: 200, 200, 200;
+  }
+
+  @keyframes blinkingCursor {
+    0%,
+    49% {
+      color: var(--fg);
+      background-color: var(--bg);
+    }
+    50%,
+    100% {
+      color: var(--bg);
+      background-color: var(--fg);
+    }
+  }
 `;
 
-export default Terminalcap;
+export default Asciinema;

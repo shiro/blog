@@ -1,4 +1,3 @@
-import { compileTermcap } from "../src/test.compile";
 import { PluginOption } from "vite";
 
 export const terminalcapVitePlugin = (): PluginOption => {
@@ -6,16 +5,18 @@ export const terminalcapVitePlugin = (): PluginOption => {
     name: "viteTermcapPlugin",
     enforce: "pre",
     async load(id: string) {
-      if (!id.endsWith(".termcap")) return undefined;
+      const [filepath] = id.split("?");
+      if (!filepath.endsWith(".cast")) return undefined;
 
-      const meta = await compileTermcap(id);
+      // const meta = await compileTermcap(filepath);
+      const meta = {};
 
       return {
         code: `
-import Terminalcap from "~/terminalcap/Terminalcap.vite";
-export default Terminalcap(${JSON.stringify(meta)});
+import Asciinema from "~/terminalcap/Asciinema.vite";
+export default Asciinema(${JSON.stringify(meta)});
           `,
-        moduleSideEffects: false,
+        moduleSideEffects: true,
       };
     },
   };
