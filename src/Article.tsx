@@ -10,7 +10,6 @@ import Icon from "~/components/Icon";
 import IconText from "~/components/IconText";
 import { getArticles } from "~/ssg/getArticles";
 import { remBase } from "~/style/fluidSizeTS";
-import Terminalcap from "~/Terminalcap";
 
 const articlesImportMap = import.meta.glob("./articles/*/*.mdx");
 const articles = getArticles();
@@ -201,6 +200,10 @@ const _Article = css`
   //   display: flex;
   //   justify-content: center;
   // }
+
+  --terminal-fg: var(--color-colors-text-600a);
+  --terminal-color4: var(--color-colors-primary-600);
+  --terminal-color10: var(--color-colors-secondary-600);
 `;
 
 export default Article;

@@ -1,6 +1,7 @@
 import fs from "fs";
 import repeat from "lodash/repeat.js";
 import Terminal from "asciinema-player/terminal.js";
+import AsciinemaVite from "~/terminalcap/Asciinema.vite";
 
 const hexToRGB = (hex: string) => {
   hex = hex.replace("#", "");
@@ -26,8 +27,8 @@ export interface Segment {
   charWidth: number;
   offset: number;
   pen: {
-    fg?: string;
-    bg?: string;
+    fg?: string | number;
+    bg?: string | number;
     bold?: boolean;
     inverse?: boolean;
   };
@@ -88,6 +89,25 @@ const closestColor = (targetColor: string, colorArray: string[]) => {
   return closestColor;
 };
 
+const terminalColors: Record<string, string> = {
+  "#000000": "black",
+  "#bb0000": "red",
+  "#00bb00": "green",
+  "#bbbb00": "yellow",
+  "#97bde3": "blue",
+  "#ff00ff": "magenta",
+  "#00bbbb": "cyan",
+  "#eeeeee": "white",
+  "#555555": "brightBlack",
+  "#ff5555": "brightRed",
+  "#00ff00": "brightGreen",
+  "#ffff55": "brightYellow",
+  "#32afff": "brightBlue",
+  "#ff55ff": "brightMagenta",
+  "#55ffff": "brightCyan",
+  "#ffffff": "brightWhite",
+};
+
 const namedColorsMap: Record<string, string> = {
   black: "#000000",
   red: "#bb0000",
@@ -101,25 +121,25 @@ const namedColorsMap: Record<string, string> = {
   brightRed: "#ff5555",
   brightGreen: "#00ff00",
   brightYellow: "#ffff55",
-  brightBlue: "#97bde3",
+  brightBlue: "#32afff",
   brightMagenta: "#ff55ff",
   brightCyan: "#55ffff",
   brightWhite: "#ffffff",
   //
   // "2": "#bb0000",
 
-  1: "#CC4542",
-  2: "#F5C504",
-  3: "#90C93F",
-  4: "#569E16",
-  5: "#93784E",
-  6: "#CE830D",
-  7: "#458383",
-  8: "#007E8A",
-  9: "#7A7A43",
-  10: "#DD6718",
-  11: "#CC4542",
-  12: "#ff55ff",
+  // 1: "#CC4542",
+  // 2: "#F5C504",
+  // 3: "#90C93F",
+  // 4: "#569E16",
+  // 5: "#93784E",
+  // 6: "#CE830D",
+  // 7: "#458383",
+  // 8: "#007E8A",
+  // 9: "#7A7A43",
+  // 10: "#DD6718",
+  // 11: "#CC4542",
+  // 12: "#ff55ff",
 };
 
 const colors = [
@@ -209,7 +229,9 @@ const addCursor = (header: FrameHeader, frame: string) => {
   return undefined;
 };
 
-export const compileAsciinema = async (filepath: string) => {
+type Meta = Parameters<typeof AsciinemaVite>[0];
+
+export const compileAsciinema = async (filepath: string): Promise<Meta> => {
   let raw = fs
     .readFileSync(filepath)
     .toString()
@@ -247,12 +269,15 @@ export const compileAsciinema = async (filepath: string) => {
               ...VTSegment,
               pen: Object.fromEntries(VTSegment.pen.entries()),
             };
-            if (segment.pen.fg && namedColorsMap[segment.pen.fg]) {
-              segment.pen.fg = namedColorsMap[segment.pen.fg];
-            }
-            if (segment.pen.bg && namedColorsMap[segment.pen.bg]) {
-              segment.pen.bg = namedColorsMap[segment.pen.bg];
-            }
+            console.log(segment.pen.fg);
+            // fg/bg it's a number from 1-16 or string "#ffffff"
+
+            // if (segment.pen.fg && namedColorsMap[segment.pen.fg]) {
+            //   segment.pen.fg = namedColorsMap[segment.pen.fg];
+            // }
+            // if (segment.pen.bg && namedColorsMap[segment.pen.bg]) {
+            //   segment.pen.bg = namedColorsMap[segment.pen.bg];
+            // }
             return segment;
           });
 

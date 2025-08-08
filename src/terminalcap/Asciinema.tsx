@@ -19,6 +19,7 @@ import {
   TermcapHeader,
 } from "~/terminalcap/asciinema.server";
 import { cloneDeep } from "lodash";
+import { themeColorList, themeColors } from "~/style/colorsTs";
 
 interface Props extends Partial<ReturnType<typeof useTerminalcapState>> {
   class?: string;
@@ -35,6 +36,42 @@ const COLS = 100;
 interface ClientSegment extends Segment {
   cursor?: Cursor;
 }
+
+let GlobalTheme = $signal<"dark" | "light">("dark");
+
+const getThemeColors = () => ["#ff0000"];
+
+const hexToRGB = (hex: string) => {
+  hex = hex.replace("#", "");
+
+  const r = parseInt(hex.slice(0, 2), 16);
+  const g = parseInt(hex.slice(2, 4), 16);
+  const b = parseInt(hex.slice(4, 6), 16);
+
+  return [r, g, b];
+};
+
+const closestColor = (targetColor: string, colorArray: string[]) => {
+  let closestDistance = Number.MAX_VALUE;
+  let closestColor: string | undefined;
+
+  const [r1, g1, b1] = hexToRGB(targetColor);
+
+  colorArray.forEach((color) => {
+    const [r2, g2, b2] = hexToRGB(color);
+    const distance = Math.sqrt(
+      (r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2
+    );
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestColor = color;
+    }
+  });
+
+  console.log(closestColor);
+
+  return closestColor;
+};
 
 // const getScale = (x: number) => (-0.29 * x + 138) / 100;
 
@@ -168,14 +205,22 @@ const Asciinema = (props: Props) => {
 
   let decodedFrames = $memo(decode(encodedFrames));
 
-  const getSegmentColor = (segment: ClientSegment, name: "fg" | "bg") =>
-    name == "fg"
+  const getSegmentColor = (segment: ClientSegment, name: "fg" | "bg") => {
+    const g = (c?: string | number) => {
+      // console.log(c);
+      if (!c) return undefined;
+      if (typeof c == "string") return closestColor(c, getThemeColors());
+      return `var(--terminal-color${c})`;
+    };
+
+    return name == "fg"
       ? segment.pen.inverse
-        ? (segment.pen.bg ?? "var(--fallback-bg)")
-        : (segment.pen.fg ?? header.theme.foreground)
+        ? (g(segment.pen.bg) ?? "var(--fallback-bg)")
+        : (g(segment.pen.fg) ?? "var(--terminal-fg)")
       : segment.pen.inverse
-        ? (segment.pen.fg ?? header.theme.foreground)
-        : (segment.pen.bg ?? "var(--fallback-bg)");
+        ? (g(segment.pen.fg) ?? "var(--terminal-fg)")
+        : (g(segment.pen.bg) ?? "var(--fallback-bg)");
+  };
 
   const totalTime = $memo(
     (() => {
@@ -600,17 +645,58 @@ const content = css`
     }
   }
 
-  .cursor-block {
+  .cursor-block,
+  .cursor-default {
     &.cursor-blinking {
-      animation: blinkingCursor 1s step-end infinite;
+      animation: blinkingCursorBlock 1s step-end infinite;
+      @keyframes blinkingCursorBlock {
+        0%,
+        49% {
+          color: var(--fg);
+          background-color: var(--bg);
+        }
+        50%,
+        100% {
+          color: var(--bg);
+          background-color: var(--fg);
+        }
+      }
     }
   }
   .cursor-underscore {
     text-decoration: underline;
+
+    &.cursor-blinking {
+      animation: blinkingCursorUnderscore 1s step-end infinite;
+      @keyframes blinkingCursorUnderscore {
+        0%,
+        49% {
+          text-decoration: underline;
+        }
+        50%,
+        100% {
+          text-decoration: none;
+        }
+      }
+    }
   }
   .cursor-line {
-    margin-left: -2px;
+    // margin-left: -2px;
     border-left: solid 2px currentColor;
+
+    &.cursor-blinking {
+      animation: blinkingCursorLine 1s step-end infinite;
+      @keyframes blinkingCursorLine {
+        0%,
+        49% {
+          border-left-color: var(--fg);
+        }
+        50%,
+        100% {
+          border-left-color: var(--bg);
+        }
+      }
+    }
   }
   .cursor {
     //
@@ -621,19 +707,6 @@ const content = css`
 
   :root {
     --blink-bg-color: 200, 200, 200;
-  }
-
-  @keyframes blinkingCursor {
-    0%,
-    49% {
-      color: var(--fg);
-      background-color: var(--bg);
-    }
-    50%,
-    100% {
-      color: var(--bg);
-      background-color: var(--fg);
-    }
   }
 `;
 
