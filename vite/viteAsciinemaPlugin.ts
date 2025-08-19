@@ -1,15 +1,16 @@
 import { PluginOption } from "vite";
+import { compileAsciinema } from "../src/terminalcap/asciinema.server";
 
-export const terminalcapVitePlugin = (): PluginOption => {
+export const viteAsciinemaPlugin = (): PluginOption => {
   return {
-    name: "viteTermcapPlugin",
+    name: "viteAsciinemaPlugin",
     enforce: "pre",
     async load(id: string) {
       const [filepath] = id.split("?");
       if (!filepath.endsWith(".cast")) return undefined;
 
-      // const meta = await compileTermcap(filepath);
-      const meta = {};
+      const meta = await compileAsciinema(filepath);
+      // const meta = {};
 
       return {
         code: `

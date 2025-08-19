@@ -4,10 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  ansi-sequence-parser: link:../ansi-sequence-parser
-  asciinema-player: link:../../.local/share/pnpm/global/5/node_modules/asciinema-player
-
 importers:
 
   .:
@@ -57,12 +53,9 @@ importers:
       '@wyw-in-js/vite':
         specifier: 0.6.0
         version: 0.6.0(typescript@5.8.2)(vite@6.2.3(@types/node@22.12.0)(jiti@2.4.2)(lightningcss@1.29.2)(sass@1.84.0)(terser@5.37.0)(yaml@2.7.0))
-      ansi-sequence-parser:
-        specifier: link:../ansi-sequence-parser
-        version: link:../ansi-sequence-parser
       asciinema-player:
-        specifier: link:../../.local/share/pnpm/global/5/node_modules/asciinema-player
-        version: link:../../.local/share/pnpm/global/5/node_modules/asciinema-player
+        specifier: file:tarballs/asciinema-player.tar.gz
+        version: file:tarballs/asciinema-player.tar.gz
       babel-plugin-transform-remove-imports:
         specifier: 1.8.0
         version: 1.8.0(@babel/core@7.26.7)
@@ -339,6 +332,10 @@ packages:
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
+
+  '@babel/runtime@7.28.2':
+    resolution: {integrity: sha512-KHp2IflsnGywDjBWDkR9iEqiWSpc8GIi0lgTT3mOElT0PP1tG26P4tmFI2YvAdzgq9RGyoHZQEIEdZy6Ec5xCA==}
+    engines: {node: '>=6.9.0'}
 
   '@babel/standalone@7.26.7':
     resolution: {integrity: sha512-Fvdo9Dd20GDUAREzYMIR2EFMKAJ+ccxstgQdb39XV/yvygHL4UPcqgTkiChPyltAe/b+zgq+vUPXeukEZ6aUeA==}
@@ -2093,6 +2090,10 @@ packages:
 
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
+
+  asciinema-player@file:tarballs/asciinema-player.tar.gz:
+    resolution: {integrity: sha512-kEikRj+wwUNz844TRyXD5XEFvG4NPofKbZCF/hY36ojRdToYycdxer4foh16SXH6yW4GQeAaj4F3pLUNEKlMdA==, tarball: file:tarballs/asciinema-player.tar.gz}
+    version: 3.10.0
 
   ast-types@0.16.1:
     resolution: {integrity: sha512-6t10qk83GOG8p0vKmaCr8eiilZwO171AvbROMtvvNiwrTly62t+7XkA8RdIIVbpMhCASAsxgAzdRSwh6nw/5Dg==}
@@ -5344,6 +5345,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@babel/runtime@7.28.2': {}
+
   '@babel/standalone@7.26.7': {}
 
   '@babel/template@7.25.9':
@@ -7059,6 +7062,11 @@ snapshots:
       sprintf-js: 1.0.3
 
   argparse@2.0.1: {}
+
+  asciinema-player@file:tarballs/asciinema-player.tar.gz:
+    dependencies:
+      '@babel/runtime': 7.28.2
+      solid-js: 1.9.5
 
   ast-types@0.16.1:
     dependencies:

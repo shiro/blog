@@ -1,5 +1,5 @@
 import { css } from "@linaria/core";
-import { normalizeColorName, themeColorList } from "~/style/colorsTs";
+import { normalizeColorName, themeColorNameList } from "~/style/colorsTs";
 import {
   bigText,
   bodyText,
@@ -20,7 +20,7 @@ import {
 } from "~/style/commonStyle";
 import { pxToRem } from "~/style/fluidSizeTS";
 
-const twColors = themeColorList
+const twColors = themeColorNameList
   .map(normalizeColorName)
   .map((color) => `--color-${color}: var(--color-${color});`)
   .join("\n");

@@ -32,26 +32,26 @@ const DialogAsciinema = (props: Props) => {
         class="mt-16 mb-16"
         fullscreenButtonComponent={Dialog.Trigger}
       />
-      {/* <Dialog.Portal> */}
-      {/*   <Dialog.Overlay */}
-      {/*     class="fixed inset-0 z-50 cursor-pointer" */}
-      {/*     style={{ background: "rgba(0, 0, 0, 0.5)" }} */}
-      {/*     onClick={() => handleChange(false)} */}
-      {/*   /> */}
-      {/*   <div class="fixed inset-0 z-51 flex items-center justify-center"> */}
-      {/*     <Dialog.Content class="flex w-[100vw] items-center justify-stretch"> */}
-      {/*       <Terminalcap */}
-      {/*         {...state2} */}
-      {/*         {...props} */}
-      {/*         fullscreenExitButtonComponent={Dialog.CloseButton} */}
-      {/*         class={css` */}
-      {/*           --max-font-size: ${textDefinitions.body.size}px !important; */}
-      {/*         `} */}
-      {/*         onClickOutside={() => handleChange(false)} */}
-      {/*       /> */}
-      {/*     </Dialog.Content> */}
-      {/*   </div> */}
-      {/* </Dialog.Portal> */}
+      <Dialog.Portal>
+        <Dialog.Overlay
+          class="fixed inset-0 z-50 cursor-pointer"
+          style={{ background: "rgba(0, 0, 0, 0.5)" }}
+          onClick={() => handleChange(false)}
+        />
+        <div class="fixed inset-0 z-51 flex items-center justify-center">
+          <Dialog.Content class="flex w-[100vw] items-center justify-stretch">
+            <Asciinema
+              {...state2}
+              {...props}
+              fullscreenExitButtonComponent={Dialog.CloseButton}
+              class={css`
+                --max-font-size: ${textDefinitions.body.size}px !important;
+              `}
+              onClickOutside={() => handleChange(false)}
+            />
+          </Dialog.Content>
+        </div>
+      </Dialog.Portal>
     </Dialog.Root>
   );
 };

@@ -1,8 +1,19 @@
 import { Component, ComponentProps } from "solid-js";
 import DialogAsciinema from "~/terminalcap/DialogAsciinema";
-import { debugCompileAsciinema } from "~/terminalcap/debugAsciinema.compile";
-import { TermcapHeader, Segment } from "~/terminalcap/asciinema.server";
+import type { TermcapHeader } from "~/terminalcap/asciinema.server";
 import Asciinema from "~/terminalcap/Asciinema";
+import { useContext } from "solid-js";
+import { createContext } from "solid-js";
+
+interface AsciinemaContextValue
+  extends Pick<
+    ComponentProps<typeof DialogAsciinema>,
+    "backgroundColor" | "foregroundColor" | "colors"
+  > {}
+
+const AsciinemaContext = createContext<AsciinemaContextValue>(undefined);
+const useAsciinemaContext = () => useContext(AsciinemaContext);
+export const AsciinemaProvider = AsciinemaContext.Provider;
 
 interface Meta {
   header: TermcapHeader;
@@ -10,9 +21,9 @@ interface Meta {
 }
 
 const AsciinemaVite: (meta: Meta) => Component = (meta) => () => {
-  meta = debugCompileAsciinema();
+  const ctx = useAsciinemaContext();
 
-  return <DialogAsciinema {...meta} />;
+  return <DialogAsciinema {...meta} {...ctx} />;
 };
 
 export default AsciinemaVite;

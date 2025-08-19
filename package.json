@@ -26,8 +26,7 @@
     "@vinxi/plugin-mdx": "3.7.2",
     "@wyw-in-js/transform": "0.6.0",
     "@wyw-in-js/vite": "0.6.0",
-    "ansi-sequence-parser": "link:../ansi-sequence-parser",
-    "asciinema-player": "link:../../.local/share/pnpm/global/5/node_modules/asciinema-player",
+    "asciinema-player": "file:tarballs/asciinema-player.tar.gz",
     "babel-plugin-transform-remove-imports": "1.8.0",
     "classnames": "2.5.1",
     "cssnano": "6.1.2",
@@ -73,11 +72,5 @@
     "textdiff-patch": "^1.1.10",
     "ts-node": "10.9.2",
     "vite-plugin-solid-svg": "0.8.1"
-  },
-  "pnpm": {
-    "overrides": {
-      "ansi-sequence-parser": "link:../ansi-sequence-parser",
-      "asciinema-player": "link:../../.local/share/pnpm/global/5/node_modules/asciinema-player"
-    }
   }
 }

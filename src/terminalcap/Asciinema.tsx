@@ -19,7 +19,8 @@ import {
   TermcapHeader,
 } from "~/terminalcap/asciinema.server";
 import { cloneDeep } from "lodash";
-import { themeColorList, themeColors } from "~/style/colorsTs";
+
+type RGBColor = [number, number, number];
 
 interface Props extends Partial<ReturnType<typeof useTerminalcapState>> {
   class?: string;
@@ -28,6 +29,9 @@ interface Props extends Partial<ReturnType<typeof useTerminalcapState>> {
   fullscreenButtonComponent?: ValidComponent;
   fullscreenExitButtonComponent?: ValidComponent;
   onClickOutside?: () => void;
+  foregroundColor?: () => string;
+  backgroundColor?: () => string;
+  colors?: () => RGBColor[];
 }
 
 const FINAL_FRAME_TIME = 1000;
@@ -36,10 +40,6 @@ const COLS = 100;
 interface ClientSegment extends Segment {
   cursor?: Cursor;
 }
-
-let GlobalTheme = $signal<"dark" | "light">("dark");
-
-const getThemeColors = () => ["#ff0000"];
 
 const hexToRGB = (hex: string) => {
   hex = hex.replace("#", "");
@@ -51,24 +51,25 @@ const hexToRGB = (hex: string) => {
   return [r, g, b];
 };
 
-const closestColor = (targetColor: string, colorArray: string[]) => {
+const closestColor = (
+  targetColor: string,
+  colorArray: [number, number, number][]
+) => {
   let closestDistance = Number.MAX_VALUE;
   let closestColor: string | undefined;
 
   const [r1, g1, b1] = hexToRGB(targetColor);
 
   colorArray.forEach((color) => {
-    const [r2, g2, b2] = hexToRGB(color);
+    const [r2, g2, b2] = color;
     const distance = Math.sqrt(
       (r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2
     );
     if (distance < closestDistance) {
       closestDistance = distance;
-      closestColor = color;
+      closestColor = `rgb(${color.join(", ")})`;
     }
   });
-
-  console.log(closestColor);
 
   return closestColor;
 };
@@ -198,8 +199,18 @@ const Asciinema = (props: Props) => {
     header,
     fullscreenButtonComponent,
     fullscreenExitButtonComponent,
+    foregroundColor: _foregroundColor,
+    backgroundColor: _backgroundColor,
+    colors,
     ...state
   } = $destructure(props);
+
+  const foregroundColor = $memo(
+    _foregroundColor?.() ?? header?.theme?.foreground ?? "currentColor"
+  );
+  const backgroundColor = $memo(
+    _backgroundColor?.() ?? header?.theme?.background ?? "#ffffff"
+  );
 
   // header.width = COLS;
 
@@ -207,19 +218,21 @@ const Asciinema = (props: Props) => {
 
   const getSegmentColor = (segment: ClientSegment, name: "fg" | "bg") => {
     const g = (c?: string | number) => {
-      // console.log(c);
       if (!c) return undefined;
-      if (typeof c == "string") return closestColor(c, getThemeColors());
-      return `var(--terminal-color${c})`;
+      if (typeof c == "string") {
+        if (colors) return closestColor(c, colors());
+        return c;
+      }
+      return `var(--terminal-color-${c}, var(--fallback-terminal-color-${c}))`;
     };
 
     return name == "fg"
       ? segment.pen.inverse
-        ? (g(segment.pen.bg) ?? "var(--fallback-bg)")
-        : (g(segment.pen.fg) ?? "var(--terminal-fg)")
+        ? (g(segment.pen.bg) ?? backgroundColor)
+        : (g(segment.pen.fg) ?? foregroundColor)
       : segment.pen.inverse
-        ? (g(segment.pen.fg) ?? "var(--terminal-fg)")
-        : (g(segment.pen.bg) ?? "var(--fallback-bg)");
+        ? (g(segment.pen.fg) ?? foregroundColor)
+        : (g(segment.pen.bg) ?? backgroundColor);
   };
 
   const totalTime = $memo(
@@ -361,8 +374,16 @@ const Asciinema = (props: Props) => {
     $cleanup(() => observer.disconnect());
   });
 
+  const fallbackTerminalColors = header.theme?.palette?.reduce(
+    (acc, value, idx) => ({
+      ...acc,
+      [`--fallback-terminal-color-${idx}`]: value,
+    }),
+    {} as Record<string, string>
+  );
+
   return (
-    <div class={cn(container, $class, "w-full")}>
+    <div class={cn(container, $class, "w-full")} style={fallbackTerminalColors}>
       <div
         class={cn(innerContainer, "flex justify-center", {
           "cursor-pointer": props.onClickOutside,
@@ -378,11 +399,11 @@ const Asciinema = (props: Props) => {
         style={{ "--scale": 0.6 }}>
         <div
           ref={boxRef}
-          class={cn("bg-colors-primary-50 flex cursor-auto flex-col", box)}
-          style={{ "--fallback-bg": color("colors/primary-50") }}
+          class={cn("flex cursor-auto flex-col", box)}
           onFocusOut={() => (contentFocused = false)}
           onKeyDown={handleKeyDown}
-          tabindex={0}>
+          tabindex={0}
+          style={{ background: backgroundColor }}>
           <div class="m-2">
             <div class="relative flex flex-col">
               {/* X spacer */}
@@ -478,16 +499,16 @@ const Asciinema = (props: Props) => {
                 )}
                 style={{ transform: `scaleX(${progress})` }}
               />
-              <For each={decodedFrames}>
-                {({ time }) => (
-                  <div
-                    class="bg-colors-primary-700 absolute top-0 h-full w-px"
-                    style={{
-                      left: `${Math.round((time / totalTime) * 100)}%`,
-                    }}
-                  />
-                )}
-              </For>
+              {/* <For each={decodedFrames}> */}
+              {/*   {({ time }) => ( */}
+              {/*     <div */}
+              {/*       class="bg-colors-primary-700 absolute top-0 h-full w-px" */}
+              {/*       style={{ */}
+              {/*         left: `${Math.round((time / totalTime) * 100)}%`, */}
+              {/*       }} */}
+              {/*     /> */}
+              {/*   )} */}
+              {/* </For> */}
             </div>
             <Show when={fullscreenButtonComponent}>
               <div class="text-sub mr-2 ml-2 flex gap-2">

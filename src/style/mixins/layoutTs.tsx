@@ -1,6 +1,6 @@
 import {
     normalizeColorName,
-    themeColorList,
+    themeColorNameList,
     themeColors,
 } from "~/style/colorsTs";
 import { _breakpoint, _breakpointUntil } from "~/style/sizesTS";
@@ -39,7 +39,7 @@ export const _color = (value: string) => {
 
     const important = rest.some((v) => v == "!important");
 
-    if (!themeColorList.includes(value)) {
+    if (!themeColorNameList.includes(value)) {
         console.warn(
             `color '${value}' was not found in the current color palette`
         );
@@ -53,7 +53,7 @@ export const _color = (value: string) => {
 type ColorTheme = "light" | "dark";
 
 export const _staticColor = (value: string, theme: ColorTheme) => {
-    if (!themeColorList.includes(value)) {
+    if (!themeColorNameList.includes(value)) {
         console.warn(
             `color '${value}' was not found in the current color palette`
         );
