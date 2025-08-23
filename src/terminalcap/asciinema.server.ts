@@ -76,12 +76,13 @@ export const compileAsciinema = async (filepath: string): Promise<Meta> => {
     cols: number;
     rows: number;
     events: [number, string, string][];
-    theme: {
-      foreground: string;
-      background: string;
-      palette: string[];
+    theme?: {
+      foreground?: string;
+      background?: string;
+      palette?: string[];
     };
   };
+  header.theme = undefined;
 
   const VT = await VTPromise;
   const vt = VT.create(header.cols, header.rows, false, 0);

@@ -34,6 +34,28 @@ interface Props extends Partial<ReturnType<typeof useTerminalcapState>> {
   colors?: () => RGBColor[];
 }
 
+const DEFAULT_COLORS = [
+  "#2E3436",
+  "#CC0000",
+  "#4E9A06",
+  "#C4A000",
+  "#3465A4",
+  "#75507B",
+  "#06989A",
+  "#D3D7CF",
+  "#555753",
+  "#EF2929",
+  "#8AE234",
+  "#FCE94F",
+  "#729FCF",
+  "#AD7FA8",
+  "#34E2E2",
+  "#EEEEEC",
+];
+
+const DEFAULT_FOREGROUND = "#300924";
+const DEFAULT_BACKGROUND = "#FFFFFF";
+
 const FINAL_FRAME_TIME = 1000;
 const COLS = 100;
 
@@ -374,10 +396,11 @@ const Asciinema = (props: Props) => {
     $cleanup(() => observer.disconnect());
   });
 
-  const fallbackTerminalColors = header.theme?.palette?.reduce(
-    (acc, value, idx) => ({
+  const fallbackTerminalColors = DEFAULT_COLORS.reduce(
+    (acc, defaultValue, idx) => ({
       ...acc,
-      [`--fallback-terminal-color-${idx}`]: value,
+      [`--fallback-terminal-color-${idx}`]:
+        header.theme?.palette?.[idx] ?? defaultValue,
     }),
     {} as Record<string, string>
   );
