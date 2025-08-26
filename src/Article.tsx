@@ -4,14 +4,12 @@ import { Meta } from "@solidjs/meta";
 import cn from "classnames";
 import { Component, children, lazy } from "solid-js";
 import DialogImage from "~/DialogImage";
-import LazyImage from "~/LazyImage";
 import Spoiler from "~/Spoiler";
 import Icon from "~/components/Icon";
 import IconText from "~/components/IconText";
 import { getArticles } from "~/ssg/getArticles";
 import { themeColors } from "~/style/colorsTs";
-import { color } from "~/style/commonStyle";
-import { remBase } from "~/style/fluidSizeTS";
+import { color, textDefinitions } from "~/style/commonStyle";
 import { AsciinemaProvider } from "~/terminalcap/Asciinema.vite";
 
 const articlesImportMap = import.meta.glob("./articles/*/*.mdx");
@@ -26,22 +24,50 @@ interface Props {
   className?: string;
 }
 
-function extractRGBComponents(rgbaString: string): [number, number, number] {
-  const start = rgbaString.indexOf("(") + 1;
-  const end = rgbaString.indexOf(")");
-  const rgbComponents = rgbaString
-    .substring(start, end)
-    .split(",")
-    .map((component) => Number(component.trim()));
-  return rgbComponents.slice(0, 3) as [number, number, number];
-}
+const {
+  "terminal/background": black,
+  "terminal/red": red,
+  "terminal/green": green,
+  "terminal/yellow": yellow,
+  "terminal/blue": blue,
+  "terminal/magenta": magenta,
+  "terminal/cyan": cyan,
+  "terminal/white": white,
+  "terminal/brightRed": brightRed,
+  "terminal/brightGreen": brightGreen,
+  "terminal/brightYellow": brightYellow,
+  "terminal/brightBlue": brightBlue,
+  "terminal/brightMagenta": brightMagenta,
+  "terminal/brightCyan": brightCyan,
+  "terminal/brightWhite": brightWhite,
+  ...otherColors
+} = themeColors.dark;
 
-const themeColorList = Object.entries(themeColors.dark)
-  .filter(([k, v]) => k.startsWith("terminal/"))
-  .map(([k, v]) => extractRGBComponents(v));
-
-themeColorList.push(extractRGBComponents(themeColors.dark["colors/text-600a"]));
-// themeColorList.push(extractRGBComponents("rgb(56, 55, 53)"));
+const themeColorList = [
+  // normal
+  black,
+  red,
+  green,
+  yellow,
+  blue,
+  magenta,
+  cyan,
+  white,
+  black,
+  // bright
+  brightRed,
+  brightGreen,
+  brightYellow,
+  brightBlue,
+  brightMagenta,
+  brightCyan,
+  brightWhite,
+  // other
+  themeColors.dark["colors/text-600a"],
+  ...Object.entries(otherColors)
+    .filter(([k, v]) => k.startsWith("terminal/"))
+    .map(([k, v]) => v),
+];
 
 const Article: Component<Props> = (props) => {
   const { name } = $destructure(props);
@@ -54,6 +80,11 @@ const Article: Component<Props> = (props) => {
         foregroundColor: () => color("colors/text-600a"),
         backgroundColor: () => color("colors/primary-50"),
         colors: () => themeColorList,
+        autoplay: true,
+        disableTrueColor: true,
+        forceCustomTheme: true,
+        maxFontSize: `${textDefinitions.sub.size}px`,
+        dialogMaxFontSize: `${textDefinitions.body.size}px`,
       }}>
       <div class={cn(_Article, props.className)}>
         <Meta name="description" content={meta.description} />
@@ -88,7 +119,6 @@ const Article: Component<Props> = (props) => {
               return (
                 <figure class="mt-8 mb-8 flex justify-center">
                   <div>
-                    {/* <img {...props} class="ml-auto mr-auto" /> */}
                     <DialogImage
                       thumbnail={props.thumbnail ?? props.src}
                       image={props.src}
@@ -215,9 +245,7 @@ const Article: Component<Props> = (props) => {
               }
               return null;
             },
-            ["data-err"]: (props: any) => {
-              return null;
-            },
+            ["data-err"]: () => null,
           }}
         />
       </div>
@@ -226,15 +254,6 @@ const Article: Component<Props> = (props) => {
 };
 
 const _Article = css`
-  ${LazyImage.styles.container} {
-    // width: calc((var(--width) / 16) * ${remBase}rem);
-    // height: calc((var(--height) / 16) * ${remBase}rem);
-  }
-  // figure {
-  //   display: flex;
-  //   justify-content: center;
-  // }
-
   --terminal-fg: var(--color-colors-text-600a);
   --terminal-color4: var(--color-colors-primary-600);
   --terminal-color10: var(--color-colors-secondary-600);

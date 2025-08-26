@@ -1,12 +1,23 @@
 import { ComponentProps } from "solid-js";
 import Asciinema, { useTerminalcapState } from "~/terminalcap/Asciinema";
+import cn from "classnames";
 import { Dialog } from "@kobalte/core";
-import { css } from "@linaria/core";
-import { textDefinitions } from "~/style/commonStyle";
 
-interface Props extends ComponentProps<typeof Asciinema> {}
+interface Props
+  extends Omit<
+    ComponentProps<typeof Asciinema>,
+    | "class"
+    | "onClickOutside"
+    | "fullscreenButtonComponent"
+    | "fullscreenExitButtonComponent"
+    | keyof ReturnType<typeof useTerminalcapState>
+  > {
+  class?: string;
+  dialogMaxFontSize?: string;
+}
 
 const DialogAsciinema = (props: Props) => {
+  const { class: $class, dialogMaxFontSize, ...rest } = $destructure(props);
   const state1 = useTerminalcapState();
   const state2 = useTerminalcapState();
   let fullscreen = $signal(false);
@@ -28,9 +39,19 @@ const DialogAsciinema = (props: Props) => {
     <Dialog.Root open={fullscreen} onOpenChange={handleChange}>
       <Asciinema
         {...state1}
-        {...props}
-        class="mt-16 mb-16"
+        {...rest}
+        class={cn($class, "mt-16 mb-16")}
         fullscreenButtonComponent={Dialog.Trigger}
+        onKeyDown={(ev) => {
+          rest.onKeyDown?.(ev);
+          if (ev.defaultPrevented) return;
+          switch (ev.key) {
+            case "f": {
+              handleChange(true);
+              break;
+            }
+          }
+        }}
       />
       <Dialog.Portal>
         <Dialog.Overlay
@@ -42,11 +63,9 @@ const DialogAsciinema = (props: Props) => {
           <Dialog.Content class="flex w-[100vw] items-center justify-stretch">
             <Asciinema
               {...state2}
-              {...props}
+              {...rest}
+              maxFontSize={dialogMaxFontSize ?? rest.maxFontSize}
               fullscreenExitButtonComponent={Dialog.CloseButton}
-              class={css`
-                --max-font-size: ${textDefinitions.body.size}px !important;
-              `}
               onClickOutside={() => handleChange(false)}
             />
           </Dialog.Content>

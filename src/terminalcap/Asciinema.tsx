@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
 import cn from "classnames";
-import { boxShadow, textDefinitions } from "~/style/commonStyle";
+import { boxShadow } from "~/style/commonStyle";
 import { subText } from "~/style/commonStyle";
 import { color } from "~/style/commonStyle";
 import Icon from "~/components/Icon";
@@ -20,7 +20,7 @@ import {
 } from "~/terminalcap/asciinema.server";
 import { cloneDeep } from "lodash";
 
-type RGBColor = [number, number, number];
+export type RGBColor = [number, number, number];
 
 interface Props extends Partial<ReturnType<typeof useTerminalcapState>> {
   class?: string;
@@ -28,79 +28,123 @@ interface Props extends Partial<ReturnType<typeof useTerminalcapState>> {
   encodedFrames: Frame[];
   fullscreenButtonComponent?: ValidComponent;
   fullscreenExitButtonComponent?: ValidComponent;
+  disableTrueColor?: boolean;
+  forceCustomTheme?: boolean;
+  maxFontSize?: string;
+  autoplay?: boolean;
+  onKeyDown?: (ev: KeyboardEvent) => void;
   onClickOutside?: () => void;
   foregroundColor?: () => string;
   backgroundColor?: () => string;
-  colors?: () => RGBColor[];
+  colors?: () => string[];
 }
 
-const DEFAULT_COLORS = [
-  "#2E3436",
-  "#CC0000",
-  "#4E9A06",
-  "#C4A000",
-  "#3465A4",
-  "#75507B",
-  "#06989A",
-  "#D3D7CF",
-  "#555753",
-  "#EF2929",
-  "#8AE234",
-  "#FCE94F",
-  "#729FCF",
-  "#AD7FA8",
-  "#34E2E2",
-  "#EEEEEC",
-];
+const DEFAULT_COLORS = () => {
+  const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+  if (prefersDarkScheme) {
+    // https://github.com/Gogh-Co/Gogh/blob/dfc128e018aa4d7429f0a5bbd8a90955e36f0752/themes/Gruvbox%20Dark.yml
+    return [
+      "#282828",
+      "#CC241D",
+      "#98971A",
+      "#D79921",
+      "#458588",
+      "#B16286",
+      "#689D6A",
+      "#A89984",
+      "#928374",
+      "#FB4934",
+      "#B8BB26",
+      "#FABD2F",
+      "#83A598",
+      "#D3869B",
+      "#8EC07C",
+      "#EBDBB2",
+    ];
+  }
 
-const DEFAULT_FOREGROUND = "#300924";
-const DEFAULT_BACKGROUND = "#FFFFFF";
+  // https://github.com/Gogh-Co/Gogh/blob/dfc128e018aa4d7429f0a5bbd8a90955e36f0752/themes/Gruvbox.yml
+  return [
+    "#FBF1C7",
+    "#CC241D",
+    "#98971A",
+    "#D79921",
+    "#458588",
+    "#B16286",
+    "#689D6A",
+    "#7C6F64",
+    "#928374",
+    "#9D0006",
+    "#79740E",
+    "#B57614",
+    "#076678",
+    "#8F3F71",
+    "#427B58",
+    "#3Cl836",
+  ];
+};
 
+const DEFAULT_BACKGROUND = () => DEFAULT_COLORS()[0];
+const DEFAULT_FOREGROUND = () => DEFAULT_COLORS()[15];
+
+/** keep the last frame up for a bit */
 const FINAL_FRAME_TIME = 1000;
-const COLS = 100;
 
 interface ClientSegment extends Segment {
   cursor?: Cursor;
 }
 
-const hexToRGB = (hex: string) => {
-  hex = hex.replace("#", "");
+const toRGB = (input: string | RGBColor): RGBColor => {
+  if (Array.isArray(input)) return input;
 
-  const r = parseInt(hex.slice(0, 2), 16);
-  const g = parseInt(hex.slice(2, 4), 16);
-  const b = parseInt(hex.slice(4, 6), 16);
+  if (input.startsWith("rgb")) {
+    const start = input.indexOf("(") + 1;
+    const end = input.indexOf(")", start);
+    const rgbComponents = input
+      .substring(start, end)
+      .split(",")
+      .map((component) => Number(component.trim()));
+    return rgbComponents.slice(0, 3) as [number, number, number];
+  }
+
+  input = input.replace("#", "");
+
+  const r = parseInt(input.slice(0, 2), 16);
+  const g = parseInt(input.slice(2, 4), 16);
+  const b = parseInt(input.slice(4, 6), 16);
 
   return [r, g, b];
 };
 
-const closestColor = (
-  targetColor: string,
+const closestColorIndex = (
+  targetColor: RGBColor,
   colorArray: [number, number, number][]
 ) => {
   let closestDistance = Number.MAX_VALUE;
-  let closestColor: string | undefined;
+  let closest = 0;
 
-  const [r1, g1, b1] = hexToRGB(targetColor);
+  const [r1, g1, b1] = targetColor;
 
-  colorArray.forEach((color) => {
+  colorArray.forEach((color, idx) => {
     const [r2, g2, b2] = color;
     const distance = Math.sqrt(
       (r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2
     );
     if (distance < closestDistance) {
       closestDistance = distance;
-      closestColor = `rgb(${color.join(", ")})`;
+      closest = idx;
     }
   });
 
-  return closestColor;
+  return closest;
 };
 
-// const getScale = (x: number) => (-0.29 * x + 138) / 100;
-
-/** Supports up to 300 columns. */
-const getScale = (x: number) =>
-  (266.3 - 1.388 * x + 0.002235 * Math.pow(x, 2)) / 100;
+/**
+ * Magick number scaling function that always scales the terminal text correctly.
+ * Supports up to 300 columns.
+ */
+const getScale = (cols: number) =>
+  (266.3 - 1.388 * cols + 0.002235 * Math.pow(cols, 2)) / 100;
 
 const decode = (encodedFrames: Props["encodedFrames"]) => {
   const firstFrame = encodedFrames[0];
@@ -148,9 +192,6 @@ const decode = (encodedFrames: Props["encodedFrames"]) => {
           segments.splice(segmentIdx, 0, {
             ...segment,
             text: chars[charIdx],
-            // class: cn(`cursor cursor-${frame.cursor.shape}`, {
-            //   blinking: frame.cursor.blinking,
-            // }),
             cursor: frame.cursor,
             pen: {
               ...segment.pen,
@@ -214,6 +255,20 @@ const shadowSignal = <T extends unknown>(
   return [getOuter, setter];
 };
 
+/**
+ * Converts color. to rgb, ensures 16 colors (and wraps if missing).
+ * Returns default colors if not provided.
+ */
+const initColors = (colors?: (string | RGBColor)[]): RGBColor[] => {
+  if (!colors || !colors.length) return DEFAULT_COLORS().map(toRGB);
+
+  const rgbColors = new Array(Math.max(colors.length, 16))
+    .fill(0)
+    .map((_, idx) => toRGB(colors[idx % colors.length]));
+
+  return rgbColors;
+};
+
 const Asciinema = (props: Props) => {
   const {
     class: $class,
@@ -221,31 +276,49 @@ const Asciinema = (props: Props) => {
     header,
     fullscreenButtonComponent,
     fullscreenExitButtonComponent,
+    disableTrueColor,
+    forceCustomTheme,
+    autoplay = false,
+    maxFontSize = "16px",
     foregroundColor: _foregroundColor,
     backgroundColor: _backgroundColor,
-    colors,
+    colors: _colors,
+    onKeyDown,
     ...state
   } = $destructure(props);
 
+  const colors = $memo(
+    initColors(
+      (!forceCustomTheme ? header.theme?.palette : undefined) ?? _colors?.()
+    )
+  );
   const foregroundColor = $memo(
-    _foregroundColor?.() ?? header?.theme?.foreground ?? "currentColor"
+    (!forceCustomTheme ? header?.theme?.foreground : undefined) ??
+      _foregroundColor?.() ??
+      DEFAULT_FOREGROUND()
   );
   const backgroundColor = $memo(
-    _backgroundColor?.() ?? header?.theme?.background ?? "#ffffff"
+    (!forceCustomTheme ? header?.theme?.background : undefined) ??
+      _backgroundColor?.() ??
+      DEFAULT_BACKGROUND()
   );
-
-  // header.width = COLS;
 
   let decodedFrames = $memo(decode(encodedFrames));
 
   const getSegmentColor = (segment: ClientSegment, name: "fg" | "bg") => {
-    const g = (c?: string | number) => {
+    const g = (c?: string | number | RGBColor) => {
       if (!c) return undefined;
-      if (typeof c == "string") {
-        if (colors) return closestColor(c, colors());
-        return c;
+      if (typeof c == "number") {
+        return `var(--terminal-color-${c})`;
       }
-      return `var(--terminal-color-${c}, var(--fallback-terminal-color-${c}))`;
+      if (typeof c == "string") {
+        c = toRGB(c);
+      }
+      if (disableTrueColor) {
+        const idx = closestColorIndex(c, colors);
+        return `var(--terminal-color-${idx})`;
+      }
+      return `rgb(${c.join(",")})`;
     };
 
     return name == "fg"
@@ -355,6 +428,9 @@ const Asciinema = (props: Props) => {
   };
 
   const handleKeyDown = (ev: KeyboardEvent) => {
+    onKeyDown?.(ev);
+    if (ev.defaultPrevented) return;
+
     switch (ev.key) {
       case " ": {
         ev.preventDefault();
@@ -376,7 +452,11 @@ const Asciinema = (props: Props) => {
     }
   };
 
-  $mount(() => (playing = true));
+  $mount(() => {
+    // find iniitial frame
+    handleSeekAbsolute(currentTime);
+    playing = autoplay;
+  });
 
   let contentFocused = $signal(false);
   $effect(() => {
@@ -396,11 +476,10 @@ const Asciinema = (props: Props) => {
     $cleanup(() => observer.disconnect());
   });
 
-  const fallbackTerminalColors = DEFAULT_COLORS.reduce(
-    (acc, defaultValue, idx) => ({
+  const fallbackTerminalColors = colors.reduce(
+    (acc, color, idx) => ({
       ...acc,
-      [`--fallback-terminal-color-${idx}`]:
-        header.theme?.palette?.[idx] ?? defaultValue,
+      [`--terminal-color-${idx}`]: `rgb(${color[0]}, ${color[1]}, ${color[2]})`,
     }),
     {} as Record<string, string>
   );
@@ -419,7 +498,11 @@ const Asciinema = (props: Props) => {
               }
             : undefined
         }
-        style={{ "--scale": 0.6 }}>
+        style={{
+          "--scale": 0.6,
+          "--max-font-size": maxFontSize,
+          "--dynamic-font-size": `${getScale(header.width)}cqw`,
+        }}>
         <div
           ref={boxRef}
           class={cn("flex cursor-auto flex-col", box)}
@@ -554,53 +637,6 @@ const Asciinema = (props: Props) => {
   );
 };
 
-/**
- * Generate a CSS property value that scales linearly in `[minFontSize..maxFontSize]`, proportional to `[minWidth..maxWidth]`
- */
-export const fluidProperty = (
-  minWidth: string,
-  maxVW: string,
-  minFontSize: string,
-  fontSizeDelta: string
-) => {
-  // const usesVariables = [minWidth, maxVW, minFontSize, maxFonSize].some((v) =>
-  //   v.startsWith("var(")
-  // );
-
-  // only check if units are the same on static values, no way to do it on variables
-  // if (!usesVariables) {
-  //   const units = [minWidth, maxVW, minFontSize, maxFonSize].map(getUnit);
-  //   const allEqual = units.every((u) => u == units[0]);
-  //   if (!allEqual) {
-  //     throw new Error(
-  //       `_calculateFluidProperty: all 4 values need to have the same units, got ${units}`
-  //     );
-  //   }
-  // }
-
-  // calculate values without unit
-  // const minFontSizeNumber = usesVariables
-  //   ? minFontSize.replace(/(px|rem)/g, "")
-  //   : parseFloat(minFontSize);
-  // const maxFontSizeNumber = usesVariables
-  //   ? maxFonSize.replace(/(px|rem)/g, "")
-  //   : parseFloat(maxFonSize);
-
-  // the pxToRem plugin converts "0px" to "0", which breaks things
-  if (minWidth == "0px") minWidth = "0rem";
-
-  const deltaVW = parseFloat(maxVW) - parseFloat(minWidth);
-
-  return `calc(${minFontSize} + ${fontSizeDelta} * ((100cqw - ${minWidth}) / ${
-    deltaVW
-  }))`;
-};
-
-const widthFrom = "200px";
-const widthTo = "1500px";
-const fontFrom = textDefinitions.sub.size;
-const fontTo = textDefinitions.body.size;
-
 const container = css`
   font-family: Courier New;
   ${subText};
@@ -609,38 +645,11 @@ const container = css`
 `;
 
 const innerContainer = css`
-  // @container (min-width: ${widthFrom}) {
-  // --cols: 140;
-  --unit: 1px;
-
-  --scale: 2 !important;
-
-  --from: calc(${fontFrom} * var(--scale));
-  --from-unit: calc(var(--from) * var(--unit));
-  --to: calc(${fontTo} * var(--scale));
-  --delta: calc(var(--to) - var(--from));
-
-  // font-size: min(
-  //   ${fluidProperty(widthFrom, widthTo, "var(--from-unit)", "var(--delta)")},
-  //   ${textDefinitions.body.size}px,
-  //   1.1cqw
-  // );
-  font-size: min(
-    ${getScale(COLS)}cqw,
-    var(--max-font-size, ${textDefinitions.sub.size}px)
-  );
-  // font-size: ${getScale(COLS)}cqw;
-  // font-size: 1.5cqw;
-  // }
-  // 300 = 0.51
-  // 70 = 2.2
-  // m = -0.00734782608
-  // b = 1.6856521744
+  font-size: min(var(--dynamic-font-size), var(--max-font-size));
 `;
 
 const seekbar = css`
-  // transition: width linear var(--animation-time);
-  // transition: width linear 10000ms;
+  transition: transform linear 30ms;
 `;
 
 const box = css`
@@ -661,31 +670,14 @@ const content = css`
   display: flex;
   justify-content: center;
 
-  // pre.shiki {
-  //   width: 100%;
-  //   display: inline-flex;
-  //   margin: 0;
-  //   padding: 0;
-  //   background: none;
-  // }
-  // code {
-  //   width: 100%;
-  //   // display: initial;
-  //   // flex-direction: column;
-  //   // align-items: flex-start;
-  // }
-
   .line {
     width: initial;
-    // display: inline;
-    // display: inline-flex;
     font-size: inherit !important;
     line-height: inherit !important;
     white-space: pre;
 
     span:last-child {
       flex: 1;
-      // width: 100%;
     }
   }
 
@@ -725,7 +717,6 @@ const content = css`
     }
   }
   .cursor-line {
-    // margin-left: -2px;
     border-left: solid 2px currentColor;
 
     &.cursor-blinking {
@@ -742,15 +733,8 @@ const content = css`
       }
     }
   }
-  .cursor {
-    //
-  }
   .cursor-hidden {
     text-decoration: none !important;
-  }
-
-  :root {
-    --blink-bg-color: 200, 200, 200;
   }
 `;
 

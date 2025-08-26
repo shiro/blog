@@ -6,10 +6,12 @@ import { useContext } from "solid-js";
 import { createContext } from "solid-js";
 
 interface AsciinemaContextValue
-  extends Pick<
+  extends Omit<
     ComponentProps<typeof DialogAsciinema>,
-    "backgroundColor" | "foregroundColor" | "colors"
-  > {}
+    "header" | "encodedFrames"
+  > {
+  class?: string;
+}
 
 const AsciinemaContext = createContext<AsciinemaContextValue>(undefined);
 const useAsciinemaContext = () => useContext(AsciinemaContext);

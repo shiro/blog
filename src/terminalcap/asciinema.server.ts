@@ -82,7 +82,7 @@ export const compileAsciinema = async (filepath: string): Promise<Meta> => {
       palette?: string[];
     };
   };
-  header.theme = undefined;
+  // header.theme = undefined;
 
   const VT = await VTPromise;
   const vt = VT.create(header.cols, header.rows, false, 0);
