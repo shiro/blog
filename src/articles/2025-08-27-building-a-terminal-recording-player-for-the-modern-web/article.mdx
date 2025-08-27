@@ -1,0 +1,107 @@
+---
+title: Building a terminal-recording player for the modern web
+---
+
+import Video from "./demo.cast";
+
+Recording terminal sessions as video is tedious and doesn't let us copy the text.
+Let's build a modern terminal playback solution for the web, custom colors supported!
+
+
+I'm a developer using Linux and living inside the terminal like many others are.
+This mostly means no fancy animations and following the latest design trends as everything
+is just text, but think about it, everything is just text!
+
+## Recording terminals
+
+Let's say we wanted to record a terminal session to use in a blog.  
+Picking up OBS and getting a recording is easy enough, however we're now left with a 10MB video file.
+No problem, just render it into a lossy format and reduce the quality a bit, that should do it!
+Oh, the text looks... like it's been through a microwave, not readable anymore.
+
+We could just settle for a slightly higher filesize and call it a day, but the way to good UX on the
+web is never easy, so find a better solution.
+
+Thinking about it, text in the terminal doesn't actually change every frame, but regular recordings
+require a constant amount of space _per frame_. Can't we just remove all the static content somehow?
+Converting it into a GIF could work... but now we need to manually cut out the static content and
+control the playback timing using JS... not quite good enough, but the approach seems promising.
+
+## It's just text after all
+
+What if we just try to record the actual text as it appears on the terminal along with timestamps
+so we can recreate frame timings and handle the playback logic with JS? It's just text, sounds easy right?
+
+Alright, now we just need a way to get the text, maybe even listen to changes to avoid checking multiple times per
+second. My terminal emulator of choice is [Alacritty](https://github.com/alacritty/alacritty), which had some
+issues discussing the above, but at the time it hasn't been implemented.
+So... time to look for a new terminal emulator? If only there was a way to make it work for everyone...
+
+
+## Tmux saves the day
+
+I was already using [Tmux](https://github.com/tmux/tmux), the terminal multiplexer 
+(it's convenient to manage multiple windows and long running sessions), which conveniently seems to support capturing output.
+
+```sh
+$ tmux capture-pane -e
+$ tmux save-buffer ~/output
+```
+
+
+This gives us the raw terminal output including ANSI escape sequences that are used to represent colors, blinking
+cursors and a myriad of other things. We'll worry about parsing colors later, let's try to get notified about changes
+rather than running the save command all the time. Turns out that's also doable.
+
+ 
+
+> **pipe-pane [-IOo] [-t target-pane] [shell-command]**  
+> Pipe output sent by the program in target-pane to a shell command or vice versa.  A pane may only be connected to one command at a time, any existing
+> pipe  is  closed before shell-command is executed.  The shell-command string may contain the special character sequences supported by the status-left
+> option.  If no shell-command is given, the current pipe (if any) is closed.
+
+
+By using `pipe-pane` we should be able to get live output and avoid having to manually save the output and compare it
+against the previous one to see if there's any changes right?
+Let's give it a try.
+
+```sh
+tmux pipe-pane 'cat >~/live-output'
+```
+
+
+I started writing a small CLI app in rust in order to automate the above.
+
+# Tmux patches
+
+
+https://github.com/tmux/tmux/pull/4414
+
+```sh
+$ tmux display-message -p "shape: #{cursor_shape}, blinking: #{cursor_blinking}, color: #{cursor_colour}"
+shape: block, blinking: 1, color: #ffffff
+```
+
+
+## It already exists
+
+After researching some more in hopes to find ways to improve what we've got, the unexpected happened - someone already
+made it!
+
+I remember seeing [Asciinema](https://www.asciinema.org) recordings before, but didn't pay it too much attention as I
+just assumed it was a regular video recording at that time.
+
+
+# Implemented asciinema
+
+... but missing features
+
+# Patching asciinema
+
+# Final solution
+
+
+<Video />
+
+something
+

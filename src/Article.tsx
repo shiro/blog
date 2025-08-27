@@ -114,6 +114,11 @@ const Article: Component<Props> = (props) => {
                 </Tooltip.Root>
               );
             },
+            blockquote: (props: any) => (
+              <blockquote class="bg-colors-primary-100 border-colors-primary-500 mt-8 mb-8 ml-8 border-l-8 p-2">
+                {props.children}
+              </blockquote>
+            ),
             pre: (props: any) => <pre {...props} title={null} />,
             Img: (props: any) => {
               return (
@@ -151,7 +156,7 @@ const Article: Component<Props> = (props) => {
                   <code
                     class={cn(
                       $class,
-                      typeof c() == "string"
+                      typeof c() == "string" && !(c() as string).includes(`\n`)
                         ? "bg-colors-primary-300 rounded pr-1 pl-1"
                         : ""
                     )}>
