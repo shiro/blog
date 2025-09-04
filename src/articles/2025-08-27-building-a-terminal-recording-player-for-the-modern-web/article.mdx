@@ -12,7 +12,7 @@ I'm a developer using Linux and living inside the terminal like many others are.
 This mostly means no fancy animations and following the latest design trends as everything
 is just text, but think about it, everything is just text!
 
-## Recording terminals
+# Recording terminals
 
 Let's say we wanted to record a terminal session to use in a blog.  
 Picking up OBS and getting a recording is easy enough, however we're now left with a 10MB video file.
@@ -27,7 +27,7 @@ require a constant amount of space _per frame_. Can't we just remove all the sta
 Converting it into a GIF could work... but now we need to manually cut out the static content and
 control the playback timing using JS... not quite good enough, but the approach seems promising.
 
-## It's just text after all
+# It's just text after all
 
 What if we just try to record the actual text as it appears on the terminal along with timestamps
 so we can recreate frame timings and handle the playback logic with JS? It's just text, sounds easy right?
@@ -38,21 +38,24 @@ issues discussing the above, but at the time it hasn't been implemented.
 So... time to look for a new terminal emulator? If only there was a way to make it work for everyone...
 
 
-## Tmux saves the day
+# Tmux saves the day
 
 I was already using [Tmux](https://github.com/tmux/tmux), the terminal multiplexer 
-(it's convenient to manage multiple windows and long running sessions), which conveniently seems to support capturing output.
+(it's nice for managing multiple windows and long running sessions), which conveniently seems to support capturing output.
 
-```sh
-$ tmux capture-pane -e
-$ tmux save-buffer ~/output
+```terminal colors
+[me@local:~]# tmux capture-pane -e
+[me@local:~]# tmux save-buffer ~/output
+[me@local:~]# cat ~/output
+| [me@local:~]# tmux capture-pane -e
+| [me@local:~]# tmux save-buffer ~/output
+| [me@local:~]# cat ~/output
 ```
 
 
 This gives us the raw terminal output including ANSI escape sequences that are used to represent colors, blinking
 cursors and a myriad of other things. We'll worry about parsing colors later, let's try to get notified about changes
 rather than running the save command all the time. Turns out that's also doable.
-
  
 
 > **pipe-pane [-IOo] [-t target-pane] [shell-command]**  
@@ -60,30 +63,74 @@ rather than running the save command all the time. Turns out that's also doable.
 > pipe  is  closed before shell-command is executed.  The shell-command string may contain the special character sequences supported by the status-left
 > option.  If no shell-command is given, the current pipe (if any) is closed.
 
+As is often the case, the answer is burried deep inside the man-page .
+By using `pipe-pane` we should be able to get live output, which means we no longer have to manually snapshot the
+terminal on a timer and risk missing rapid updates right?
 
-By using `pipe-pane` we should be able to get live output and avoid having to manually save the output and compare it
-against the previous one to see if there's any changes right?
-Let's give it a try.
+```terminal colors
+[me@local:~]# tmux pipe-pane 'cat > ~/live-output'
+[me@local:~]# cat ~/live-output
+> [me@local:~]# tmux pipe-pane 'cat > ~/live-output'
+> [me@local:~]# cat ~/live-output
+```
 
-```sh
-tmux pipe-pane 'cat >~/live-output'
+It seems to work on first glance, unfortunately there's a catch. Remember the previous paragraph that mentions ANSI
+sequences being able to also do a myriad of other things? This includes changing and removing text that has already been
+printed, which is nice for showing interactive terminal applications without having to redraw everything all the time,
+but not so good for taking snapshots of the text that's on screen.
+
+Does that mean no update notifications then? Not quite, let's combine the 2 approaches: watch the live output file for
+filesystem change events and trigger a snapshot using `save-buffer`!
+
+To make it easier to work with, I quickly implemented a small terminal application using rust (which is a great choice
+for small terminal utilities like that).
+
+# Where's the cursor?
+
+Now we're getting somewhere, but it seems like something's missing... The snapshots don't include the current cursor
+position, color and shape, which objectively makes terminal recordings less awesome. Let's fix that.
+
+Since `tmux` is nice enough to give us the entire terminal output, I figured it might even give us the cursor info if we
+ask nicely, the data needs to be stored somewhere inside `tmux` after all. The good news is [I found where the data is
+stored](https://github.com/tmux/tmux/blob/6a3170386e8362315cfe78b2776654c29b675202/tmux.h#L963), bad news is there's
+currently no way to access it from the outside, but that won't stop us of course.
+
+An easy way to get information from a `tmux` session is using variables that one can use inside format strings for
+various UI elements as well as using a terminal command. Turns out all we had to do was get a fundamental understanding
+of the entire codebase written in C and make a pull request that adds variables for cursor information.
+
+
+<Embed url="https://github.com/tmux/tmux/pull/4414" description="Expose additional formatting variables" />
+
+Luckily there was a lot of existing code that made it simple even for non-C developers.
+The awesome maintainer was very helpful and merged it quickly.
+After updating to the latest git version of `tmux`, we can now get all the cursor info we need!
+
+```ansi terminal
+[me@local:~]# tmux display-message -p "shape: #{cursor_shape}, blinking: #{cursor_blinking}, color: #{cursor_colour}"
+| shape: block, blinking: 1, color: #ffffff
+
+[0;32mcolored foreground[0m bob
+[0;42mcolored background[0m
+
+[0;1mbold text[0m
+[0;2mdimmed text[0m
+[0;4munderlined text[0m
+[0;7mreversed text[0m
+[0;9mstrikethrough text[0m
+[0;4;9munderlined + strikethrough text[0m
 ```
 
 
-I started writing a small CLI app in rust in order to automate the above.
+# Building the player component
 
-# Tmux patches
-
-
-https://github.com/tmux/tmux/pull/4414
-
-```sh
-$ tmux display-message -p "shape: #{cursor_shape}, blinking: #{cursor_blinking}, color: #{cursor_colour}"
-shape: block, blinking: 1, color: #ffffff
-```
+Now that we can capture frame data along with the cursor position, it's time to build a component that can play back the
+frames with the correct timings.
+The plan is to build a SolidJS component, for peak performance and minimal bundle size, easy to integrate into my blog,
+vanilla HTML sites and even React apps (with some adapter magic).
 
 
-## It already exists
+# It already exists
 
 After researching some more in hopes to find ways to improve what we've got, the unexpected happened - someone already
 made it!

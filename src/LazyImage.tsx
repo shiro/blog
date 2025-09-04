@@ -13,6 +13,7 @@ const isImageCached = (url: string, onLoad?: () => void) => {
 interface Props extends ComponentProps<"img"> {
   style?: JSX.CSSProperties;
   class?: string;
+  maxHeight?: string;
 }
 
 export interface LazyImageMeta {
@@ -22,9 +23,16 @@ export interface LazyImageMeta {
   height: number;
 }
 
+export type LazyImageComponent = Component<Props>;
+
 const LazyImage: (meta: LazyImageMeta) => Component<Props> =
   (meta) => (props) => {
-    const { class: $class, style, ...rest } = $destructure(props);
+    const {
+      class: $class,
+      style,
+      maxHeight = "100vw",
+      ...rest
+    } = $destructure(props);
     let hasJS = $signal(false);
     let loaded = $signal(false);
 
@@ -37,35 +45,49 @@ const LazyImage: (meta: LazyImageMeta) => Component<Props> =
 
     return (
       <div
-        class={cn(_LazyImage, $class)}
+        class={cn(outer, $class)}
         style={{
           ...style,
           "--width": `${meta.width}`,
           "--height": `${meta.height}`,
+          "--max-height": `${maxHeight}`,
           "--color1": meta.gradient[1],
           "--color2": meta.gradient[0],
         }}>
-        <img
-          class={cn({ hasJS, loaded })}
-          src={meta.url}
-          {...rest}
-        />
+        <div class={cn(_LazyImage)}>
+          <img class={cn({ hasJS, loaded })} src={meta.url} {...rest} />
+        </div>
       </div>
     );
   };
 
+const outer = css`
+  width: 100%;
+  container-type: inline-size;
+  overflow: hidden;
+`;
+
 const _LazyImage = css`
   background: linear-gradient(45deg, var(--color1) 0%, var(--color2) 100%);
   object-fit: contain;
+  margin: 0 auto;
 
-  --w_limit: 100%;
-  --h_limit: 100vw;
+  --w_limit: min(100cqw, calc(var(--width) * 1px));
+  // --w_limit: 100cqw;
+  // --h_limit: 100vw;
+  --h_limit: min(var(--max-height), calc(var(--height) * 1px));
   // we multiply by 100 to avoid CSS precision loss
   --x_sf_px: calc((1 / var(--width)) * var(--w_limit) * 100);
   --y_sf_px: calc((1 / var(--height)) * var(--h_limit) * 100);
   --sf_px: min(var(--x_sf_px), var(--y_sf_px));
   width: calc((var(--width) * var(--sf_px) / 100));
+  // width: 80vw;
   height: calc((var(--height) * var(--sf_px) / 100));
+  // height: calc(var(--x_sf_px));
+  // height: 100cqw;
+  // background: red;
+
+  // container-type: inline-size;
 
   ${breakpoint("xs")} {
     object-fit: cover !important;

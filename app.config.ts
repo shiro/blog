@@ -7,6 +7,7 @@ import { linariaVitePlugin } from "./vite/linariaVitePlugin";
 import { viteAsciinemaPlugin } from "./vite/viteAsciinemaPlugin";
 import { viteMarkdownPlugin } from "./vite/markdown/viteMarkdownPlugin";
 import { viteImagePlugin } from "./vite/viteImagePlugin";
+// @ts-ignore
 import tailwindcss from "@tailwindcss/vite";
 // @ts-ignore
 import babelPluginLazyPlus from "solid-lazy-plus/babel";
@@ -43,7 +44,7 @@ export default defineConfig({
       // css: { postcss: "./postcss.config.js" },
       server: {
         port: 3000,
-        warmup: { clientFiles: ["./src/app.tsx"] },
+        // warmup: { clientFiles: ["./src/app.tsx"] },
       },
       build: { sourcemap: true },
       resolve: {
@@ -55,6 +56,27 @@ export default defineConfig({
         ),
       },
       plugins: [
+        {
+          name: "warmup",
+          enforce: "post",
+          configureServer: (server) => {
+            if (server.config.router.name != "client") return;
+            const { port, host, https } = server.config.server;
+            const protocol = https ? "https" : "http";
+            const hostname = host || "localhost";
+            const url = `${protocol}://${hostname}:${port}`;
+
+            (async () => {
+              for (let i = 0; i < 10; i++) {
+                try {
+                  return await fetch(url);
+                } catch (err) {
+                  await new Promise((resolve) => setTimeout(resolve, 500));
+                }
+              }
+            })();
+          },
+        },
         viteImagePlugin(),
         viteAsciinemaPlugin(),
         compileTime(),

@@ -123,7 +123,7 @@ const Article: Component<Props> = (props) => {
             Img: (props: any) => {
               return (
                 <figure class="mt-8 mb-8 flex justify-center">
-                  <div>
+                  <div class="w-full">
                     <DialogImage
                       thumbnail={props.thumbnail ?? props.src}
                       image={props.src}

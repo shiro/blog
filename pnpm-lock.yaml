@@ -114,6 +114,9 @@ importers:
       '@shikijs/transformers':
         specifier: 3.2.0
         version: 3.2.0
+      '@types/hast':
+        specifier: 3.0.4
+        version: 3.0.4
       '@types/imagemagick':
         specifier: 0.0.35
         version: 0.0.35
@@ -121,10 +124,10 @@ importers:
         specifier: npm:@types/lodash-es@4.17.12
         version: '@types/lodash-es@4.17.12'
       '@types/textdiff-create':
-        specifier: ^1.0.2
+        specifier: 1.0.2
         version: 1.0.2
       '@types/textdiff-patch':
-        specifier: ^1.0.2
+        specifier: 1.0.2
         version: 1.0.2
       babel-plugin-transform-define:
         specifier: 2.1.4

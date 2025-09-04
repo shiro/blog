@@ -1,11 +1,7 @@
 {
   "displayName": "Terminal",
   "name": "terminal",
-  "patterns": [
-    {
-      "include": "#prompt"
-    }
-  ],
+  "patterns": [{ "include": "#prompt" }],
   "repository": {
     "prompt": {
       "begin": "^\\[",

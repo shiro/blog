@@ -24,9 +24,9 @@ const DialogImage: Component<Props> = (props) => {
   } = $destructure(props);
 
   return (
-    <div class={cn($class, "relative overflow-hidden")} {...rest}>
+    <div class={cn($class, "relative w-full overflow-hidden")} {...rest}>
       <Dialog.Root>
-        <Dialog.Trigger class="block">
+        <Dialog.Trigger class="block w-full">
           <props.thumbnail class={cn(_Thumbnail, "max-w-[100vw]")} alt={alt} />
         </Dialog.Trigger>
         <Dialog.Portal>
@@ -34,12 +34,13 @@ const DialogImage: Component<Props> = (props) => {
             class="fixed inset-0 z-50 cursor-pointer"
             style={{ background: "rgba(0, 0, 0, 0.5)" }}
           />
-          <div class="fixed inset-0 z-50 flex items-center justify-center">
-            <Dialog.Content class="flex max-h-[90vh] items-center justify-center s:max-w-[90vw]">
-              <Dialog.CloseButton class="flex justify-center">
+          <div class="fixed inset-0 z-50 flex w-full items-center justify-center">
+            <Dialog.Content class="s:max-w-[90vw] flex max-h-[90vh] w-full items-center justify-center">
+              <Dialog.CloseButton class="flex w-full justify-center">
                 <props.image
                   class={cn(_FullscreenImage, "overflow-hidden object-contain")}
                   alt={alt}
+                  maxHeight="80vh"
                 />
               </Dialog.CloseButton>
             </Dialog.Content>

@@ -2,11 +2,7 @@ import { css } from "@linaria/core";
 import cn from "classnames";
 import { Component, JSX } from "solid-js";
 import DialogImage from "~/DialogImage";
-import {
-  breakpoint,
-  breakpointFrom,
-  breakpointUntil,
-} from "~/style/commonStyle";
+import { breakpoint } from "~/style/commonStyle";
 
 const images: Component[] = Object.values(
   import.meta.glob("@assets/gallery/*.jpg", {

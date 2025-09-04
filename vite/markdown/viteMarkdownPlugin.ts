@@ -13,6 +13,7 @@ import { bundledLanguages } from "shiki";
 import { parseDelimitedString } from "../../src/util/parseDelimitedString";
 import { shikiColorNotation } from "./shikiColorNotation/shikiColorNotation";
 import { shikiDiffNotation } from "./shikiDiffNotation/shikiDiffNotation";
+import { shikiTerminal } from "./shikiTerminal/shikiTerminal";
 
 const { default: mdx } = _mdx;
 
@@ -31,6 +32,9 @@ export const viteMarkdownPlugin = () =>
         rehypeShiki,
         {
           theme: "github-dark",
+          // colorReplacements: {
+          //   "#e1e4e8": "var(--theme-foreground, #e1e4e8)",
+          // },
           langs: [
             ...Object.keys(bundledLanguages),
             // theme colors: https://github.com/shikijs/textmate-grammars-themes/blob/45c05724db7ce7015e81d68b5b3f56dfcc0e8a2b/packages/tm-themes/themes/github-dark.json
@@ -66,6 +70,7 @@ export const viteMarkdownPlugin = () =>
             })(),
             shikiDiffNotation(),
             shikiColorNotation(),
+            shikiTerminal(),
           ],
         },
       ],
