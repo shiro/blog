@@ -11,6 +11,7 @@ interface Props {
   image: Component<any>;
   thumbnail: Component<any>;
   alt: string;
+  allowUpscale?: boolean;
 }
 
 const DialogImage: Component<Props> = (props) => {
@@ -20,6 +21,7 @@ const DialogImage: Component<Props> = (props) => {
     alt,
     thumbnail,
     image,
+    allowUpscale,
     ...rest
   } = $destructure(props);
 
@@ -27,7 +29,11 @@ const DialogImage: Component<Props> = (props) => {
     <div class={cn($class, "relative w-full overflow-hidden")} {...rest}>
       <Dialog.Root>
         <Dialog.Trigger class="block w-full">
-          <props.thumbnail class={cn(_Thumbnail, "max-w-[100vw]")} alt={alt} />
+          <props.thumbnail
+            class={cn(_Thumbnail, "max-w-[100vw]")}
+            alt={alt}
+            allowUpscale={allowUpscale}
+          />
         </Dialog.Trigger>
         <Dialog.Portal>
           <Dialog.Overlay

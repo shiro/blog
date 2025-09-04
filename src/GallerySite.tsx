@@ -31,10 +31,11 @@ const GallerySite: Component<Props> = (props) => {
         <For each={images}>
           {(image, idx) => (
             <DialogImage
-              class={cn(card, "h-0 w-full pt-[100%]")}
+              class={cn(Card, "h-0 w-full pt-[100%]")}
               alt="gallery picture"
               image={image}
               thumbnail={thumbnails[idx()]}
+              allowUpscale
             />
           )}
         </For>
@@ -60,7 +61,7 @@ const Grid = css`
   }
 `;
 
-const card = css`
+const Card = css`
   ${breakpoint("s", "m")} {
     &:nth-child(1n + 18) + div {
       display: none;
@@ -73,7 +74,12 @@ const card = css`
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+
+    div,
+    img {
+      object-fit: cover;
+      height: 100%;
+    }
   }
 `;
 

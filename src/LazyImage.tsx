@@ -14,6 +14,7 @@ interface Props extends ComponentProps<"img"> {
   style?: JSX.CSSProperties;
   class?: string;
   maxHeight?: string;
+  allowUpscale?: boolean;
 }
 
 export interface LazyImageMeta {
@@ -31,6 +32,7 @@ const LazyImage: (meta: LazyImageMeta) => Component<Props> =
       class: $class,
       style,
       maxHeight = "100vw",
+      allowUpscale,
       ...rest
     } = $destructure(props);
     let hasJS = $signal(false);
@@ -49,6 +51,12 @@ const LazyImage: (meta: LazyImageMeta) => Component<Props> =
         style={{
           ...style,
           "--width": `${meta.width}`,
+          "--w_limit": allowUpscale
+            ? `100cqw`
+            : `min(100cqw, calc(var(--width) * 1px))`,
+          "--h_limit": allowUpscale
+            ? `var(--max-height)`
+            : `min(var(--max-height), calc(var(--height) * 1Px))`,
           "--height": `${meta.height}`,
           "--max-height": `${maxHeight}`,
           "--color1": meta.gradient[1],
@@ -65,17 +73,16 @@ const outer = css`
   width: 100%;
   container-type: inline-size;
   overflow: hidden;
+  object-fit: contain;
+  ${breakpoint("xs")} {
+    object-fit: cover !important;
+  }
 `;
 
 const _LazyImage = css`
   background: linear-gradient(45deg, var(--color1) 0%, var(--color2) 100%);
-  object-fit: contain;
   margin: 0 auto;
 
-  --w_limit: min(100cqw, calc(var(--width) * 1px));
-  // --w_limit: 100cqw;
-  // --h_limit: 100vw;
-  --h_limit: min(var(--max-height), calc(var(--height) * 1px));
   // we multiply by 100 to avoid CSS precision loss
   --x_sf_px: calc((1 / var(--width)) * var(--w_limit) * 100);
   --y_sf_px: calc((1 / var(--height)) * var(--h_limit) * 100);
@@ -88,10 +95,6 @@ const _LazyImage = css`
   // background: red;
 
   // container-type: inline-size;
-
-  ${breakpoint("xs")} {
-    object-fit: cover !important;
-  }
 
   img {
     width: 100%;

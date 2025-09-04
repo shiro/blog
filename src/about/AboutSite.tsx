@@ -19,10 +19,11 @@ const AboutSite: Component<Props> = (props) => {
   return (
     <div class={cn(_AboutSite, "mb-8 grid gap-4")}>
       <div class="flex flex-col gap-2" style={{ "grid-area": "picture" }}>
-        <div class="flex h-[192px] w-[192px] items-center justify-center overflow-hidden rounded border-4 border-colors-primary-500">
+        <div class="border-colors-primary-500 flex h-[192px] w-[192px] items-center justify-center overflow-hidden rounded border-4">
           <ProfilePicture
             alt="Profile picture showing an manga-style face with glasses"
             class="h-full w-full"
+            allowUpscale
           />
         </div>
       </div>
@@ -39,13 +40,13 @@ const AboutSite: Component<Props> = (props) => {
       <div
         class="flex flex-col gap-2 text-center"
         style={{ "grid-area": "name" }}>
-        <div class="text-heading1 bg-colors-primary-500 pl-8 pr-8 text-colors-text-900a">
+        <div class="text-heading1 bg-colors-primary-500 text-colors-text-900a pr-8 pl-8">
           Matic Utsumi Gačar
         </div>
       </div>
 
       <div
-        class="text-heading3 flex gap-2 s:flex-row"
+        class="text-heading3 s:flex-row flex gap-2"
         style={{ "grid-area": "title" }}>
         <div class="text-nowrap">Level 21</div>
         <div class="xs:text-heading3 text-nowrap">
@@ -54,19 +55,19 @@ const AboutSite: Component<Props> = (props) => {
       </div>
       <LabeledBox label="general" style={{ "grid-area": "general" }}>
         <ul class="flex min-h-full flex-col gap-1">
-          <li class="xs:text-heading3 flex gap-2 text-nowrap s:text-body">
+          <li class="xs:text-heading3 s:text-body flex gap-2 text-nowrap">
             <IconText icon="github" />
             <a href="https://github.com/shiro">github.com/shiro</a>
           </li>
-          <li class="xs:text-heading3 flex gap-2 text-nowrap s:text-body">
+          <li class="xs:text-heading3 s:text-body flex gap-2 text-nowrap">
             <IconText icon="email" />
             <a href="mailto:matic@usagi.io">matic@usagi.io</a>
           </li>
-          <li class="xs:text-heading3 flex gap-2 text-nowrap s:text-body">
+          <li class="xs:text-heading3 s:text-body flex gap-2 text-nowrap">
             <IconText icon="globe" />
             <a href="https://usagi.io">usagi.io</a>
           </li>
-          <li class="xs:text-heading3 flex gap-2 text-nowrap s:text-body">
+          <li class="xs:text-heading3 s:text-body flex gap-2 text-nowrap">
             <IconText icon="house" />
             <span>Tokyo</span>
           </li>
@@ -77,7 +78,7 @@ const AboutSite: Component<Props> = (props) => {
         <p>
           My passion is building full-stack applications that have a lasting
           impact on the world and{" "}
-          <span class="rounded bg-colors-primary-400 pl-2 pr-2">
+          <span class="bg-colors-primary-400 rounded pr-2 pl-2">
             gaining experience
           </span>{" "}
           along the way.
