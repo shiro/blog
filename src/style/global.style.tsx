@@ -13,7 +13,8 @@ import "~/style/layerPreamble.style";
 import "~/style/reset.style";
 import "~/style/tw.style";
 import { css } from "@linaria/core";
-import { baseText, smallTextHeight } from "~/style/textStylesTS";
+import { baseText } from "~/style/textStylesTS";
+import { boxShadow } from "~/style/commonStyle";
 
 export const globals = css`
   html {
@@ -195,11 +196,13 @@ export const globals = css`
     }
 
     pre.shiki {
-      margin-top: 32px;
-      margin-bottom: 32px;
+      margin: 32px auto;
+      // margin-bottom: 32px;
       background-color: ${color("colors/primary-50")};
       padding: 8px;
       font-family: Courier New;
+      min-width: min(80vw, 80%);
+      ${boxShadow(0, 2, 16, "rgba(0, 0, 0, 0.1)")}
 
       & > code {
         display: flex;
@@ -207,9 +210,9 @@ export const globals = css`
       }
       .line {
         ${subText};
-        width: 100%;
+        // width: 100%;
         white-space: pre-wrap !important;
-        display: inline-block;
+        display: inline-flex;
         line-height: 1.1;
 
         &:empty::before {
@@ -246,6 +249,21 @@ export const globals = css`
             &::before {
               content: "-";
             }
+          }
+        }
+      }
+      &.terminal {
+        .line.input {
+          color: ${color("colors/text-900a")} !important;
+        }
+        .line.output {
+          color: ${color("colors/text-300a")} !important;
+          // padding-left: 16px;
+
+          &::before {
+            content: "|";
+            padding-right: 8px;
+            user-select: none;
           }
         }
       }

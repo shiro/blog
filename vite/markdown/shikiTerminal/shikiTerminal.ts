@@ -12,6 +12,8 @@ export interface shikiDiffNotationOptions {
 
 type MetaNode = Element & { meta?: Record<string, any> };
 
+const inputRegex = new RegExp(`^\\[(.*)@(.*)\\]([$#])(.*)`);
+
 export function shikiTerminal(
   options: shikiDiffNotationOptions = {}
 ): ShikiTransformer {
@@ -29,7 +31,9 @@ export function shikiTerminal(
       lang = options.lang;
       if (lang != "ansi") return;
       options.colorReplacements = {
-        "#e1e4e8": "var(--theme-foreground, #e1e4e8)",
+        ...(options.colorReplacements ?? {}),
+        // "#24292e": "var(--color-colors-primary-50, #24292e)",
+        "#e1e4e8": "inherit",
       };
     },
     code(node: MetaNode) {
@@ -42,21 +46,61 @@ export function shikiTerminal(
       ) as Element[];
 
       lines.forEach((line) => {
-        // console.log(line);
-        // for (const child of line.children) {
-        //   if (child.type !== "element") continue;
-        //   const text = child.children[0];
-        //   if (text.type !== "text") continue;
-        //
-        //   if (text.value.startsWith("+")) {
-        //     text.value = text.value.slice(1);
-        //     this.addClassToHast(line, classLineAdd);
-        //   }
-        //   if (text.value.startsWith("-")) {
-        //     text.value = text.value.slice(1);
-        //     this.addClassToHast(line, classLineRemove);
-        //   }
-        // }
+        for (const child of line.children) {
+          if (child.type !== "element") continue;
+
+          if (child.children[0]?.type == "text") {
+            const match = inputRegex.exec(child.children[0].value);
+            if (match) {
+              this.addClassToHast(line, "input");
+
+              const [_, user, location, sign, rest] = match;
+
+              const vals: [string, string | undefined][] = [
+                ["[", undefined],
+                [user, "var(--color-colors-primary-800)"],
+                ["@", undefined],
+                [location, "var(--color-colors-secondary-800)"],
+                ["]", undefined],
+                [sign, "var(--color-colors-primary-800)"],
+                [rest, undefined],
+              ];
+
+              line.children = [
+                ...vals.map(
+                  ([a, b]) =>
+                    ({
+                      type: "element",
+                      tagName: "span",
+                      properties: { style: `color: ${b ?? "inherit"}` },
+                      children: [{ type: "text", value: a }],
+                    }) as Element
+                ),
+                ...line.children.slice(1),
+              ];
+
+              continue;
+            }
+
+            // remove escaped "\"
+            if (
+              child.children[0].value[0] == "\\" &&
+              inputRegex.test(child.children[0].value.slice(1))
+            ) {
+              child.children[0].value = child.children[0].value.slice(1);
+            }
+          }
+          this.addClassToHast(line, "output");
+
+          //   if (text.value.startsWith("+")) {
+          //     text.value = text.value.slice(1);
+          //     this.addClassToHast(line, classLineAdd);
+          //   }
+          //   if (text.value.startsWith("-")) {
+          //     text.value = text.value.slice(1);
+          //     this.addClassToHast(line, classLineRemove);
+          //   }
+        }
       });
     },
   };

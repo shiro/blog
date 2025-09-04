@@ -68,7 +68,7 @@ We'll also need to flash the installation image onto a USB drive. You can build 
 it's easier to just download a [pre-built image](https://github.com/tpwrules/nixos-apple-silicon/releases) and
 flashing it using:
 
-```terminal
+```ansi terminal
 [shiro@shiro-pc:~]# lsblk
 # find your USB device (for me it's /dev/sdb)
 [shiro@shiro-pc:~]# cat macos-nixos.iso > /dev/sdb
@@ -86,7 +86,7 @@ time of writing, but the steps might change in the future!
 
 First I installed the bootloader by opening a terminal in MacOS and runnning:
 
-```terminal
+```ansi terminal
 [shiro@shiro-macos:~]# curl https://alx.sh | sh
 # follow the interactive instructions
 ```
@@ -133,7 +133,7 @@ There's plenty of documentation on how to do so, but I'll be sticking with the d
 for this article. Regardless, the rest of the configuration won't change much.
 
 
-```terminal
+```ansi terminal
 [shiro@shiro-pc:~]# echo wow
 ```
 
@@ -247,7 +247,7 @@ authorization, pretty convenient indeed.
 
 The last step is to initialize the git repository in our codebase and push it to Github.
 
-```terminal
+```ansi terminal
 [shiro@shiro-pc:~/my-blog]# git init
 Initialized empty Git repository in ~/my-blog/.git/
 [shiro@shiro-pc:~/my-blog]# git remote add origin git@github.com:username/my-blog.git

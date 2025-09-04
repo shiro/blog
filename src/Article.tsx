@@ -86,7 +86,7 @@ const Article: Component<Props> = (props) => {
         maxFontSize: `${textDefinitions.sub.size}px`,
         dialogMaxFontSize: `${textDefinitions.body.size}px`,
       }}>
-      <div class={cn(_Article, props.className)}>
+      <div class={cn(_Article, "flex flex-col", props.className)}>
         <Meta name="description" content={meta.description} />
         <span class="mb-2">
           <a href="/">Articles</a>{" "}
@@ -130,7 +130,7 @@ const Article: Component<Props> = (props) => {
                       alt="image"
                     />
                     <Show when={props.caption}>
-                      <figcaption class="text-colors-text-300a mt-1">
+                      <figcaption class="text-colors-text-300a mt-1 text-center">
                         {props.caption}
                       </figcaption>
                     </Show>

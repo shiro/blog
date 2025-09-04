@@ -100,7 +100,7 @@ After a few seconds you should see the droplet running and ready on the dashboar
 Once the droplet is created, click on the `IPv4` field to copy the address to the system clipboard, open
 a terminal and connect to the droplet. After connecting, ensure it worked by checking the system info.
 
-```txt
+```ansi terminal
 [shiro@pc:~]# ssh root@143.198.219.81
 [root@droplet:~]# uname -a
 Linux droplet 6.1.69 #1-NixOS SMP PREEMPT_DYNAMIC Wed Dec 20 16:00:29 UTC 2023 x86_64 GNU/Linux
@@ -136,8 +136,8 @@ the new packages we specified.
 After switching, the packages should be available as globally installed
 system packages.
 
-```terminal colors
-[nix-shell:/etc/nixos]# exit
+```ansi terminal
+[nix-shell@local:/etc/nixos]# exit
 [root@droplet:~]# nixos-rebuild switch
 [root@droplet:~]# echo "NixOS in the cloud!" | cowsay
  _____________________

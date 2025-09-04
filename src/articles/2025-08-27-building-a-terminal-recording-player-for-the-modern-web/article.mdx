@@ -43,13 +43,13 @@ So... time to look for a new terminal emulator? If only there was a way to make 
 I was already using [Tmux](https://github.com/tmux/tmux), the terminal multiplexer 
 (it's nice for managing multiple windows and long running sessions), which conveniently seems to support capturing output.
 
-```terminal colors
+```ansi terminal
 [me@local:~]# tmux capture-pane -e
 [me@local:~]# tmux save-buffer ~/output
 [me@local:~]# cat ~/output
-| [me@local:~]# tmux capture-pane -e
-| [me@local:~]# tmux save-buffer ~/output
-| [me@local:~]# cat ~/output
+\[me@local:~]# tmux capture-pane -e
+\[me@local:~]# tmux save-buffer ~/output
+\[me@local:~]# cat ~/output
 ```
 
 
@@ -67,11 +67,11 @@ As is often the case, the answer is burried deep inside the man-page .
 By using `pipe-pane` we should be able to get live output, which means we no longer have to manually snapshot the
 terminal on a timer and risk missing rapid updates right?
 
-```terminal colors
+```ansi terminal
 [me@local:~]# tmux pipe-pane 'cat > ~/live-output'
 [me@local:~]# cat ~/live-output
-> [me@local:~]# tmux pipe-pane 'cat > ~/live-output'
-> [me@local:~]# cat ~/live-output
+\[me@local:~]# tmux pipe-pane 'cat > ~/live-output'
+\[me@local:~]# cat ~/live-output
 ```
 
 It seems to work on first glance, unfortunately there's a catch. Remember the previous paragraph that mentions ANSI
@@ -108,17 +108,7 @@ After updating to the latest git version of `tmux`, we can now get all the curso
 
 ```ansi terminal
 [me@local:~]# tmux display-message -p "shape: #{cursor_shape}, blinking: #{cursor_blinking}, color: #{cursor_colour}"
-| shape: block, blinking: 1, color: #ffffff
-
-[0;32mcolored foreground[0m bob
-[0;42mcolored background[0m
-
-[0;1mbold text[0m
-[0;2mdimmed text[0m
-[0;4munderlined text[0m
-[0;7mreversed text[0m
-[0;9mstrikethrough text[0m
-[0;4;9munderlined + strikethrough text[0m
+shape: block, blinking: 1, color: #ffffff
 ```
 
 

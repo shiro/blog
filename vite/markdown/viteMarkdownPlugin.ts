@@ -27,14 +27,17 @@ export const viteMarkdownPlugin = () =>
       remarkGfm,
       [remarkCaptions, { external: { table: "Table:" } }],
     ],
+    elementAttributeNameCase: "html",
+    stylePropertyNameCase: "css",
     rehypePlugins: [
       [
         rehypeShiki,
         {
           theme: "github-dark",
-          // colorReplacements: {
-          //   "#e1e4e8": "var(--theme-foreground, #e1e4e8)",
-          // },
+          colorReplacements: {
+            "#24292e": "var(--color-colors-primary-50, #24292e)",
+          },
+          fontStyle: true,
           langs: [
             ...Object.keys(bundledLanguages),
             // theme colors: https://github.com/shikijs/textmate-grammars-themes/blob/45c05724db7ce7015e81d68b5b3f56dfcc0e8a2b/packages/tm-themes/themes/github-dark.json
