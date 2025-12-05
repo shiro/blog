@@ -95,7 +95,11 @@ export const viteImagePlugin = () => {
           finalImageFilepath = resizedFilepath;
         }
 
-        const res = await plugin.load.call(this, finalImageFilepath, ...args);
+        const res = await plugin.load.handler.call(
+          this,
+          finalImageFilepath,
+          ...args
+        );
         if (!query["lazy"]) return res;
         const url = res.code.split(`"`)[1];
         if (!url) return;
