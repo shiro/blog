@@ -1,4 +1,4 @@
-import { css } from "@linaria/core";
+import { css } from "@style-this/core";
 import cn from "classnames";
 import { boxShadow } from "~/style/commonStyle";
 import { subText } from "~/style/commonStyle";
@@ -685,18 +685,6 @@ const content = css`
   .cursor-default {
     &.cursor-blinking {
       animation: blinkingCursorBlock 1s step-end infinite;
-      @keyframes blinkingCursorBlock {
-        0%,
-        49% {
-          color: var(--fg);
-          background-color: var(--bg);
-        }
-        50%,
-        100% {
-          color: var(--bg);
-          background-color: var(--fg);
-        }
-      }
     }
   }
   .cursor-underscore {
@@ -704,16 +692,6 @@ const content = css`
 
     &.cursor-blinking {
       animation: blinkingCursorUnderscore 1s step-end infinite;
-      @keyframes blinkingCursorUnderscore {
-        0%,
-        49% {
-          text-decoration: underline;
-        }
-        50%,
-        100% {
-          text-decoration: none;
-        }
-      }
     }
   }
   .cursor-line {
@@ -721,20 +699,45 @@ const content = css`
 
     &.cursor-blinking {
       animation: blinkingCursorLine 1s step-end infinite;
-      @keyframes blinkingCursorLine {
-        0%,
-        49% {
-          border-left-color: var(--fg);
-        }
-        50%,
-        100% {
-          border-left-color: var(--bg);
-        }
-      }
     }
   }
   .cursor-hidden {
     text-decoration: none !important;
+  }
+`;
+
+const _GlobalStyle = css`
+  @keyframes blinkingCursorBlock {
+    0%,
+    49% {
+      color: var(--fg);
+      background-color: var(--bg);
+    }
+    50%,
+    100% {
+      color: var(--bg);
+      background-color: var(--fg);
+    }
+  }
+  @keyframes blinkingCursorUnderscore {
+    0%,
+    49% {
+      text-decoration: underline;
+    }
+    50%,
+    100% {
+      text-decoration: none;
+    }
+  }
+  @keyframes blinkingCursorLine {
+    0%,
+    49% {
+      border-left-color: var(--fg);
+    }
+    50%,
+    100% {
+      border-left-color: var(--bg);
+    }
   }
 `;
 

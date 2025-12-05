@@ -1,5 +1,5 @@
 import { Dialog } from "@kobalte/core";
-import { css } from "@linaria/core";
+import { css } from "@style-this/core";
 import cn from "classnames";
 import { Component, JSX } from "solid-js";
 import { withStyle } from "~/style/commonStyle";
@@ -63,7 +63,7 @@ const _FullscreenImage = css`
   --w_limit: 90vw !important;
   --h_limit: 90vh !important;
 
-  // don't upscale
+  /* don't upscale */
   max-width: calc(var(--width) * 1px);
   max-height: calc(var(--height) * 1px);
 `;

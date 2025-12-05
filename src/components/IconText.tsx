@@ -1,4 +1,4 @@
-import { css } from "@linaria/core";
+import { css } from "@style-this/core";
 import cn from "classnames";
 import { Component, ComponentProps, JSX } from "solid-js";
 import Icon from "~/components/Icon";

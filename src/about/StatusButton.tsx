@@ -1,5 +1,5 @@
-import { JSX, Component } from "solid-js";
-import { css } from "@linaria/core";
+import { Component } from "solid-js";
+import { css } from "@style-this/core";
 import cn from "classnames";
 import IconText from "~/components/IconText";
 import { Link } from "@kobalte/core";
@@ -17,7 +17,7 @@ const StatusButton: Component<Props> = (props) => {
       href="mailto:matic@usagi.io"
       class={cn(
         _StatusButton,
-        "relative flex w-[192px] gap-2 rounded-md border-2 border-colors-primary-300 pl-2 pr-2 no-underline hover:cursor-pointer hover:bg-colors-primary-300"
+        "border-colors-primary-300 hover:bg-colors-primary-300 relative flex w-[192px] gap-2 rounded-md border-2 pr-2 pl-2 no-underline hover:cursor-pointer"
       )}>
       <IconText icon={icon} />
       {children}

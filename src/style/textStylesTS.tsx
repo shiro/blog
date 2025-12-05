@@ -1,7 +1,7 @@
 // linaria strips istanbul symbols, causing tests to fail, should have been fixed in https://github.com/callstack/linaria/pull/324/files, but not really
 /* istanbul ignore file */
 import { _color } from "~/style/mixins/layoutTs";
-import { css } from "@linaria/core";
+import { css } from "@style-this/core";
 import { _fluidFontSize as fluidFontSize, remBase } from "./fluidSizeTS";
 import { style } from "./styleUtilTS";
 
@@ -181,9 +181,9 @@ export const _text = (
 
   if (textColor) {
     if (textColor == "inherit") {
-      resultStyle += style`color: inherit;`;
+      resultStyle += `color: inherit;`;
     } else {
-      resultStyle += style`color: ${_color(textColor)};`;
+      resultStyle += `color: ${_color(textColor)};`;
     }
   }
 

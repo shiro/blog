@@ -1,5 +1,5 @@
 import { JSX, Component } from "solid-js";
-import { css } from "@linaria/core";
+import { css } from "@style-this/core";
 import cn from "classnames";
 import LabeledBox from "~/about/LabeledBox";
 import { color } from "~/style/commonStyle";
@@ -179,7 +179,7 @@ const SnakeGame: Component<Props> = (props) => {
   return (
     <LabeledBox class={cn(_SnakeGame, $class, "")} label="snake" style={style}>
       <div class="relative h-full min-h-20 w-full overflow-hidden">
-        <div class="absolute left-0 top-0 h-full w-full">
+        <div class="absolute top-0 left-0 h-full w-full">
           <svg class={cn(Board, "h-full w-full")} ref={canvas} />
         </div>
       </div>

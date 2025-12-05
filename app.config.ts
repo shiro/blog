@@ -3,7 +3,6 @@ import path from "node:path";
 import compileTime from "vite-plugin-compile-time";
 import solidSvg from "vite-plugin-solid-svg";
 import tsconfig from "./tsconfig.json";
-import { linariaVitePlugin } from "./vite/linariaVitePlugin";
 import { viteAsciinemaPlugin } from "./vite/viteAsciinemaPlugin";
 import { viteMarkdownPlugin } from "./vite/markdown/viteMarkdownPlugin";
 import { viteImagePlugin } from "./vite/viteImagePlugin";
@@ -11,6 +10,7 @@ import { viteImagePlugin } from "./vite/viteImagePlugin";
 import tailwindcss from "@tailwindcss/vite";
 // @ts-ignore
 import babelPluginLazyPlus from "solid-lazy-plus/babel";
+import styleThis from "@style-this/vite";
 
 const babelPluginLabels = [
   "solid-labels/babel",
@@ -42,6 +42,7 @@ export default defineConfig({
   vite(options) {
     return {
       // css: { postcss: "./postcss.config.js" },
+      css: { transformer: "lightningcss" },
       server: {
         port: 3000,
         // warmup: { clientFiles: ["./src/app.tsx"] },
@@ -82,10 +83,7 @@ export default defineConfig({
         compileTime(),
         solidSvg(),
         viteMarkdownPlugin(),
-        linariaVitePlugin({
-          include: [/\/src\//],
-          exclude: [/solid-refresh/, /\/@babel\/runtime\//, /\.import\./],
-        }) as any,
+        styleThis({ ignoredImports: { "@kobalte/core": true } }),
         tailwindcss(),
       ],
     };

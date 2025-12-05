@@ -1,4 +1,4 @@
-import { css } from "@linaria/core";
+import { css } from "@style-this/core";
 import cn from "classnames";
 import { Component } from "solid-js";
 import SVG from "~/components/SVG";

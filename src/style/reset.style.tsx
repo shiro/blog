@@ -1,6 +1,6 @@
-import { css } from "@linaria/core";
+import { css } from "@style-this/core";
 
-export const globals = css`
+const _GlobalStyle = css`
   /* stylelint-disable */
   /* http://meyerweb.com/eric/tools/css/reset/
   v2.0 | 20110126
@@ -92,8 +92,8 @@ export const globals = css`
       margin: 0;
       padding: 0;
       border-width: 0;
-      // font-size: 100%;
-      // font: inherit;
+      /* font-size: 100%; */
+      /* font: inherit; */
       vertical-align: baseline;
     }
 

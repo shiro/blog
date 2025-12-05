@@ -1,5 +1,5 @@
 import { Separator, Tooltip } from "@kobalte/core";
-import { css } from "@linaria/core";
+import { css } from "@style-this/core";
 import { Meta } from "@solidjs/meta";
 import cn from "classnames";
 import { Component, children, lazy } from "solid-js";

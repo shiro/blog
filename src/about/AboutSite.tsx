@@ -1,5 +1,5 @@
 import ProfilePicture from "@assets/about/profile-picture.jpg?lazy";
-import { css } from "@linaria/core";
+import { css } from "@style-this/core";
 import cn from "classnames";
 import { Component, JSX } from "solid-js";
 import LabeledBox from "~/about/LabeledBox";

@@ -1,4 +1,4 @@
-import { css } from "@linaria/core";
+import { css } from "@style-this/core";
 import cn from "classnames";
 import { Component, JSX } from "solid-js";
 import SVG from "~/components/SVG";
@@ -18,7 +18,7 @@ const BackgroundImage: Component<Props> = (props) => {
       class={cn(
         _BackgroundImage,
         $class,
-        "content-container relative xs:hidden l:block"
+        "content-container xs:hidden l:block relative"
       )}
       {...rest}>
       <SVG class="fixed ml-[-380px]" src="/sakura.svg" />

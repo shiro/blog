@@ -1,9 +1,10 @@
-import { css } from "@linaria/core";
+import { css } from "@style-this/core";
+import { styled } from "@style-this/solid";
 import cn from "classnames";
 import { Component, JSX } from "solid-js";
 import LabeledBox from "~/about/LabeledBox";
 import IconText from "~/components/IconText";
-import { breakpoint, breakpointUntil } from "~/style/commonStyle";
+import { breakpoint, breakpointUntil, color } from "~/style/commonStyle";
 
 interface Props {
   style?: JSX.CSSProperties;
@@ -16,7 +17,7 @@ const SkillsSection: Component<Props> = (props) => {
   return (
     <div class={cn(_SkillsSection, $class, "")} {...rest}>
       <LabeledBox label="skills">
-        <div class={cn(SkillList, "flex flex-col flex-wrap gap-2")}>
+        <SkillList class="flex flex-col flex-wrap gap-2">
           <Skill icon="bulb">Problem solving</Skill>
           <Skill icon="code">Software design</Skill>
           <Skill text="Ts">TypeScript / JavaScript</Skill>
@@ -46,7 +47,7 @@ const SkillsSection: Component<Props> = (props) => {
           <Skill text="C">C, C++, C#</Skill>
           <Skill icon="php">PHP, Laravel</Skill>
           <Skill icon="android">Java, Kotlin, Android</Skill>
-        </div>
+        </SkillList>
       </LabeledBox>
     </div>
   );
@@ -56,20 +57,30 @@ const Skill: Component<any> = (props: any) => {
   const { children, icon, text } = $destructure(props);
   return (
     <div class="flex gap-2">
-      <div
-        class={`box-content flex h-[28px] w-[28px] items-center justify-center rounded border-2 border-colors-text-600a`}>
+      <SkillIcon>
         <Show when={icon} fallback={<span class="select-none">{text}</span>}>
           <IconText icon={icon} />
         </Show>
-      </div>
+      </SkillIcon>
       <span>{children}</span>
     </div>
   );
 };
 
+const SkillIcon = styled.div`
+  border: 2px solid ${color("colors/text-600a")};
+  box-sizing: content-box;
+  display: flex;
+  height: 28px;
+  width: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+`;
+
 const _SkillsSection = css``;
 
-const SkillList = css`
+const SkillList = styled.div`
   height: 400px;
   ${breakpointUntil("m")} {
     height: 545px;

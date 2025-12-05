@@ -1,4 +1,4 @@
-import { css } from "@linaria/core";
+import { css } from "@style-this/core";
 import cn from "classnames";
 import { Component, ComponentProps, JSX } from "solid-js";
 import { breakpoint, withStyle } from "~/style/commonStyle";
@@ -83,45 +83,47 @@ const _LazyImage = css`
   background: linear-gradient(45deg, var(--color1) 0%, var(--color2) 100%);
   margin: 0 auto;
 
-  // we multiply by 100 to avoid CSS precision loss
+  /* we multiply by 100 to avoid CSS precision loss */
   --x_sf_px: calc((1 / var(--width)) * var(--w_limit) * 100);
   --y_sf_px: calc((1 / var(--height)) * var(--h_limit) * 100);
   --sf_px: min(var(--x_sf_px), var(--y_sf_px));
   width: calc((var(--width) * var(--sf_px) / 100));
-  // width: 80vw;
+  /* width: 80vw; */
   height: calc((var(--height) * var(--sf_px) / 100));
-  // height: calc(var(--x_sf_px));
-  // height: 100cqw;
-  // background: red;
+  /* height: calc(var(--x_sf_px)); */
+  /* height: 100cqw; */
+  /* background: red; */
 
-  // container-type: inline-size;
+  /* container-type: inline-size; */
 
-  img {
+  & img {
     width: 100%;
     height: 100%;
     object-fit: inherit;
-    // hide text when loading image
+    /* hide text when loading image */
     text-indent: 100%;
 
     @supports (animation-name: fadeIn) {
       opacity: 0;
       animation: fadeIn 200ms 4s forwards;
     }
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
-
     &.hasJS {
       animation: none;
       transition: opacity 200ms ease-in-out;
       &.loaded {
         opacity: 1;
       }
+    }
+  }
+`;
+
+const _GlobalStyle = css`
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
     }
   }
 `;

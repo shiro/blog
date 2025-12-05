@@ -1,4 +1,4 @@
-import { css } from "@linaria/core";
+import { css } from "@style-this/core";
 import cn from "classnames";
 import { Component, JSX } from "solid-js";
 import DialogImage from "~/DialogImage";
@@ -68,7 +68,7 @@ const Card = css`
     }
   }
 
-  ${DialogImage.styles.Thumbnail} {
+  .${DialogImage.styles.Thumbnail} {
     position: absolute;
     top: 0;
     left: 0;

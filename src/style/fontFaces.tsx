@@ -7,7 +7,7 @@ const nameSuffix = (isFull: boolean) => (isFull ? "" : " JP Only");
 // Hack linaria can't deal with import.meta, not even with babel
 const base = (process.env.BASE_URL ?? "").replace("/_build", "");
 
-const fontPath = `../../assets/fonts`;
+const fontPath = `/assets/fonts`;
 const notoPath = `${fontPath}/noto-sans-jp-v40`;
 const interPath = `${fontPath}/inter-3.19-roman`;
 

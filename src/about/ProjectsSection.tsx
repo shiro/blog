@@ -1,5 +1,5 @@
 import { Separator } from "@kobalte/core";
-import { css } from "@linaria/core";
+import { css } from "@style-this/core";
 import cn from "classnames";
 import { Component, JSX } from "solid-js";
 import LabeledBox from "~/about/LabeledBox";
@@ -77,7 +77,7 @@ const ProjectsSection: Component<Props> = (props) => {
             </ul>
           </Project>
 
-          <Separator.Root class="border-t-2 border-colors-primary-200" />
+          <Separator.Root class="border-colors-primary-200 border-t-2" />
 
           <Project
             name="map2"
@@ -98,7 +98,7 @@ const ProjectsSection: Component<Props> = (props) => {
             </ul>
           </Project>
 
-          <Separator.Root class="border-t-2 border-colors-primary-200" />
+          <Separator.Root class="border-colors-primary-200 border-t-2" />
 
           <Project
             name="Blog of a programming rabbit"
@@ -151,9 +151,11 @@ const Project: Component<any> = (props: any) => {
   const websiteName = $memo(website.split("://")[1]);
   return (
     <div>
-      <div class="mb-8 flex xs:flex-col xs:gap-1 s:flex-row s:gap-4">
-        <span class="text-nowrap text-heading3 text-colors-text-900a">{name}</span>
-        <span class="text-nowrap text-heading3 text-colors-text-300a">
+      <div class="xs:flex-col xs:gap-1 s:flex-row s:gap-4 mb-8 flex">
+        <span class="text-heading3 text-colors-text-900a text-nowrap">
+          {name}
+        </span>
+        <span class="text-heading3 text-colors-text-300a text-nowrap">
           {descripton}
         </span>
       </div>
@@ -164,7 +166,7 @@ const Project: Component<any> = (props: any) => {
               alt={`Project screenshot of project "${name}"`}
               class={cn(
                 ImageStyle,
-                "h-32 w-[30%] max-w-60 rounded border-2 border-colors-primary-800 xs:w-[50%]"
+                "border-colors-primary-800 xs:w-[50%] h-32 w-[30%] max-w-60 rounded border-2"
               )}
               image={image}
               thumbnail={thumbnails[idx()]}

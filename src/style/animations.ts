@@ -1,7 +1,4 @@
-import {style} from "@client/style/commonStyle";
-
-
-export const flashAnimation = style`
+export const flashAnimation = `
   animation: flash 0.6s alternate ease-in-out infinite;
 
   @keyframes flash {

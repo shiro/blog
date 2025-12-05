@@ -1,4 +1,4 @@
-import { css } from "@linaria/core";
+import { css } from "@style-this/core";
 import { normalizeColorName, themeColorNameList } from "~/style/colorsTs";
 import {
   bigText,
@@ -34,8 +34,8 @@ const twTextStyles = Object.entries(textDefinitions)
   )
   .join("\n");
 
-export const globals = css`
-  @_import "tailwindcss";
+const _GlobalStyle = css`
+  @import "tailwindcss";
 
   @theme {
     ${twColors}

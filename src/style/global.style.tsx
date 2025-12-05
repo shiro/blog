@@ -12,11 +12,11 @@ import "~/style/fontPreamble.style";
 import "~/style/layerPreamble.style";
 import "~/style/reset.style";
 import "~/style/tw.style";
-import { css } from "@linaria/core";
+import { css } from "@style-this/core";
 import { baseText } from "~/style/textStylesTS";
 import { boxShadow } from "~/style/commonStyle";
 
-export const globals = css`
+const _GlobalStyle = css`
   html {
     ${colorVariablesCSS}
   }
@@ -27,7 +27,7 @@ export const globals = css`
 
     a,
     span {
-      // display: inline-block;
+      /* display: inline-block; */
     }
 
     a,
@@ -159,7 +159,7 @@ export const globals = css`
     }
 
     html {
-      // firefox-only for now (https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-color)
+      /* firefox-only for now (https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-color) */
       scrollbar-color: ${color("colors/primary-700")}
         ${color("colors/special-bg")};
       overflow-y: overlay;
@@ -197,7 +197,7 @@ export const globals = css`
 
     pre.shiki {
       margin: 32px auto;
-      // margin-bottom: 32px;
+      /* margin-bottom: 32px; */
       background-color: ${color("colors/primary-50")};
       padding: 8px;
       font-family: Courier New;
@@ -210,7 +210,7 @@ export const globals = css`
       }
       .line {
         ${subText};
-        // width: 100%;
+        /* width: 100%; */
         white-space: pre-wrap !important;
         display: inline-flex;
         line-height: 1.1;
@@ -258,7 +258,7 @@ export const globals = css`
         }
         .line.output {
           color: ${color("colors/text-300a")} !important;
-          // padding-left: 16px;
+          /* padding-left: 16px; */
 
           &::before {
             content: "|";
