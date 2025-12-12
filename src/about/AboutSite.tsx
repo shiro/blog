@@ -99,6 +99,7 @@ const AboutSite: Component<Props> = (props) => {
 };
 
 const _AboutSite = css`
+  /* background: blue; */
   justify-items: start;
   grid-template:
     "picture name     name  emtpy" auto

@@ -47,7 +47,7 @@ const LazyImage: (meta: LazyImageMeta) => Component<Props> =
 
     return (
       <div
-        class={cn(outer, $class)}
+        class={cn(_LazyImage_outer, $class)}
         style={{
           ...style,
           "--width": `${meta.width}`,
@@ -69,13 +69,13 @@ const LazyImage: (meta: LazyImageMeta) => Component<Props> =
     );
   };
 
-const outer = css`
+const _LazyImage_outer = css`
   width: 100%;
   container-type: inline-size;
   overflow: hidden;
   object-fit: contain;
   ${breakpoint("xs")} {
-    object-fit: cover !important;
+    object-fit: cover;
   }
 `;
 
@@ -88,11 +88,11 @@ const _LazyImage = css`
   --y_sf_px: calc((1 / var(--height)) * var(--h_limit) * 100);
   --sf_px: min(var(--x_sf_px), var(--y_sf_px));
   width: calc((var(--width) * var(--sf_px) / 100));
-  /* width: 80vw; */
-  height: calc((var(--height) * var(--sf_px) / 100));
+  /* width: inherit; */
+  height: min(100%, calc((var(--height) * var(--sf_px) / 100)));
   /* height: calc(var(--x_sf_px)); */
   /* height: 100cqw; */
-  /* background: red; */
+  object-fit: inherit;
 
   /* container-type: inline-size; */
 

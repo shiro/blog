@@ -1,4 +1,0 @@
-overrides:
-  '@style-this/core': link:../../.local/share/pnpm/global/5/node_modules/@style-this/core
-  '@style-this/vite': link:../../.local/share/pnpm/global/5/node_modules/@style-this/vite
-  '@style-this/solid': link:../../.local/share/pnpm/global/5/node_modules/@style-this/solid

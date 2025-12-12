@@ -33,15 +33,12 @@ export default defineConfig({
     babel: {
       plugins: [babelPluginLabels, babelPluginLazyPlus],
     },
-    // the `solid` field is incorrectly typed
-    ...({} as any),
   },
 
   extensions: ["mdx", "md"],
 
   vite(options) {
     return {
-      // css: { postcss: "./postcss.config.js" },
       css: { transformer: "lightningcss" },
       server: {
         port: 3000,

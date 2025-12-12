@@ -4,11 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  '@style-this/core': link:../../.local/share/pnpm/global/5/node_modules/@style-this/core
-  '@style-this/vite': link:../../.local/share/pnpm/global/5/node_modules/@style-this/vite
-  '@style-this/solid': link:../../.local/share/pnpm/global/5/node_modules/@style-this/solid
-
 importers:
 
   .:
@@ -41,14 +36,14 @@ importers:
         specifier: 1.2.0
         version: 1.2.0(solid-js@1.9.10)(vinxi@0.5.8(@types/node@24.10.1)(db0@0.3.4)(ioredis@5.8.2)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.94.2)(terser@5.44.1))(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.94.2)(terser@5.44.1))
       '@style-this/core':
-        specifier: link:../../.local/share/pnpm/global/5/node_modules/@style-this/core
-        version: link:../../.local/share/pnpm/global/5/node_modules/@style-this/core
+        specifier: 0.1.4
+        version: 0.1.4(rollup@4.53.3)
       '@style-this/solid':
-        specifier: link:../../.local/share/pnpm/global/5/node_modules/@style-this/solid
-        version: link:../../.local/share/pnpm/global/5/node_modules/@style-this/solid
+        specifier: 0.1.2
+        version: 0.1.2
       '@style-this/vite':
-        specifier: link:../../.local/share/pnpm/global/5/node_modules/@style-this/vite
-        version: link:../../.local/share/pnpm/global/5/node_modules/@style-this/vite
+        specifier: 0.1.5
+        version: 0.1.5(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.53.3)(sass@1.94.2)(solid-js@1.9.10)(terser@5.44.1)
       '@tailwindcss/node':
         specifier: 4.1.17
         version: 4.1.17
@@ -1345,6 +1340,15 @@ packages:
       rollup:
         optional: true
 
+  '@rollup/plugin-wasm@6.2.2':
+    resolution: {integrity: sha512-gpC4R1G9Ni92ZIRTexqbhX7U+9estZrbhP+9SRb0DW9xpB9g7j34r+J2hqrcW/lRI7dJaU84MxZM0Rt82tqYPQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+
   '@rollup/pluginutils@5.3.0':
     resolution: {integrity: sha512-5EdhGZtnu3V88ces7s53hhfK5KSASnJZv8Lulpc04cWO3REESroJXg73DFsOmgbU2BhwV0E20bu2IDZb3VKW4Q==}
     engines: {node: '>=14.0.0'}
@@ -1634,6 +1638,20 @@ packages:
 
   '@speed-highlight/core@1.2.12':
     resolution: {integrity: sha512-uilwrK0Ygyri5dToHYdZSjcvpS2ZwX0w5aSt3GCEN9hrjxWCoeV4Z2DTXuxjwbntaLQIEEAlCeNQss5SoHvAEA==}
+
+  '@style-this/core@0.1.4':
+    resolution: {integrity: sha512-Rx8TgGcNQ70Mwbpk+AHfhrBRBXjIA4GjqRKnCqiomXvoFaKbhp7gE3Z0gU0Kegj8the2jYwFVdekM80Z0a+kvg==}
+
+  '@style-this/solid@0.1.2':
+    resolution: {integrity: sha512-a6u4cJw/g1Z3j2tSZvz1M8w0PpAAo4YuS1sTqcztPXGb+oya4c5shi57APr/mCjqOTksHVE3N0EhbPjXNHY6Ag==}
+
+  '@style-this/vite@0.1.5':
+    resolution: {integrity: sha512-Znp5riFjYhAirm3bSXQOzIk9HcUU4rXxxD28JRVKuKqxMLZs5KDUUu7IYB702MqW3rUdEJOlGRyyWZ4XBhZyhw==}
+    peerDependencies:
+      solid-js: '*'
+    peerDependenciesMeta:
+      solid-js:
+        optional: true
 
   '@swc/helpers@0.5.17':
     resolution: {integrity: sha512-5IKx/Y13RsYd+sauPb2x+U/xZikHjolzfuDgTAl/Tdf3Q8rslRvC19NKDLgAJQ6wsqADk10ntlv08nPFw/gO/A==}
@@ -4682,6 +4700,46 @@ packages:
       yaml:
         optional: true
 
+  vite@7.2.2:
+    resolution: {integrity: sha512-BxAKBWmIbrDgrokdGZH1IgkIk/5mMHDreLDmCJ0qpyJaAteP8NvMhkwr/ZCQNqNH97bw/dANTE9PDzqwJghfMQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': ^20.19.0 || >=22.12.0
+      jiti: '>=1.21.0'
+      less: ^4.0.0
+      lightningcss: ^1.21.0
+      sass: ^1.70.0
+      sass-embedded: ^1.70.0
+      stylus: '>=0.54.8'
+      sugarss: ^5.0.0
+      terser: ^5.16.0
+      tsx: ^4.8.1
+      yaml: ^2.4.2
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      jiti:
+        optional: true
+      less:
+        optional: true
+      lightningcss:
+        optional: true
+      sass:
+        optional: true
+      sass-embedded:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+      tsx:
+        optional: true
+      yaml:
+        optional: true
+
   vite@7.2.6:
     resolution: {integrity: sha512-tI2l/nFHC5rLh7+5+o7QjKjSR04ivXDF4jcgV0f/bTQ+OJiITy5S6gaynVsEM+7RqzufMnVbIon6Sr5x1SDYaQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -5854,6 +5912,12 @@ snapshots:
     optionalDependencies:
       rollup: 4.53.3
 
+  '@rollup/plugin-wasm@6.2.2(rollup@4.53.3)':
+    dependencies:
+      '@rollup/pluginutils': 5.3.0(rollup@4.53.3)
+    optionalDependencies:
+      rollup: 4.53.3
+
   '@rollup/pluginutils@5.3.0(rollup@4.53.3)':
     dependencies:
       '@types/estree': 1.0.8
@@ -6171,6 +6235,36 @@ snapshots:
       - vite
 
   '@speed-highlight/core@1.2.12': {}
+
+  '@style-this/core@0.1.4(rollup@4.53.3)':
+    dependencies:
+      '@rollup/plugin-wasm': 6.2.2(rollup@4.53.3)
+    transitivePeerDependencies:
+      - rollup
+
+  '@style-this/solid@0.1.2':
+    dependencies:
+      solid-js: 1.9.10
+
+  '@style-this/vite@0.1.5(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.53.3)(sass@1.94.2)(solid-js@1.9.10)(terser@5.44.1)':
+    dependencies:
+      '@style-this/core': 0.1.4(rollup@4.53.3)
+      vite: 7.2.2(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.94.2)(terser@5.44.1)
+    optionalDependencies:
+      solid-js: 1.9.10
+    transitivePeerDependencies:
+      - '@types/node'
+      - jiti
+      - less
+      - lightningcss
+      - rollup
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - terser
+      - tsx
+      - yaml
 
   '@swc/helpers@0.5.17':
     dependencies:
@@ -9913,6 +10007,22 @@ snapshots:
       - supports-color
 
   vite@6.4.1(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.94.2)(terser@5.44.1):
+    dependencies:
+      esbuild: 0.25.12
+      fdir: 6.5.0(picomatch@4.0.3)
+      picomatch: 4.0.3
+      postcss: 8.5.6
+      rollup: 4.53.3
+      tinyglobby: 0.2.15
+    optionalDependencies:
+      '@types/node': 24.10.1
+      fsevents: 2.3.3
+      jiti: 2.6.1
+      lightningcss: 1.30.2
+      sass: 1.94.2
+      terser: 5.44.1
+
+  vite@7.2.2(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.94.2)(terser@5.44.1):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.3)

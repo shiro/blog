@@ -7,7 +7,7 @@
     "prod": "pnpm build && pnpm serve",
     "build": "vinxi build",
     "start": "vinxi start",
-    "serve": "cd .output && npx http-server public -p 3091",
+    "serve": "cd .output && npx http-server public -p 3000",
     "version": "vinxi version"
   },
   "dependencies": {
@@ -30,9 +30,9 @@
     "cssnano": "6.1.2",
     "lodash": "npm:lodash-es@4.17.21",
     "postcss-preset-env": "10.5.0",
-    "@style-this/core": "link:../../../.local/share/pnpm/global/5/node_modules/@style-this/core",
-    "@style-this/solid": "link:../../../.local/share/pnpm/global/5/node_modules/@style-this/solid",
-    "@style-this/vite": "link:../../../.local/share/pnpm/global/5/node_modules/@style-this/vite",
+    "@style-this/core": "0.1.4",
+    "@style-this/solid": "0.1.2",
+    "@style-this/vite": "0.1.5",
     "postcss-pxtorem": "6.1.0",
     "rehype-raw": "7.0.0",
     "sass": "1.94.2",

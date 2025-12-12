@@ -26,8 +26,8 @@ export default createHandler(() => {
               content="width=device-width, initial-scale=1"
             />
             <link rel="icon" href={`${config.base}/favicon.ico`} />
-            {/* {filterAssets(assets)} */}
-            {assets}
+            {filterAssets(assets)}
+            {/* {assets} */}
           </head>
           <body>
             <div id="app" class="flex min-h-[100vh] flex-col">
