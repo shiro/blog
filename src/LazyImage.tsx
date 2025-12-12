@@ -35,11 +35,9 @@ const LazyImage: (meta: LazyImageMeta) => Component<Props> =
       allowUpscale,
       ...rest
     } = $destructure(props);
-    let hasJS = $signal(false);
     let loaded = $signal(false);
 
     $effect(() => {
-      hasJS = true;
       loaded ||= isImageCached(meta.url, () => {
         loaded = true;
       });
@@ -63,7 +61,7 @@ const LazyImage: (meta: LazyImageMeta) => Component<Props> =
           "--color2": meta.gradient[0],
         }}>
         <div class={cn(_LazyImage)}>
-          <img class={cn({ hasJS, loaded })} src={meta.url} {...rest} />
+          <img class={cn({ loaded })} src={meta.url} {...rest} />
         </div>
       </div>
     );
@@ -105,9 +103,9 @@ const _LazyImage = css`
 
     @supports (animation-name: fadeIn) {
       opacity: 0;
-      animation: fadeIn 200ms 4s forwards;
+      animation: fadeIn 200ms 2s forwards;
     }
-    &.hasJS {
+    @media (scripting: enabled), (scripting: initial-only) {
       animation: none;
       transition: opacity 200ms ease-in-out;
       &.loaded {
