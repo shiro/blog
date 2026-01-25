@@ -13,14 +13,13 @@ import {
   jumboText,
   largeText,
   primaryFontBold,
-  smallText,
   style,
   subText,
   textDefinitions,
 } from "~/style/commonStyle";
 import { pxToRem } from "~/style/fluidSizeTS";
 
-const twColors = themeColorNameList
+const twColors = Array.from(themeColorNameList.keys())
   .map(normalizeColorName)
   .map((color) => `--color-${color}: var(--color-${color});`)
   .join("\n");

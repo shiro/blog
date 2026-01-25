@@ -3,22 +3,22 @@ import theme from "./theme";
 export const themeColors = theme.colors;
 
 export const themeColorNameList = (() => {
-  const list: string[] = [];
+  const set = new Set<string>();
 
   for (const colorSet of [themeColors, themeColors.light, themeColors.dark]) {
     for (const [key, value] of Object.entries(colorSet)) {
-      if (typeof value == "string") list.push(key);
+      if (typeof value == "string") set.add(key);
     }
   }
 
-  return list;
+  return set;
 })();
 
 export const themeColorList = (() => {
   const list: string[] = [];
 
   for (const colorSet of [themeColors, themeColors.light, themeColors.dark]) {
-    for (const [key, value] of Object.entries(colorSet)) {
+    for (const value of Object.values(colorSet)) {
       if (typeof value == "string") list.push(value);
     }
   }

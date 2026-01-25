@@ -191,7 +191,7 @@ const _SnakeGame = css``;
 
 const Board = css`
   background: repeating-conic-gradient(
-      ${color("colors-primary-100")} 0 90deg,
+      ${color("colors/primary-100")} 0 90deg,
       transparent 0 180deg
     )
     0 0/32px 32px;

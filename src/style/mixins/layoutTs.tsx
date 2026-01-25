@@ -38,8 +38,9 @@ export const _color = (value: string) => {
 
   const important = rest.some((v) => v == "!important");
 
-  if (!themeColorNameList.includes(value)) {
+  if (!themeColorNameList.has(value)) {
     console.warn(`color '${value}' was not found in the current color palette`);
+    console.log(themeColorNameList);
     console.trace();
   }
 
@@ -50,7 +51,7 @@ export const _color = (value: string) => {
 type ColorTheme = "light" | "dark";
 
 export const _staticColor = (value: string, theme: ColorTheme) => {
-  if (!themeColorNameList.includes(value)) {
+  if (!themeColorNameList.has(value)) {
     console.warn(`color '${value}' was not found in the current color palette`);
     console.trace();
     return;
