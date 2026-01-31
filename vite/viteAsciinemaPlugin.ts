@@ -10,7 +10,6 @@ export const viteAsciinemaPlugin = (): PluginOption => {
       if (!filepath.endsWith(".cast")) return undefined;
 
       const meta = await compileAsciinema(filepath);
-      // const meta = {};
 
       return {
         code: `

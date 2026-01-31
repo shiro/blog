@@ -1,8 +1,8 @@
 ---
 title: Building a terminal-recording player for the modern web
-private: true
 ---
 
+import Video1 from "./initial.cast";
 import Video from "./demo.cast";
 
 Recording terminal sessions as video is tedious and doesn't let us copy the text.
@@ -20,8 +20,8 @@ Picking up OBS and getting a recording is easy enough, however we're now left wi
 No problem, just render it into a lossy format and reduce the quality a bit, that should do it!
 Oh, the text looks... like it's been through a microwave, not readable anymore.
 
-We could just settle for a slightly higher filesize and call it a day, but the way to good UX on the
-web is never easy, so find a better solution.
+We could just settle for a slightly higher filesize and call it a day, but the path to good UX on the
+web is never easy, so let's find a better solution.
 
 Thinking about it, text in the terminal doesn't actually change every frame, but regular recordings
 require a constant amount of space _per frame_. Can't we just remove all the static content somehow?
@@ -35,27 +35,30 @@ so we can recreate frame timings and handle the playback logic with JS? It's jus
 
 Alright, now we just need a way to get the text, maybe even listen to changes to avoid checking multiple times per
 second. My terminal emulator of choice is [Alacritty](https://github.com/alacritty/alacritty), which had some
-issues discussing the above, but at the time it hasn't been implemented.
+discussions about the above, but at the time it hasn't been implemented.
 So... time to look for a new terminal emulator? If only there was a way to make it work for everyone...
 
 
 # Tmux saves the day
 
-I was already using [Tmux](https://github.com/tmux/tmux), the terminal multiplexer 
-(it's nice for managing multiple windows and long running sessions), which conveniently seems to support capturing output.
+Another tool I'm using all the time is [Tmux](https://github.com/tmux/tmux), the terminal multiplexer.
+It's is particularly useful for developers who work with remote servers or need to maintain persistent sessions that survive
+network disconnections. Beyond its session management capabilities, turns out it also provides a way to capture a snapshot the
+screen contents.
 
 ```ansi terminal
 [me@local:~]# tmux capture-pane -e
 [me@local:~]# tmux save-buffer ~/output
 [me@local:~]# cat ~/output
 \[me@local:~]# tmux capture-pane -e
-\[me@local:~]# tmux save-buffer ~/output
+\[me@local:~]# t/mux save-buffer ~/output
 \[me@local:~]# cat ~/output
 ```
 
 
-This gives us the raw terminal output including ANSI escape sequences that are used to represent colors, blinking
-cursors and a myriad of other things. We'll worry about parsing colors later, let's try to get notified about changes
+This gives us the raw terminal output including escape sequences. ANSI escape sequences are special character codes that terminals interpret as
+formatting commands - they start with an escape character (ESC, or `\033`) followed by specific codes that control
+text appearance, cursor movement, and screen manipulation. We'll worry about parsing colors later, let's try to get notified about changes
 rather than running the save command all the time. Turns out that's also doable.
  
 
@@ -64,7 +67,7 @@ rather than running the save command all the time. Turns out that's also doable.
 > pipe  is  closed before shell-command is executed.  The shell-command string may contain the special character sequences supported by the status-left
 > option.  If no shell-command is given, the current pipe (if any) is closed.
 
-As is often the case, the answer is burried deep inside the man-page .
+As is often the case, the answer is buried deep inside the man-page .
 By using `pipe-pane` we should be able to get live output, which means we no longer have to manually snapshot the
 terminal on a timer and risk missing rapid updates right?
 
@@ -85,6 +88,31 @@ filesystem change events and trigger a snapshot using `save-buffer`!
 
 To make it easier to work with, I quickly implemented a small terminal application using rust (which is a great choice
 for small terminal utilities like that).
+
+
+```ansi terminal
+[me@local:~]# rust-record start ~/live-output
+[me@local:~]# echo hi
+hi
+[me@local:~]# rust-record end
+[me@local:~]# cat ~/live-output
+\[me@local:~]# e
+---frame--- {"width": 80, "height": 40}
+\[me@local:~]# ec
+---frame--- {"width": 80, "height": 40}
+\[me@local:~]# ech
+---frame--- {"width": 80, "height": 40}
+\[me@local:~]# echo
+---frame--- {"width": 80, "height": 40}
+\[me@local:~]# echo 
+---frame--- {"width": 80, "height": 40}
+\[me@local:~]# echo h
+---frame--- {"width": 80, "height": 40}
+\[me@local:~]# echo hi
+---frame--- {"width": 80, "height": 40}
+\[me@local:~]# echo hi
+hi
+```
 
 # Where's the cursor?
 
@@ -112,22 +140,77 @@ After updating to the latest git version of `tmux`, we can now get all the curso
 shape: block, blinking: 1, color: #ffffff
 ```
 
+This uses tmux's string formatting feature and allows us to print special variables that get replaced with actual values
+from the current session.
 
 # Building the player component
 
 Now that we can capture frame data along with the cursor position, it's time to build a component that can play back the
 frames with the correct timings.
-The plan is to build a SolidJS component, for peak performance and minimal bundle size, easy to integrate into my blog,
+I decided to build a SolidJS component, for peak performance and minimal bundle size, easy to integrate into my blog,
 vanilla HTML sites and even React apps (with some adapter magic).
 
+Some core features I had in mind from the beggining were:
+- Dynamic font size that scales to fit the parent HTML element it's in, just like an image
+- Smooth play, pause and seek functionality, maybe some transitions
+- Keybindings, including jumping to next/previous frames in the capture
+- Full-screen button
+- Text diffing between frames, so only parts that change get replaced in the HTML tree, preserving text selections
+
+The implementation is quite involved, but feel free to check it out on github - [first published
+version](https://github.com/shiro/blog/blob/33f877da67229bad1ccc5dabdf68c119b8f4a6d2/src/terminalcap/Asciinema.tsx)j.
+And here's what it looks like:
+
+<Video1 />
+
+It even allows for color-remapping, so that we can approximate each color from the terminal's colors scheme to the
+website's theme. There's probably a couple of things we can tweak here, as well as potential additions like markers, but
+it's definitely not bad for a first version!
+
+The next step was to write a simple vite plugin that evaluates the frames at compile-time so my static blog website can
+use it without the need for a backend. In the future we can also move all the logic out into a library that can be
+called with dynamic content from a backend too.
+
+```tsx
+import { PluginOption } from "vite";
+import { compileFrames } from "../src/terminalcap/compiler.server";
+
+export const viteTermcapPlugin = (): PluginOption => {
+  return {
+    name: "viteTermcapPlugin",
+    enforce: "pre",
+    async load(id: string) {
+      const [filepath] = id.split("?");
+      if (!filepath.endsWith(".term-capture")) return undefined;
+
+      const meta = await compileFrames(filepath);
+
+      return {
+        code: `
+import PlayerComponent from "~/terminalcap/PlayerComponent.vite";
+export default PlayerComponent(${JSON.stringify(meta)});
+          `,
+        moduleSideEffects: true,
+      };
+    },
+  };
+};
+```
+
+We basically define a handler for the `.term-capture` filetype so we can import it from any typescript file. The plugin then
+reads the file contents, computes the static capture frames from the ANSI sequences and passes them to a parameterized
+solid component we can instantiate like any other one.
+
+Since we have the recording backend, as well as the frontend component, we're pretty much done here right? 
 
 # It already exists
 
-After researching some more in hopes to find ways to improve what we've got, the unexpected happened - someone already
-made it!
+There's a few things in programing that make you stop what you're doing and re-evaluate your life choices, one of them
+being the realization that you've spend a weekend programming something that already exists, you just didn't know it.
 
 I remember seeing [Asciinema](https://www.asciinema.org) recordings before, but didn't pay it too much attention as I
 just assumed it was a regular video recording at that time.
+It turns out that it's essentially the same thing as my terminal capture program, but better.
 
 
 # Implemented asciinema
