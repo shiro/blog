@@ -107,6 +107,11 @@ console.log('goodbye')
 
 Implementing a shiki highlighter is incredibly easy, since the library provides all the hooks
 we need and more - there's even helpers for adding CSS classes to nodes.
+
+The `diff` flag is read from Shiki's `this.options.meta.__raw`, which
+`@shikijs/rehype` supplies from the code fence metadata.
+This lets the transformer work without an additional metadata parser.
+
 Here's what a simple implementation of the above looks like:
 
 ```ts title="shikiDiffNotation.ts"
@@ -121,8 +126,8 @@ export function shikiDiffNotation(
 
   return {
     name: "shiki-diff-notation",
-    code(node: MetaNode) {
-      if (!node.meta?.diff) return;
+    code(node) {
+      if (!/(?:^|\s)diff(?:\s|$)/.test(this.options.meta?.__raw ?? "")) return;
       this.addClassToHast(this.pre, classActivePre);
 
       const lines = node.children.filter(
