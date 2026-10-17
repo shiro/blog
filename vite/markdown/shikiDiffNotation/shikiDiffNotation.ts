@@ -37,14 +37,16 @@ export function shikiDiffNotation(
           const text = child.children[0];
           if (text.type !== "text") continue;
 
-          if (text.value.startsWith("+")) {
+          if (text.value.startsWith(" ")) {
+            text.value = text.value.slice(1);
+          } else if (text.value.startsWith("+")) {
             text.value = text.value.slice(1);
             this.addClassToHast(line, classLineAdd);
-          }
-          if (text.value.startsWith("-")) {
+          } else if (text.value.startsWith("-")) {
             text.value = text.value.slice(1);
             this.addClassToHast(line, classLineRemove);
           }
+          break;
         }
       });
     },
