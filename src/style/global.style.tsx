@@ -232,7 +232,9 @@ const _GlobalStyle = css`
         color: ${color("colors/text-300a")} !important;
       }
       &.diff {
+        padding-inline: 0;
         .line {
+          padding-inline: 8px;
           &::before {
             content: " ";
             padding: 0 8px;
@@ -242,12 +244,14 @@ const _GlobalStyle = css`
             background: rgba(53, 117, 42, 0.15);
             &::before {
               content: "+";
+              color: #afa;
             }
           }
           &.remove {
             background: rgba(193, 34, 34, 0.15);
             &::before {
               content: "-";
+              color: #faa;
             }
           }
         }
