@@ -37,14 +37,19 @@ export function shikiDiffNotation(
           const text = child.children[0];
           if (text.type !== "text") continue;
 
-          if (text.value.startsWith("+")) {
+          const marker = text.value[0];
+
+          if (/^[+ -]/.test(text.value)) {
             text.value = text.value.slice(1);
-            this.addClassToHast(line, classLineAdd);
           }
-          if (text.value.startsWith("-")) {
-            text.value = text.value.slice(1);
-            this.addClassToHast(line, classLineRemove);
+
+          if (marker === "+" || marker === "-") {
+            this.addClassToHast(
+              line,
+              marker === "+" ? classLineAdd : classLineRemove
+            );
           }
+          break;
         }
       });
     },

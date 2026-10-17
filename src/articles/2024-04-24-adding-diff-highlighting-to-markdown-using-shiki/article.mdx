@@ -135,14 +135,19 @@ export function shikiDiffNotation(
           const text = child.children[0];
           if (text.type !== "text") continue;
 
-          if (text.value.startsWith("+")) {
+          const marker = text.value[0];
+
+          if (/^[+ -]/.test(text.value)) {
             text.value = text.value.slice(1);
-            this.addClassToHast(line, classLineAdd);
           }
-          if (text.value.startsWith("-")) {
-            text.value = text.value.slice(1);
-            this.addClassToHast(line, classLineRemove);
+
+          if (marker === "+" || marker === "-") {
+            this.addClassToHast(
+              line,
+              marker === "+" ? classLineAdd : classLineRemove
+            );
           }
+          break;
         }
       });
     },
@@ -151,7 +156,8 @@ export function shikiDiffNotation(
 ```
 
 I also added a couple of CSS classes to add highlighting and marker symbols that
-won't get included in user selections.
+won't get included in user selections. The leading space on unchanged diff lines
+is also removed, preserving the code indentation when copying.
 After adding our plugin, we can now enjoy the new, superior, notation as it
 was originally intended:
 
