@@ -107,65 +107,16 @@ console.log('goodbye')
 
 Implementing a shiki highlighter is incredibly easy, since the library provides all the hooks
 we need and more - there's even helpers for adding CSS classes to nodes.
-Here's what a simple implementation of the above looks like:
-
-```ts title="shikiDiffNotation.ts"
-export function shikiDiffNotation(
-  options: shikiDiffNotationOptions = {}
-): ShikiTransformer {
-  const {
-    classLineAdd = "add",
-    classLineRemove = "remove",
-    classActivePre = "diff",
-  } = options;
-
-  return {
-    name: "shiki-diff-notation",
-    code(node) {
-      if (this.options.meta?.__raw?.split(" ")[0] !== "diff") return;
-
-      this.addClassToHast(this.pre, classActivePre);
-
-      const lines = node.children.filter(
-        (node) => node.type === "element"
-      ) as Element[];
-
-      lines.forEach((line) => {
-        for (const child of line.children) {
-          if (child.type !== "element") continue;
-          const text = child.children[0];
-          if (text.type !== "text") continue;
-
-          const marker = text.value[0];
-
-          if (/^[+ -]/.test(text.value)) {
-            text.value = text.value.slice(1);
-          }
-
-          if (marker === "+" || marker === "-") {
-            this.addClassToHast(
-              line,
-              marker === "+" ? classLineAdd : classLineRemove
-            );
-          }
-          break;
-        }
-      });
-    },
-  };
-}
-```
-
 Use `diff` as the fence language and specify the syntax-highlighting language with `lang="html"`, following [Expressive Code’s convention](https://expressive-code.com/key-features/text-markers/#combining-syntax-highlighting-with-diff-like-syntax). Prettier leaves these diff contents unchanged instead of trying to format them as HTML.
 
-The rehype wrapper selects the target language before Shiki loads grammars and enables the diff transformer only for these blocks:
+The rehype wrapper selects the target language before Shiki loads grammars. The Shiki transformer then marks the highlighted lines. Both are included in this file:
 
 ```ts title="rehypeShikiDiff.ts"
+import type { ShikiTransformer } from "@shikijs/core";
 import rehypeShiki, { type RehypeShikiOptions } from "@shikijs/rehype";
-import type { Root } from "hast";
+import type { Element, Root } from "hast";
 import { unified } from "unified";
 import { visit } from "unist-util-visit";
-import { shikiDiffNotation } from "./shikiDiffNotation";
 
 export default function rehypeShikiDiff(options: RehypeShikiOptions) {
   const highlight = unified().use(rehypeShiki, {
@@ -209,6 +160,60 @@ export default function rehypeShikiDiff(options: RehypeShikiOptions) {
       ].join(" ");
     });
     await highlight.run(tree);
+  };
+}
+
+export interface shikiDiffNotationOptions {
+  // class for added lines
+  classLineAdd?: string;
+  // class for removed lines
+  classLineRemove?: string;
+  // class added to the <pre> element when the current code has diff
+  classActivePre?: string;
+}
+
+export function shikiDiffNotation(
+  options: shikiDiffNotationOptions = {}
+): ShikiTransformer {
+  const {
+    classLineAdd = "add",
+    classLineRemove = "remove",
+    classActivePre = "diff",
+  } = options;
+
+  return {
+    name: "shiki-diff-notation",
+    code(node) {
+      if (this.options.meta?.__raw?.split(" ")[0] !== "diff") return;
+
+      this.addClassToHast(this.pre, classActivePre);
+
+      const lines = node.children.filter(
+        (node) => node.type === "element"
+      ) as Element[];
+
+      lines.forEach((line) => {
+        for (const child of line.children) {
+          if (child.type !== "element") continue;
+          const text = child.children[0];
+          if (text.type !== "text") continue;
+
+          const marker = text.value[0];
+
+          if (/^[+ -]/.test(text.value)) {
+            text.value = text.value.slice(1);
+          }
+
+          if (marker === "+" || marker === "-") {
+            this.addClassToHast(
+              line,
+              marker === "+" ? classLineAdd : classLineRemove
+            );
+          }
+          break;
+        }
+      });
+    },
   };
 }
 ```
