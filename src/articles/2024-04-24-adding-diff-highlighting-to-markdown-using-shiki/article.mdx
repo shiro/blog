@@ -212,8 +212,7 @@ export function shikiDiffNotation(
 ```
 
 To add it, just replace `@shikijs/rehype` with this wrapper and pass in the same options
-and other transformers. The wrapper also adds a `diff` flag, so the transformer can check
-whether a codeblock needs diff highlighting without a separate metadata parser.
+and other transformers.
 
 I also added a couple of CSS classes to add highlighting and marker symbols that
 won't get included in user selections. The leading space on unchanged diff lines
