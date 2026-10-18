@@ -97,7 +97,7 @@ it's dependencies.
 The next step was to decide on a notation, the Github one seems pretty good so I'll go with that.
 
 ````txt
-```ts diff
+```diff lang="ts"
 -console.log('hewwo')
 +console.log('hello')
 console.log('goodbye')
@@ -121,8 +121,14 @@ export function shikiDiffNotation(
 
   return {
     name: "shiki-diff-notation",
-    code(node: MetaNode) {
-      if (!node.meta?.diff) return;
+    code(node) {
+      if (
+        !this.options.meta?.__raw
+          ?.match(/(?:[^\s"']|"[^"]*"|'[^']*')+/g)
+          ?.includes("diff")
+      )
+        return;
+
       this.addClassToHast(this.pre, classActivePre);
 
       const lines = node.children.filter(
@@ -155,13 +161,72 @@ export function shikiDiffNotation(
 }
 ```
 
+Use `diff` as the fence language and specify the syntax-highlighting language with `lang="html"`, following [Expressive Code’s convention](https://expressive-code.com/key-features/text-markers/#combining-syntax-highlighting-with-diff-like-syntax). Prettier leaves these diff contents unchanged instead of trying to format them as HTML.
+
+The rehype wrapper selects the target language before Shiki loads grammars and enables the diff transformer only for these blocks:
+
+```ts title="rehypeShikiDiff.ts"
+import rehypeShiki, { type RehypeShikiOptions } from "@shikijs/rehype";
+import type { Root } from "hast";
+import { unified } from "unified";
+import { visit } from "unist-util-visit";
+import { shikiDiffNotation } from "./shikiDiffNotation";
+
+export default function rehypeShikiDiff(options: RehypeShikiOptions) {
+  const highlight = unified().use(rehypeShiki, {
+    ...options,
+    transformers: [...(options.transformers ?? []), shikiDiffNotation()]
+  });
+
+  return async function (tree: Root) {
+    visit(tree, "element", (node) => {
+      if (node.tagName !== "pre") return;
+      const code = node.children[0];
+      if (
+        code?.type !== "element" ||
+        !Array.isArray(code.properties.className) ||
+        !code.properties.className.includes("language-diff") ||
+        typeof code.data?.meta !== "string"
+      )
+        return;
+
+      const metadata =
+        code.data.meta.match(/(?:[^\s"']|"[^"]*"|'[^']*')+/g) ?? [];
+      const language = metadata.find((token) => /^lang="[^"]+"$/.test(token));
+      if (!language) return;
+      // Select the highlighting language before Shiki loads grammars, consuming
+      // lang="..." and retaining a diff flag for the transformer
+      // mdast-util-to-hast already converted the fence language to a code class
+      //
+      // Equivalent fence before normalization:
+      // ```diff lang="html" title="example.html"
+      // ```
+      //
+      // Equivalent fence after normalization:
+      // ```html diff title="example.html"
+      // ```
+      code.properties.className = code.properties.className.map((name) =>
+        name === "language-diff" ? `language-${language.slice(6, -1)}` : name
+      );
+      code.data.meta = [
+        "diff",
+        ...metadata.filter((token) => token !== language)
+      ].join(" ");
+    });
+    await highlight.run(tree);
+  };
+}
+```
+
+Configure this wrapper in place of `@shikijs/rehype`, passing the same options and other transformers. The wrapper selects the language and adds the `diff` metadata flag before highlighting. The transformer reads that flag directly, without requiring a custom metadata parser.
+
 I also added a couple of CSS classes to add highlighting and marker symbols that
 won't get included in user selections. The leading space on unchanged diff lines
 is also removed, preserving the code indentation when copying.
 After adding our plugin, we can now enjoy the new, superior, notation as it
 was originally intended:
 
-```ts diff
+```diff lang="ts"
 -console.log('hewwo')
 +console.log('hello')
 console.log('goodbye')

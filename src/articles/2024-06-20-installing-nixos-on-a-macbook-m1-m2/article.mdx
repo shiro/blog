@@ -144,7 +144,7 @@ If you need to display dynamic content that isn't known at compile-time, you
 might want to consider adding an external API server and loading the dynamic
 data from the client after page load.
 
-```tsx title="app.config.ts" diff
+```diff lang="tsx" title="app.config.ts"
 import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
@@ -163,7 +163,7 @@ It's also necessary to let the router know where the URL root of the site is, i.
 the case of Github pages, it'll be the respository name, which we can inject as an
 environmental variable at build-time.
 
-```tsx title="src/app.tsx" diff
+```diff lang="tsx" title="src/app.tsx"
 export default function App() {
   return (
     <Router

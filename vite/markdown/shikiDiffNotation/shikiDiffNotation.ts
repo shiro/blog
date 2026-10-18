@@ -10,8 +10,6 @@ export interface shikiDiffNotationOptions {
   classActivePre?: string;
 }
 
-type MetaNode = Element & { meta?: Record<string, any> };
-
 export function shikiDiffNotation(
   options: shikiDiffNotationOptions = {}
 ): ShikiTransformer {
@@ -23,8 +21,14 @@ export function shikiDiffNotation(
 
   return {
     name: "shiki-diff-notation",
-    code(node: MetaNode) {
-      if (!node.meta?.diff) return;
+    code(node) {
+      if (
+        !this.options.meta?.__raw
+          ?.match(/(?:[^\s"']|"[^"]*"|'[^']*')+/g)
+          ?.includes("diff")
+      )
+        return;
+
       this.addClassToHast(this.pre, classActivePre);
 
       const lines = node.children.filter(

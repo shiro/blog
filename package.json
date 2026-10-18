@@ -74,6 +74,8 @@
     "textdiff-create": "^1.1.11",
     "textdiff-patch": "^1.1.10",
     "ts-node": "10.9.2",
+    "unified": "11.0.5",
+    "unist-util-visit": "5.0.0",
     "vite-plugin-solid-svg": "0.8.1"
   }
 }
