@@ -26,18 +26,7 @@ export default function rehypeShikiDiff(options: RehypeShikiOptions) {
         code.data.meta.match(/(?:[^\s"']|"[^"]*"|'[^']*')+/g) ?? [];
       const language = metadata.find((token) => /^lang="[^"]+"$/.test(token));
       if (!language) return;
-      // Select the highlighting language before Shiki loads grammars, consuming
-      // lang="..." and retaining a diff flag for the transformer
-      // MDX uses remark-rehype and mdast-util-to-hast to convert the fence
-      // language to a class on the code element before running rehype plugins
-      //
-      // Equivalent fence before normalization:
-      // ```diff lang="html" title="example.html"
-      // ```
-      //
-      // Equivalent fence after normalization:
-      // ```html diff title="example.html"
-      // ```
+      // select the highlighting language and keep the diff flag
       code.properties.className = code.properties.className.map((name) =>
         name === "language-diff" ? `language-${language.slice(6, -1)}` : name
       );
