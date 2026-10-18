@@ -28,7 +28,8 @@ export default function rehypeShikiDiff(options: RehypeShikiOptions) {
       if (!language) return;
       // Select the highlighting language before Shiki loads grammars, consuming
       // lang="..." and retaining a diff flag for the transformer
-      // mdast-util-to-hast already converted the fence language to a code class
+      // MDX uses remark-rehype and mdast-util-to-hast to convert the fence
+      // language to a class on the code element before running rehype plugins
       //
       // Equivalent fence before normalization:
       // ```diff lang="html" title="example.html"
