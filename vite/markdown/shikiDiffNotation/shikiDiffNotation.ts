@@ -22,7 +22,7 @@ export function shikiDiffNotation(
   return {
     name: "shiki-diff-notation",
     code(node) {
-      if (this.options.meta?.__raw?.split(" ")[0] !== "diff") return;
+      if (!/^diff(?:\s|$)/.test(this.options.meta?.__raw || "")) return;
 
       this.addClassToHast(this.pre, classActivePre);
 
