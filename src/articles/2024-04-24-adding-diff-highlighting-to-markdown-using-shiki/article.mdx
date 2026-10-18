@@ -221,7 +221,12 @@ function shikiDiffNotation(
 ```
 
 To add it, just replace `@shikijs/rehype` with this wrapper and pass in the same options
-and other transformers.
+and other transformers:
+
+```diff lang="ts"
+-import rehypeShiki from "@shikijs/rehype";
++import rehypeShiki from "./shikiDiffNotation";
+```
 
 I also added a couple of CSS classes to add highlighting and marker symbols that
 won't get included in user selections. The leading space on unchanged diff lines
