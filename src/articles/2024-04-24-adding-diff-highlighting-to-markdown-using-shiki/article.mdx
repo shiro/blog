@@ -96,6 +96,10 @@ implementation](https://github.com/shikijs/shiki/blob/main/packages/transformers
 it's dependencies.
 The next step was to decide on a notation, the Github one seems pretty good so I'll go with that.
 
+I'll use `diff` for the codeblock language and `lang="ts"` for the highlighting language,
+following [Expressive Code's notation](https://expressive-code.com/key-features/text-markers/#combining-syntax-highlighting-with-diff-like-syntax).
+This also keeps Prettier from trying to format the diff as ordinary code.
+
 ````txt
 ```diff lang="ts"
 -console.log('hewwo')
@@ -107,13 +111,8 @@ console.log('goodbye')
 
 Implementing a shiki highlighter is incredibly easy, since the library provides all the hooks
 we need and more - there's even helpers for adding CSS classes to nodes.
-I'll use `diff` for the codeblock language and `lang="ts"` for the highlighting language,
-following [Expressive Code's notation](https://expressive-code.com/key-features/text-markers/#combining-syntax-highlighting-with-diff-like-syntax).
-This also keeps Prettier from trying to format the diff as ordinary code.
-
-Before shiki can highlight the code, we need to select the language from `lang="..."`.
-The rehype wrapper takes care of that, then the shiki transformer adds the diff classes.
-Here's what both look like in one file:
+We'll also need a rehype wrapper to select the highlighting language before shiki loads it.
+Here's what the implementation looks like:
 
 ```ts title="rehypeShikiDiff.ts"
 import type { ShikiTransformer } from "@shikijs/core";
