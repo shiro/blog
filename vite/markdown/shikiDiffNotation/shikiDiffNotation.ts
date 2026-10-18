@@ -1,5 +1,52 @@
 import type { ShikiTransformer } from "@shikijs/core";
-import type { Element } from "hast";
+import upstreamRehypeShiki, { type RehypeShikiOptions } from "@shikijs/rehype";
+import type { Element, Root } from "hast";
+import { unified, type Transformer } from "unified";
+import { visit } from "unist-util-visit";
+
+export default function rehypeShiki(
+  options: RehypeShikiOptions
+): Transformer<Root> {
+  const processor = unified()
+    .use(rehypeDiffNotation)
+    .use(upstreamRehypeShiki, {
+      ...options,
+      transformers: [...(options.transformers ?? []), shikiDiffNotation()]
+    });
+
+  return async function (tree, file) {
+    await processor.run(tree, file);
+  };
+}
+
+function rehypeDiffNotation() {
+  return function (tree: Root) {
+    visit(tree, "element", (node) => {
+      if (node.tagName !== "pre") return;
+      const code = node.children[0];
+      if (
+        code?.type !== "element" ||
+        !Array.isArray(code.properties.className) ||
+        !code.properties.className.includes("language-diff") ||
+        typeof code.data?.meta !== "string"
+      )
+        return;
+
+      const metadata =
+        code.data.meta.match(/(?:[^\s"']|"[^"]*"|'[^']*')+/g) ?? [];
+      const language = metadata.find((token) => /^lang="[^"]+"$/.test(token));
+      if (!language) return;
+      // select the highlighting language and keep the diff flag
+      code.properties.className = code.properties.className.map((name) =>
+        name === "language-diff" ? `language-${language.slice(6, -1)}` : name
+      );
+      code.data.meta = [
+        "diff",
+        ...metadata.filter((token) => token !== language)
+      ].join(" ");
+    });
+  };
+}
 
 export interface shikiDiffNotationOptions {
   // class for added lines
@@ -10,7 +57,7 @@ export interface shikiDiffNotationOptions {
   classActivePre?: string;
 }
 
-export function shikiDiffNotation(
+function shikiDiffNotation(
   options: shikiDiffNotationOptions = {}
 ): ShikiTransformer {
   const {

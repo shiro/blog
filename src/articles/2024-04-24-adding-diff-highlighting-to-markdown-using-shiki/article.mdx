@@ -114,20 +114,30 @@ we need and more - there's even helpers for adding CSS classes to nodes.
 We'll also need a rehype wrapper to select the highlighting language before shiki loads it.
 Here's what the implementation looks like:
 
-```ts title="rehypeShikiDiff.ts"
+```ts title="shikiDiffNotation.ts"
 import type { ShikiTransformer } from "@shikijs/core";
-import rehypeShiki, { type RehypeShikiOptions } from "@shikijs/rehype";
+import upstreamRehypeShiki, { type RehypeShikiOptions } from "@shikijs/rehype";
 import type { Element, Root } from "hast";
-import { unified } from "unified";
+import { unified, type Transformer } from "unified";
 import { visit } from "unist-util-visit";
 
-export default function rehypeShikiDiff(options: RehypeShikiOptions) {
-  const highlight = unified().use(rehypeShiki, {
-    ...options,
-    transformers: [...(options.transformers ?? []), shikiDiffNotation()]
-  });
+export default function rehypeShiki(
+  options: RehypeShikiOptions
+): Transformer<Root> {
+  const processor = unified()
+    .use(rehypeDiffNotation)
+    .use(upstreamRehypeShiki, {
+      ...options,
+      transformers: [...(options.transformers ?? []), shikiDiffNotation()]
+    });
 
-  return async function (tree: Root) {
+  return async function (tree, file) {
+    await processor.run(tree, file);
+  };
+}
+
+function rehypeDiffNotation() {
+  return function (tree: Root) {
     visit(tree, "element", (node) => {
       if (node.tagName !== "pre") return;
       const code = node.children[0];
@@ -152,7 +162,6 @@ export default function rehypeShikiDiff(options: RehypeShikiOptions) {
         ...metadata.filter((token) => token !== language)
       ].join(" ");
     });
-    await highlight.run(tree);
   };
 }
 
@@ -165,7 +174,7 @@ export interface shikiDiffNotationOptions {
   classActivePre?: string;
 }
 
-export function shikiDiffNotation(
+function shikiDiffNotation(
   options: shikiDiffNotationOptions = {}
 ): ShikiTransformer {
   const {

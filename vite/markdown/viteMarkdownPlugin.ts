@@ -2,7 +2,7 @@ import { nodeTypes } from "@mdx-js/mdx";
 import fs from "fs";
 import rehypeRaw from "rehype-raw";
 import remarkFrontmatter from "remark-frontmatter";
-import rehypeShikiDiff from "./shikiDiffNotation/rehypeShikiDiff";
+import rehypeShiki from "./shikiDiffNotation/shikiDiffNotation";
 // @ts-ignore
 import _mdx from "@vinxi/plugin-mdx";
 // @ts-ignore
@@ -29,7 +29,7 @@ export const viteMarkdownPlugin = () =>
     stylePropertyNameCase: "css",
     rehypePlugins: [
       [
-        rehypeShikiDiff,
+        rehypeShiki,
         {
           theme: "github-dark",
           colorReplacements: {
