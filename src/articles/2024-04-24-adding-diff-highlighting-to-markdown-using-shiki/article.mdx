@@ -107,9 +107,13 @@ console.log('goodbye')
 
 Implementing a shiki highlighter is incredibly easy, since the library provides all the hooks
 we need and more - there's even helpers for adding CSS classes to nodes.
-Use `diff` as the fence language and specify the syntax-highlighting language with `lang="html"`, following [Expressive Code’s convention](https://expressive-code.com/key-features/text-markers/#combining-syntax-highlighting-with-diff-like-syntax). Prettier leaves these diff contents unchanged instead of trying to format them as HTML.
+I'll use `diff` for the codeblock language and `lang="ts"` for the highlighting language,
+following [Expressive Code's notation](https://expressive-code.com/key-features/text-markers/#combining-syntax-highlighting-with-diff-like-syntax).
+This also keeps Prettier from trying to format the diff as ordinary code.
 
-The rehype wrapper selects the target language before Shiki loads grammars. The Shiki transformer then marks the highlighted lines. Both are included in this file:
+Before shiki can highlight the code, we need to select the language from `lang="..."`.
+The rehype wrapper takes care of that, then the shiki transformer adds the diff classes.
+Here's what both look like in one file:
 
 ```ts title="rehypeShikiDiff.ts"
 import type { ShikiTransformer } from "@shikijs/core";
@@ -219,7 +223,9 @@ export function shikiDiffNotation(
 }
 ```
 
-Configure this wrapper in place of `@shikijs/rehype`, passing the same options and other transformers. The wrapper selects the language and adds the `diff` metadata flag before highlighting. The transformer reads that flag directly, without requiring a custom metadata parser.
+To add it, just replace `@shikijs/rehype` with this wrapper and pass in the same options
+and other transformers. The wrapper also adds a `diff` flag, so the transformer can check
+whether a codeblock needs diff highlighting without a separate metadata parser.
 
 I also added a couple of CSS classes to add highlighting and marker symbols that
 won't get included in user selections. The leading space on unchanged diff lines
