@@ -2,8 +2,7 @@ import { nodeTypes } from "@mdx-js/mdx";
 import fs from "fs";
 import rehypeRaw from "rehype-raw";
 import remarkFrontmatter from "remark-frontmatter";
-// @ts-ignore
-import rehypeShiki from "@shikijs/rehype";
+import rehypeShiki from "./shikiDiffNotation/shikiDiffNotation";
 // @ts-ignore
 import _mdx from "@vinxi/plugin-mdx";
 // @ts-ignore
@@ -12,7 +11,6 @@ import remarkGfm from "remark-gfm";
 import { bundledLanguages } from "shiki";
 import { parseDelimitedString } from "../../src/util/parseDelimitedString";
 import { shikiColorNotation } from "./shikiColorNotation/shikiColorNotation";
-import { shikiDiffNotation } from "./shikiDiffNotation/shikiDiffNotation";
 import { shikiTerminal } from "./shikiTerminal/shikiTerminal";
 
 const { default: mdx } = _mdx;
@@ -71,7 +69,6 @@ export const viteMarkdownPlugin = () =>
                 },
               };
             })(),
-            shikiDiffNotation(),
             shikiColorNotation(),
             shikiTerminal(),
           ],

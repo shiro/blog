@@ -183,6 +183,12 @@ importers:
       ts-node:
         specifier: 10.9.2
         version: 10.9.2(@types/node@24.10.1)(typescript@5.9.3)
+      unified:
+        specifier: 11.0.5
+        version: 11.0.5
+      unist-util-visit:
+        specifier: 5.0.0
+        version: 5.0.0
       vite-plugin-solid-svg:
         specifier: 0.8.1
         version: 0.8.1(solid-js@1.9.11)(vite@7.3.1(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.44.1))

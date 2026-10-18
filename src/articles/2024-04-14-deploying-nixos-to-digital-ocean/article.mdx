@@ -117,7 +117,7 @@ no installed editor, we'll drop into a nix-shell.
 [nix-shell:/etc/nixos]# nvim configuration.nix
 ```
 
-```nix diff title="/etc/nixos/configuration.nix"
+```diff lang="nix" title="/etc/nixos/configuration.nix"
 +{ pkgs, ... }: {
   imports = [
     ./hardware-configuration.nix
