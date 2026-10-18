@@ -122,12 +122,7 @@ export function shikiDiffNotation(
   return {
     name: "shiki-diff-notation",
     code(node) {
-      if (
-        !this.options.meta?.__raw
-          ?.match(/(?:[^\s"']|"[^"]*"|'[^']*')+/g)
-          ?.includes("diff")
-      )
-        return;
+      if (this.options.meta?.__raw?.split(" ")[0] !== "diff") return;
 
       this.addClassToHast(this.pre, classActivePre);
 
