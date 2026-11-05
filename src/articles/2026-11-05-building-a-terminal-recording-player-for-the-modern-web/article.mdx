@@ -1,5 +1,4 @@
 ---
-private: true
 title: Building a terminal-recording player for the modern web
 ---
 
@@ -43,7 +42,7 @@ So... time to look for a new terminal emulator? If only there was a way to make 
 # Tmux saves the day
 
 Another tool I'm using all the time is [Tmux](https://github.com/tmux/tmux), the terminal multiplexer.
-It's is particularly useful for developers who work with remote servers or need to maintain persistent sessions that survive
+It's particularly useful for developers who work with remote servers or need to maintain persistent sessions that survive
 network disconnections. Beyond its session management capabilities, turns out it also provides a way to capture a snapshot the
 screen contents.
 
@@ -52,7 +51,7 @@ screen contents.
 [me@local:~]# tmux save-buffer ~/output
 [me@local:~]# cat ~/output
 \[me@local:~]# tmux capture-pane -e
-\[me@local:~]# t/mux save-buffer ~/output
+\[me@local:~]# tmux save-buffer ~/output
 \[me@local:~]# cat ~/output
 ```
 
@@ -68,7 +67,7 @@ rather than running the save command all the time. Turns out that's also doable.
 > pipe  is  closed before shell-command is executed.  The shell-command string may contain the special character sequences supported by the status-left
 > option.  If no shell-command is given, the current pipe (if any) is closed.
 
-As is often the case, the answer is buried deep inside the man-page .
+As is often the case, the answer is buried deep inside the man-page.
 By using `pipe-pane` we should be able to get live output, which means we no longer have to manually snapshot the
 terminal on a timer and risk missing rapid updates right?
 
@@ -151,7 +150,7 @@ frames with the correct timings.
 I decided to build a SolidJS component, for peak performance and minimal bundle size, easy to integrate into my blog,
 vanilla HTML sites and even React apps (with some adapter magic).
 
-Some core features I had in mind from the beggining were:
+Some core features I had in mind from the beginning were:
 - Dynamic font size that scales to fit the parent HTML element it's in, just like an image
 - Smooth play, pause and seek functionality, maybe some transitions
 - Keybindings, including jumping to next/previous frames in the capture
@@ -159,7 +158,7 @@ Some core features I had in mind from the beggining were:
 - Text diffing between frames, so only parts that change get replaced in the HTML tree, preserving text selections
 
 The implementation is quite involved, but feel free to check it out on github - [first published
-version](https://github.com/shiro/blog/blob/33f877da67229bad1ccc5dabdf68c119b8f4a6d2/src/terminalcap/Asciinema.tsx)j.
+version](https://github.com/shiro/blog/blob/33f877da67229bad1ccc5dabdf68c119b8f4a6d2/src/terminalcap/Asciinema.tsx).
 And here's what it looks like:
 
 <Video1 />
@@ -206,24 +205,67 @@ Since we have the recording backend, as well as the frontend component, we're pr
 
 # It already exists
 
-There's a few things in programing that make you stop what you're doing and re-evaluate your life choices, one of them
-being the realization that you've spend a weekend programming something that already exists, you just didn't know it.
+There's a few things in programming that make you stop what you're doing and re-evaluate your life choices, one of them
+being the realization that you've spent a weekend programming something that already exists, you just didn't know it.
 
 I remember seeing [Asciinema](https://www.asciinema.org) recordings before, but didn't pay it too much attention as I
 just assumed it was a regular video recording at that time.
 It turns out that it's essentially the same thing as my terminal capture program, but better.
 
+So is it time to archive all the code and move on? Not yet!
 
-# Implemented asciinema
+Looking at the Asciinema recording format - [asciicast](https://docs.asciinema.org/manual/asciicast/v3/), it seems well designed and documented, also handles use-cases like recording
+input sequences and even streaming. Re-inventing it wouldn't make much sense, it's already great.
 
-... but missing features
+Next up is the [recording CLI](https://github.com/asciinema/asciinema/blob/dabc40cf8e97c4041af4bb360c6f37d393e96ebf/src/cli.rs) available on many platforms,
+written in rust and does all the stuff we used tmux for earlier, just without the need to run tmux.
+
+The last part of the puzzle is the player component, which is similar to the one we implemented, and also written in
+solid! But looking at the implementation, there's a crucial difference: it doesn't pre-process frames, but rather parses
+the ANSI sequences in-browser using a web-assembly module.
+That's great for streaming, but for a static blog it means every visitor downloads a terminal emulator just to replay
+the exact same frames each time. Couldn't we just do that once, at build time?
+
+
+# Best of both worlds
+
+Turns out we can! The wasm parser runs just fine in node, so instead of re-implementing the recorder, I swapped my
+tmux-based format for asciicast and let the vite plugin feed the recording through asciinema's own parser at
+compile-time. The output is the same thing my player already understood: a list of frames with only the lines that
+changed, plus the cursor.
+
+The browser now gets plain data and a small solid component. No wasm, no worker, no second copy of solid, and the first
+frame renders on the server, so you can read it before any JS loads.
 
 # Patching asciinema
+
+Well, almost. The parser is only bundled inside the player, so there's no way to import it from node. And remember
+the cursor info we went through all that trouble to get out of tmux? The terminal emulator powering asciinema,
+[avt](https://github.com/asciinema/avt), only keeps track of the cursor position and visibility, ignoring the
+`ESC [ n q` sequence programs use to set the cursor shape. Looks like it's time for some forks!
+
+Teaching [avt](https://github.com/shiro/avt) about cursor shapes was mostly a matter of parsing the sequence and storing
+the shape (block, underscore, line, box) along with a blinking flag on the cursor. Then the
+[player fork](https://github.com/shiro/asciinema-player) builds against it, passes the extra cursor info through
+`getCursor()` and exposes a separate `terminal.js` entry point with just the parser, so the vite plugin can run it at
+compile-time. A couple dozen lines of rust and some rollup config later, we get blinking line cursors in neovim's
+insert mode, just like the real thing.
+
+Maintaining forks is no fun though, so the next step is to get these changes upstreamed. If it goes anything like the
+tmux pull request, everyone gets nice cursors soon!
 
 # Final solution
 
 
 <Video />
 
-something
+So was the weekend wasted? Not really. Asciinema does the hard parts better than I ever would, but the player is
+where things get personal. Asciinema's themes swap out the 16 base colors, but anything printed in true-color (looking
+at you, neovim colorschemes) stays exactly as recorded. My player snaps every color to the closest one in the website's
+palette, so recordings look like they belong on the page instead of being pasted in from someone else's terminal.
+
+On top of that, all the heavy lifting happens at build time. Visitors get pre-computed frames, a tiny component that
+shares solid with the rest of the site, and a readable first frame before JS even loads.
+
+Use asciinema to record, then let the browser do as little as possible. Perfection.
 
